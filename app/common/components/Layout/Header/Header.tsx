@@ -12,7 +12,7 @@ import {
   NotificationButton,
   ThemeSwitchButton,
 } from '@/app/common/components';
-import { SearchBarButton } from '@/app/search/[id]/components';
+import { SearchBarButton } from '@/app/search/components';
 import Logo from './Logo';
 
 export default function Header({

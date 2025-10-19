@@ -1,11 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
-import { QueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useGetUserInfo } from '@/app/user/apis';
+import { useGetUserInfo } from '@/app/user/hooks';
 import LogoutButton from './LogoutButton';
 
-export default async function UserInfo({ queryClient }: { queryClient: QueryClient }) {
-  const { data: userInfo } = await useGetUserInfo(queryClient);
+export default function UserInfo() {
+  const { data: userInfo } = useGetUserInfo();
   const { user_name, user_image_url, user_email } = userInfo;
 
   return (

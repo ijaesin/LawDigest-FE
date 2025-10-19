@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { BillProps } from '@/app/bill/[id]/types';
+import { BillProps } from '@/app/bill/types';
 import { Card, CardContent, CardFooter } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
@@ -9,8 +9,8 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/app/common/components
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/app/common/components/ui/tooltip';
 import { Button } from '@/app/common/components/ui/button';
 import Link from 'next/link';
-import { PartyLogoReplacement } from '@/app/party/[id]/components';
-import { ProposerList } from '@/app/bill/[id]/components';
+import { PartyLogoReplacement } from '@/app/party/components';
+import { ProposerList } from '@/app/bill/components';
 
 export default function BillBookmarked({
   bill_info_dto: { bill_id, brief_summary, bill_stage },

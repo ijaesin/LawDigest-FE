@@ -6,25 +6,11 @@ import { Card, CardContent } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Button } from '@/app/common/components/ui/button';
 import { useState, useEffect } from 'react';
+import type { BillOutline } from '@/app/timeline/validation';
 import { IconNext, IconPrev, IconEnter } from '@/public/svgs';
 import TimelineModal from './TimelineModal';
 
-export default function SubmittedList({
-  submitted_list,
-}: {
-  submitted_list: {
-    bill_brief_summary: string;
-    bill_id: string;
-    bill_name: string;
-    bill_proposers: string;
-    bill_stage: string;
-    party_info: {
-      party_id: number;
-      party_image_url: string;
-      party_name: string;
-    }[];
-  }[];
-}) {
+export default function SubmittedList({ submitted_list }: { submitted_list: BillOutline[] }) {
   // 접수된법안
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);

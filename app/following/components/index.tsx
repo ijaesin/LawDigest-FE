@@ -1,3 +1,5 @@
+'use client';
+
 import FollowingNav from './FollowingNav';
 import CongressmanList from './CongressmanList';
 import CongressmanItem from './CongressmanItem';

@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 import { Loader2 } from 'lucide-react';
-import { BillResponse } from '@/app/bill/[id]/types';
+import { BillResponse } from '@/app/bill/validation';
 import BillBookmarked from './BillBookmarked';
 
 export default function BillBookmarkedList({
@@ -10,7 +10,7 @@ export default function BillBookmarkedList({
 }: {
   bills: BillResponse[];
   isFetching: boolean;
-  fetchRef: RefObject<HTMLDivElement>;
+  fetchRef: RefObject<HTMLDivElement | null>;
 }) {
   return (
     <ul className="flex flex-col gap-4 mx-[30px] lg:mx-0">

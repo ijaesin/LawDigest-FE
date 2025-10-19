@@ -1,24 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { useIntersect } from '@/app/common/hooks';
 import { Separator } from '@/app/common/components/ui/separator';
-import { SearchBarButton, SearchList } from '@/app/search/[id]/components';
-import { BillList } from '@/app/bill/[id]/components';
-import { useGetSearchCongressmanParty, useGetSearchBill } from './apis';
+import { SearchBarButton, SearchList } from '@/app/search/components';
+import { BillList } from '@/app/bill/components';
+import { useGetSearchCongressmanParty, useInfiniteSearchBill } from '@/app/search/services';
 
-export default function SearchResult({ params: { id } }: { params: { id: string } }) {
-  const { data: dataCP, refetch: refetchCP } = useGetSearchCongressmanParty(decodeURI(id));
+export default function SearchResult() {
+  const params = useParams<{ id: string }>();
+  const id = decodeURI(params.id);
+  const { data: dataCP, refetch: refetchCP } = useGetSearchCongressmanParty(id);
   const {
     data: dataBill,
     hasNextPage: hasNextPageBill,
     isFetching: isFetchingBill,
     fetchNextPage: fetchNextPageBill,
     refetch: refetchBill,
-  } = useGetSearchBill(decodeURI(id));
-  const [searchResultsCP, setSearchResultsCP] = useState(dataCP ? dataCP.data.search_response : []);
+  } = useInfiniteSearchBill(id);
+  const [searchResultsCP, setSearchResultsCP] = useState(dataCP ? dataCP.search_response : []);
   const [searchResultsBill, setSearchResultsBill] = useState(
-    dataBill ? dataBill.pages.flatMap(({ data: { search_response: responses } }) => responses) : [],
+    dataBill ? dataBill.pages.flatMap(({ search_response: responses }) => responses) : [],
   );
 
   const fetchRefBill = useIntersect(async (entry: any, observer: any) => {
@@ -30,10 +33,10 @@ export default function SearchResult({ params: { id } }: { params: { id: string 
 
   useEffect(() => {
     if (dataCP) {
-      setSearchResultsCP(() => [...dataCP.data.search_response]);
+      setSearchResultsCP(() => [...dataCP.search_response]);
     }
     if (dataBill) {
-      setSearchResultsBill(() => [...dataBill.pages.flatMap(({ data: { search_response: responses } }) => responses)]);
+      setSearchResultsBill(() => [...dataBill.pages.flatMap(({ search_response: responses }) => responses)]);
     }
   }, [dataCP, dataBill]);
 
@@ -46,7 +49,7 @@ export default function SearchResult({ params: { id } }: { params: { id: string 
     <>
       <SearchBarButton />
       <section className="lg:w-[840px] mx-auto">
-        <p className="mx-5 my-4 text-sm font-medium text-center md:text-base text-gray-2">{`'${decodeURI(id)}'에 대한 검색 결과입니다.`}</p>
+        <p className="mx-5 my-4 text-sm font-medium text-center md:text-base text-gray-2">{`'${id}'에 대한 검색 결과입니다.`}</p>
         <div className="mb-10">
           <div>
             <h2 className="mx-5 text-lg font-semibold md:text-xl">의원 · 정당</h2>

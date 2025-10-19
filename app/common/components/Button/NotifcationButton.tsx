@@ -2,15 +2,14 @@
 
 import Link from 'next/link';
 import { IconNotification } from '@/public/svgs';
-import { useGetNotificationCount } from '@/app/notification/apis';
+import { useGetNotificationCount } from '@/app/notification/hooks';
 import { getCookie } from 'cookies-next';
 import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
-import { useSetRecoilState } from 'recoil';
-import { snackbarState } from '@/app/common/store';
+import { useSnackbarStore } from '@/app/common/store';
 
 export default function NotificationButton() {
   const accessToken = getCookie(ACCESS_TOKEN);
-  const setSnackbar = useSetRecoilState(snackbarState);
+  const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
 
   if (!accessToken) {
     return (

@@ -11,8 +11,7 @@ import {
 } from '@/app/common/components/ui/dropdown-menu';
 import { Button } from '@/app/common/components/ui/button';
 import { IconKebab } from '@/public/svgs';
-import { useSetRecoilState } from 'recoil';
-import { snackbarState } from '@/app/common/store';
+import { useSnackbarStore } from '@/app/common/store';
 import { SNACKBAR_TYPE } from '@/app/common/constants';
 import {
   useGetNotificationCount,
@@ -21,7 +20,7 @@ import {
   usePutNotificationReadAll,
   useDeleteNotification,
   useDeleteNotificationAll,
-} from '../apis';
+} from '@/app/notification/hooks';
 import NotificationItem from './NotificationItem';
 
 const initialData = [
@@ -69,7 +68,7 @@ const initialData = [
 export default function NotificationList() {
   const { data: notificationCount } = useGetNotificationCount();
   const { data: notifications } = useGetNotification();
-  const setSnackbar = useSetRecoilState(snackbarState);
+  const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
   const mutateRead = usePutNotificationRead();
   const mutateDelete = useDeleteNotification();
   const mutateReadAll = usePutNotificationReadAll();

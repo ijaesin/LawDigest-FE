@@ -5,8 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/
 import { Button } from '@/app/common/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PartyLogoReplacement } from '@/app/party/[id]/components';
-import type { FollowingCongressmanType } from '../types';
+import { PartyLogoReplacement } from '@/app/party/components';
+import type { FollowingCongressman } from '@/app/following/validation';
 
 export default function CongressmanItem({
   congressman_id,
@@ -15,7 +15,7 @@ export default function CongressmanItem({
   party_id,
   party_name,
   party_image_url,
-}: FollowingCongressmanType) {
+}: FollowingCongressman) {
   const router = useRouter();
 
   return (

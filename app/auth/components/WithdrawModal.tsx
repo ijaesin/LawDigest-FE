@@ -6,15 +6,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/app/common/components/ui/button';
 import { ACCESS_TOKEN } from '@/app/common/constants';
 import { deleteCookie } from 'cookies-next';
-import { useWithdraw } from '@/app/auth/apis';
+import { useDeleteWithdraw } from '@/app/auth/hooks';
 
 export default function WithdrawModal({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: () => void }) {
   const router = useRouter();
 
-  const { mutate: withdraw } = useWithdraw({
+  const { mutate: withdraw } = useDeleteWithdraw({
     onSuccess: () => {
       deleteCookie(ACCESS_TOKEN);
-      router.push('/login');
+      router.push('/');
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 

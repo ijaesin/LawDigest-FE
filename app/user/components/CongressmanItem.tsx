@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
-import { FollowingCongressmanType } from '@/app/user/types';
+import { FollowingCongressman } from '@/app/user/validation';
 
 export default function CongressmanItem({
   congressman_id,
   congressman_name,
   congressman_image_url,
   party_name,
-}: FollowingCongressmanType) {
+}: FollowingCongressman) {
   return (
     <Link href={`/congressman/${congressman_id}`} className="flex flex-col gap-1 items-center">
       <Avatar className="w-16 h-16 border-1.5">

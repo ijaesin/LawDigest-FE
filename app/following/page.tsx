@@ -4,39 +4,33 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCookie } from 'cookies-next';
 import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
-import { dehydrate, HydrationBoundary, useQueryClient } from '@tanstack/react-query';
-import { useSetRecoilState } from 'recoil';
-import { snackbarState } from '@/app/common/store';
-import { SearchBarButton } from '@/app/search/[id]/components';
+import { useSnackbarStore } from '@/app/common/store';
+import { SearchBarButton } from '@/app/search/components';
 import { FollowingNav, BillContainer } from './components';
 
 export default function Following() {
   const router = useRouter();
-  const accessToken = getCookie(ACCESS_TOKEN);
-  const queryClient = useQueryClient();
-  const setSnackbar = useSetRecoilState(snackbarState);
+  const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
+  const token = getCookie(ACCESS_TOKEN);
 
   useEffect(() => {
-    if (!accessToken) {
+    if (!token) {
       setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', duration: 3000 });
-      router.push('/login');
+      router.push('/auth/login');
     }
-  }, [setSnackbar]);
+  }, [token, router, setSnackbar]);
 
-  if (!accessToken)
-    return <div className="flex items-center justify-center h-full [140px] md:mt-[180px]">팔로잉 정보가 없습니다.</div>;
+  if (!token) return null;
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <section className="flex flex-col mx-auto lg:flex-row lg:justify-center">
-        <FollowingNav />
-        <div className="mt-4 md:mt-0 lg:border-l-1 lg:dark:border-dark-l">
-          <div className="hidden mt-11 lg:block">
-            <SearchBarButton />
-          </div>
-          <BillContainer />
+    <section className="flex flex-col mx-auto lg:flex-row lg:justify-center">
+      <FollowingNav />
+      <div className="mt-4 md:mt-0 lg:border-l-1 lg:dark:border-dark-l">
+        <div className="hidden mt-11 lg:block">
+          <SearchBarButton />
         </div>
-      </section>
-    </HydrationBoundary>
+        <BillContainer />
+      </div>
+    </section>
   );
 }

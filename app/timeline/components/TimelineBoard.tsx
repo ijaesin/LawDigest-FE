@@ -1,21 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/app/common/components/ui/card';
 import { Separator } from '@/app/common/components/ui/separator';
 import { getDDay } from '@/app/common/utils';
-import type { TimelineBillState } from '@/app/timeline/types';
-import { useGetTimelineBillState } from '../apis/queries';
+import { useGetTimelineBillState } from '@/app/timeline/hooks';
 
 export default function TimelineBoard() {
-  const { data } = useGetTimelineBillState();
-  const [billState, setBillState] = useState<TimelineBillState>();
-
-  useEffect(() => {
-    if (data) {
-      setBillState(data.data);
-    }
-  }, [data]);
+  const { data: billState } = useGetTimelineBillState();
 
   return (
     <Card className="shadow-[0_4px_6px_-2px_rgba(0,_0,_0,_0.1)] md:shadow-none w-full border-b md:border-none dark:border-dark-l mx-auto bg-transparent md:dark:bg-primary-3 md:mt-10 md:mb-6 md:w-[708px] md:pt-3 md:rounded-xl">

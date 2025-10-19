@@ -1,3 +1,5 @@
+'use client';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/common/components/ui/dialog';
 
 export default function TimelineModal({

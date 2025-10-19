@@ -1,3 +1,5 @@
+'use client';
+
 import CommitteeAuditList from './CommitteeAuditList';
 import PlenaryList from './PlenaryList';
 import PromulgationList from './PromulgationList';

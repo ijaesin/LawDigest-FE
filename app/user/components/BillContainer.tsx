@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useIntersect } from '@/app/common/hooks';
 import { Card } from '@/app/common/components/ui/card';
-import { useGetBillBookmarked } from '@/app/user/apis';
+import { useInfiniteBillBookmarked } from '@/app/user/hooks';
 import BillBookmarkedCount from './BillBookmarkedCount';
 import BillBookmarkedList from './BillBookmaredList';
 
 export default function BillContainer() {
-  const { data, hasNextPage, isFetching, fetchNextPage } = useGetBillBookmarked();
-  const [bills, setBills] = useState(data ? data.pages.flatMap(({ data: { bill_list: responses } }) => responses) : []);
+  const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteBillBookmarked();
+  const [bills, setBills] = useState(data ? data.pages.flatMap((page) => page.bill_list) : []);
 
   const fetchRef = useIntersect(async (entry: any, observer: any) => {
     observer.unobserve(entry.target);
@@ -21,7 +21,7 @@ export default function BillContainer() {
 
   useEffect(() => {
     if (data) {
-      setBills(() => [...data.pages.flatMap(({ data: { bill_list: responses } }) => responses)]);
+      setBills(() => [...data.pages.flatMap((page) => page.bill_list)]);
     }
   }, [data]);
 

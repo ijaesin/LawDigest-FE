@@ -1,10 +1,9 @@
-import { QueryClient } from '@tanstack/react-query';
-import { FollowingPartyType } from '@/app/user/types';
-import { useGetFollowingParty } from '@/app/user/apis';
+import { FollowingParty } from '@/app/user/validation';
+import { useGetFollowingParty } from '@/app/user/hooks';
 import PartyItem from './PartyItem';
 
-export default async function PartyList({ qeuryClient }: { qeuryClient: QueryClient }) {
-  const { data: partyList } = await useGetFollowingParty(qeuryClient);
+export default function PartyList() {
+  const { data: partyList } = useGetFollowingParty();
   const partyLength = partyList.length;
 
   return (
@@ -14,7 +13,7 @@ export default async function PartyList({ qeuryClient }: { qeuryClient: QueryCli
       </p>
 
       <div className="grid grid-cols-2 gap-y-5 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 lg:w-[750px] xl:w-[900px]">
-        {partyList.map((party: FollowingPartyType) => (
+        {partyList.map((party: FollowingParty) => (
           <PartyItem key={party.party_name} {...party} />
         ))}
       </div>

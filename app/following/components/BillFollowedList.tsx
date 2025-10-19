@@ -1,7 +1,9 @@
+'use client';
+
 import type { RefObject } from 'react';
 import { Loader2 } from 'lucide-react';
-import { Bill } from '@/app/bill/[id]/components';
-import type { BillResponse } from '@/app/bill/[id]/types';
+import { Bill } from '@/app/bill/components';
+import type { BillResponse } from '@/app/bill/validation';
 
 export default function BillFollowedList({
   bills,
@@ -10,7 +12,7 @@ export default function BillFollowedList({
 }: {
   bills: BillResponse[];
   isFetching: boolean;
-  fetchRef: RefObject<HTMLDivElement>;
+  fetchRef: RefObject<HTMLDivElement | null>;
 }) {
   return (
     <ul className="flex flex-col gap-4">

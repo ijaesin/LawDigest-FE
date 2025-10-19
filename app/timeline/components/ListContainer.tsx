@@ -5,17 +5,17 @@ import { useIntersect } from '@/app/common/hooks';
 import { Loader2 } from 'lucide-react';
 import { convertDateFormat } from '@/app/common/utils';
 import { Separator } from '@/app/common/components/ui/separator';
-import type { TimelineResponseList } from '@/app/timeline/types';
+import type { TimelineResponseList } from '@/app/timeline/validation';
+import { useInfiniteTimelineFeed } from '@/app/timeline/hooks';
 import PlenaryList from './PlenaryList';
 import PromulgationList from './PromulgationList';
 import CommitteeAuditList from './CommitteeAuditList';
 import SubmittedList from './SubmittedList';
-import { useGetTimelineFeed } from '../apis/queries';
 
 export default function ListContainer() {
-  const { data, hasNextPage, isFetching, fetchNextPage } = useGetTimelineFeed();
+  const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteTimelineFeed();
   const [timeline, setTimeline] = useState<TimelineResponseList[]>(
-    data ? data.pages.flatMap(({ data: { timeline_response_list: responses } }) => responses) : [],
+    data ? data.pages.flatMap(({ timeline_response_list }) => timeline_response_list) : [],
   );
 
   const fetchRef = useIntersect(async (entry: any, observer: any) => {
@@ -27,7 +27,7 @@ export default function ListContainer() {
 
   useEffect(() => {
     if (data) {
-      setTimeline(() => [...data.pages.flatMap(({ data: { timeline_response_list: responses } }) => responses)]);
+      setTimeline(() => [...data.pages.flatMap(({ timeline_response_list }) => timeline_response_list)]);
     }
   }, [data]);
 

@@ -5,29 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/app/common/components/ui/card';
 import { Button } from '@/app/common/components/ui/button';
+import type { CommitteeAudit } from '@/app/timeline/validation';
 import { IconEnter, IconNext, IconPrev } from '@/public/svgs';
 import TimelineModal from './TimelineModal';
 
-export default function CommitteeAuditList({
-  committee_audit_list,
-}: {
-  committee_audit_list: {
-    committee_name: string;
-    bill_count: number;
-    bill_outline_dto_list: {
-      party_info: {
-        party_id: number;
-        party_name: string;
-        party_image_url: string;
-      }[];
-      bill_id: string;
-      bill_name: string;
-      bill_stage: string;
-      bill_proposers: string;
-      bill_brief_summary: string;
-    }[];
-  }[];
-}) {
+export default function CommitteeAuditList({ committee_audit_list }: { committee_audit_list: CommitteeAudit[] }) {
   // 위원회심사
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);

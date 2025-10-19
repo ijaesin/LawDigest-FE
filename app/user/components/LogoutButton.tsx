@@ -3,21 +3,26 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
 import { Button } from '@/app/common/components/ui/button';
-import { useSetRecoilState } from 'recoil';
-import { snackbarState } from '@/app/common/store';
-import { postLogout } from '@/app/user/apis';
+import { useSnackbarStore } from '@/app/common/store';
+import { usePostLogout } from '@/app/user/hooks';
 
 export default function LogoutButton() {
   const router = useRouter();
-  const setSnackbar = useSetRecoilState(snackbarState);
+  const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
+  const { mutate: postLogout } = usePostLogout({
+    onSuccess: () => {
+      deleteCookie(ACCESS_TOKEN);
+      setSnackbar({ show: true, type: SNACKBAR_TYPE.SUCCESS, message: '로그아웃을 성공했습니다.', duration: 3000 });
+      router.push('/');
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
   const onClickLogout = useCallback(async () => {
     postLogout();
-    deleteCookie(ACCESS_TOKEN);
-    setSnackbar({ show: true, type: SNACKBAR_TYPE.SUCCESS, message: '로그아웃을 성공했습니다.', duration: 3000 });
-
-    router.push('/login');
-  }, [router, setSnackbar]);
+  }, [postLogout]);
 
   return (
     <Button

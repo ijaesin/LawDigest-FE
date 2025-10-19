@@ -5,40 +5,13 @@ import Image from 'next/image';
 import { Card, CardContent } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Button } from '@/app/common/components/ui/button';
-import { ProcessResult } from '@/app/bill/[id]/components';
+import { ProcessResult } from '@/app/bill/components';
 import { useState, useEffect } from 'react';
+import type { PlenaryItem } from '@/app/timeline/validation';
 import { IconEnter, IconNext, IconPrev } from '@/public/svgs';
 import TimelineModal from './TimelineModal';
 
-export default function PlenaryList({
-  plenary_list,
-}: {
-  plenary_list: {
-    bill_info: {
-      party_info: {
-        party_id: number;
-        party_name: string;
-        party_image_url: string;
-      }[];
-      bill_id: string;
-      bill_name: string;
-      bill_stage: string;
-      bill_proposers: string;
-      bill_brief_summary: string;
-      bill_result: string;
-    };
-    approval_vote_count: number;
-    total_vote_count: number;
-    party_vote_list: {
-      party_info: {
-        party_id: number;
-        party_name: string;
-        party_image_url: string;
-      };
-      party_approval_count: number;
-    }[];
-  }[];
-}) {
+export default function PlenaryList({ plenary_list }: { plenary_list: PlenaryItem[] }) {
   // 본회의심사
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);

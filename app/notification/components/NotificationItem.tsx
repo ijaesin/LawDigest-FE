@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import getTimeRemaining from '@/app/common/utils/getTimeRemaining';
-import type { Notification } from '@/app/notification/types';
+import type { Notification } from '@/app/notification/validation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
 import {
   DropdownMenu,
@@ -28,8 +28,13 @@ export default function NotificationItem({
   onClickRead: (notificationId: number, isClickByButton: boolean) => void;
   onClickDelete: (notificationId: number) => void;
 }) {
-  const isRepresentativeSolo = notification_image_url_list.length === 1;
-  const imageUrlList = notification_image_url_list.map((str) => str.split(':'));
+  const imageUrlList = notification_image_url_list
+    .filter((str): str is string => typeof str === 'string' && str.length > 0)
+    .map((str) => {
+      const [party = '', url = ''] = str.split(':');
+      return { party, url };
+    });
+  const isRepresentativeSolo = imageUrlList.length === 1;
   const linkUrl = `${type === 'congressman_party_update' ? 'congressman' : 'bill'}/${target}`;
 
   return (
@@ -41,40 +46,44 @@ export default function NotificationItem({
 
         {isRepresentativeSolo ? (
           <Avatar
-            className={`w-[50px] h-[50px] border ${imageUrlList[0][0]} ${
+            className={`w-[50px] h-[50px] border ${imageUrlList[0].party} ${
               type === 'bill_stage_update' || type === 'bill_result_update' ? 'bg-white dark:bg-dark-pb p-1' : ''
             }`}>
-            <>
-              <AvatarImage
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${imageUrlList[0][1]}`}
-                className={`${
-                  type === 'bill_stage_update' || type === 'bill_result_update' ? 'object-contain' : ''
-                } dark:hidden`}
-              />
-              <AvatarImage
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${imageUrlList[0][1].replace('wide', 'dark')}`}
-                className={`${
-                  type === 'bill_stage_update' || type === 'bill_result_update' ? 'object-contain' : ''
-                } hidden dark:block`}
-              />
-            </>
-            <AvatarFallback>{imageUrlList[0][0][0]}</AvatarFallback>
+            {imageUrlList[0].url ? (
+              <>
+                <AvatarImage
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${imageUrlList[0].url}`}
+                  className={`${
+                    type === 'bill_stage_update' || type === 'bill_result_update' ? 'object-contain' : ''
+                  } dark:hidden`}
+                />
+                <AvatarImage
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${imageUrlList[0].url.replace('wide', 'dark')}`}
+                  className={`${
+                    type === 'bill_stage_update' || type === 'bill_result_update' ? 'object-contain' : ''
+                  } hidden dark:block`}
+                />
+              </>
+            ) : null}
+            <AvatarFallback>{imageUrlList[0].party?.[0] ?? '?'}</AvatarFallback>
           </Avatar>
         ) : (
           <div className={`flex -space-x-4 w-[50px] ${imageUrlList.length >= 3 ? 'gap-0' : ''}`}>
-            {imageUrlList.slice(0, 3).map((notification_image_url) => (
-              <Avatar key={notification_image_url[0]} className="p-1 bg-white border shrink-0 dark:bg-dark-pb">
-                <>
-                  <AvatarImage
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${notification_image_url[1]}`}
-                    className="object-contain dark:hidden"
-                  />
-                  <AvatarImage
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${notification_image_url[1].replace('wide', 'dark')}`}
-                    className="hidden object-contain dark:block"
-                  />
-                </>
-                <AvatarFallback>{notification_image_url[0][0]}</AvatarFallback>
+            {imageUrlList.slice(0, 3).map(({ party, url }) => (
+              <Avatar key={`${party}-${url}`} className="p-1 bg-white border shrink-0 dark:bg-dark-pb">
+                {url ? (
+                  <>
+                    <AvatarImage
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
+                      className="object-contain dark:hidden"
+                    />
+                    <AvatarImage
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url.replace('wide', 'dark')}`}
+                      className="hidden object-contain dark:block"
+                    />
+                  </>
+                ) : null}
+                <AvatarFallback>{party?.[0] ?? '?'}</AvatarFallback>
               </Avatar>
             ))}
           </div>

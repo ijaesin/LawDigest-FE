@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { FollowingPartyType } from '@/app/user/types';
+import { FollowingParty } from '@/app/user/validation';
 
-export default function PartyItem({ party_id, party_name, party_image_url }: FollowingPartyType) {
+export default function PartyItem({ party_id, party_name, party_image_url }: FollowingParty) {
   return (
     <Link href={`/party/${party_id}`}>
       <div
