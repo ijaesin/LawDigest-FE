@@ -5,13 +5,9 @@ const config: StorybookConfig = {
     '../stories/**/*.stories.@(ts|tsx)',
     '../app/**/*.stories.@(ts|tsx)',
     '../app/**/components/**/*.stories.@(ts|tsx)',
-    '../app/common/components/**/*.stories.@(ts|tsx)'
+    '../app/common/components/**/*.stories.@(ts|tsx)',
   ],
-  addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-a11y',
-    '@storybook/addon-interactions',
-  ],
+  addons: ['@storybook/addon-essentials', '@storybook/addon-a11y', '@storybook/addon-interactions'],
   framework: {
     name: '@storybook/nextjs',
     options: {
@@ -24,5 +20,3 @@ const config: StorybookConfig = {
 };
 
 export default config;
-
-

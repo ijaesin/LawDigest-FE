@@ -5,7 +5,6 @@ title: 'Feature/#[Issue number]/[Issue name]'
 labels: 'feature'
 type: 'feature'
 assignees: ''
-
 ---
 
 ## 1. 무엇을?

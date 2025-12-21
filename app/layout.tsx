@@ -4,8 +4,8 @@ import { siteConfig } from '@/app/common/config/site';
 import { fontSans } from '@/app/common/config/fonts';
 import clsx from 'clsx';
 import { Suspense } from 'react';
-import { GoToTopButton, Loading, Snackbar } from '@/app/common/components';
-import { SearchModal } from '@/app/search/[id]/components';
+import { Loading } from '@/app/common/components';
+import ClientOnlyWidgets from '@/app/common/components/ClientOnlyWidgets';
 import { Providers } from '@/app/providers';
 
 export const metadata: Metadata = {
@@ -63,12 +63,8 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <Providers>
           <div className="relative flex flex-col h-auto min-h-[100dvh] min-w-[360px]">
             <main className="flex justify-center items-center w-full h-full">
-              <Suspense fallback={<Loading />}>
-                {children}
-                <SearchModal />
-                <Snackbar />
-                <GoToTopButton />
-              </Suspense>
+              <Suspense fallback={<Loading />}>{children}</Suspense>
+              <ClientOnlyWidgets />
             </main>
           </div>
         </Providers>

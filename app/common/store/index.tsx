@@ -1,4 +1,2 @@
-import snackbarState from './SnackbarState';
-import searchModalState from './SearchModalState';
-
-export { snackbarState, searchModalState };
+export { useSnackbarStore } from './snackbar';
+export { useSearchModalStore } from './search-modal';

@@ -34,7 +34,7 @@ export const siteConfig = {
     },
     {
       label: '마이페이지',
-      href: '/mypage',
+      href: '/user/mypage',
       IconComponent: IconMyPage,
     },
   ],

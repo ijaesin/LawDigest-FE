@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, type RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'next-themes';
 
 export function createTestQueryClient() {
@@ -15,11 +14,9 @@ export function renderWithProviders(ui: React.ReactElement, options?: RenderOpti
 
   function AllProviders({ children }: { children: React.ReactNode }) {
     return (
-      <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class">{children}</ThemeProvider>
-        </QueryClientProvider>
-      </RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class">{children}</ThemeProvider>
+      </QueryClientProvider>
     );
   }
 
