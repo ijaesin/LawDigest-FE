@@ -1,4 +1,4 @@
-import { IconFollowing, IconHome, IconMyPage, IconTimeline } from '@/public/svgs';
+import { Home, Calendar, Heart, User } from 'lucide-react';
 
 export type SiteConfig = typeof siteConfig;
 
@@ -20,22 +20,22 @@ export const siteConfig = {
     {
       label: '피드',
       href: '/',
-      IconComponent: IconHome,
+      IconComponent: Home,
     },
     {
       label: '타임라인',
       href: '/timeline',
-      IconComponent: IconTimeline,
+      IconComponent: Calendar,
     },
     {
       label: '팔로잉',
       href: '/following',
-      IconComponent: IconFollowing,
+      IconComponent: Heart,
     },
     {
       label: '마이페이지',
       href: '/user/mypage',
-      IconComponent: IconMyPage,
+      IconComponent: User,
     },
   ],
   stageTabs: [

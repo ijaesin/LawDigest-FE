@@ -103,9 +103,9 @@ export default function Bill({
     <section className={`flex flex-col  ${detail ? 'md:flex-row items-start' : 'md:mx-5'}`}>
       <Card
         key={bill_id}
-        className="flex flex-col gap-5 px-5 pt-6 bg-transparent border-none dark:bg-dark-b dark:lg:bg-dark-pb">
+        className={`flex flex-col gap-5 px-5 pt-6 bg-transparent border-none dark:bg-dark-b dark:lg:bg-dark-pb ${!detail ? 'md:flex-row' : ''}`}>
         <CardHeader
-          className={`flex  flex-col items-start gap-2 p-0  ${!detail ? 'md:w-[270px] auto md:left-0 md:absolute' : ''}`}>
+          className={`flex  flex-col items-start gap-2 p-0  ${!detail ? 'md:w-[270px] md:flex-shrink-0' : ''}`}>
           {detail && (
             <div className="flex gap-1 items-center">
               <IconClock />
@@ -125,10 +125,8 @@ export default function Bill({
           )}
         </CardHeader>
 
-        <section className={!detail ? 'md:flex md:justify-between md:gap-10' : ''}>
-          <div className={!detail ? 'hidden md:block md:w-[270px]' : ''} />
-          <div className={!detail ? 'md:w-[440px] lg:w-[490px]' : ''}>
-            <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
+        <section className={!detail ? 'md:flex-1' : ''}>
+          <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
               <p className={!detail && !toggleMore ? 'line-clamp-[8]' : ''} id={bill_id}>
                 {gpt_summary && gpt_summary}
                 {!gpt_summary && summary}
@@ -208,10 +206,9 @@ export default function Bill({
                 </TooltipProvider>
               </CardFooter>
             )}
-          </div>
-        </section>
+          </section>
 
-        {detail && (
+          {detail && (
           <div className="flex flex-col gap-[34px]">
             <Separator className="bg-gray-0.5 dark:bg-dark-l md:hidden" />
             <GPTSummary />
