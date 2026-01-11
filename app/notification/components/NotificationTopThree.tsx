@@ -74,7 +74,7 @@ export default function NotificationTopThree() {
   if (isLoading) return <p className="text-sm text-center text-gray-2 dark:text-gray-3">불러오는 중...</p>;
 
   return (
-    <section className="flex flex-col gap-4 p-5 px-5 mt-6 mb-10 rounded-xl border border-gray-1 dark:border-dark-l">
+    <section className="flex flex-col gap-4 px-3 py-2 mx-5 mt-6 mb-10 rounded-3xl border shadow-2xl backdrop-blur-md bg-white/20 border-white/60 shadow-black/20">
       <h2 className="text-xl font-semibold">최근 알림</h2>
       <Separator />
 
@@ -94,7 +94,7 @@ export default function NotificationTopThree() {
       )}
 
       {/* 푸터: 왼쪽 읽지 않은 알림 수, 오른쪽 더보기 버튼 */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center">
         {notificationCount && (
           <p className="text-xs md:text-sm text-gray-2 dark:text-gray-3">
             <span className="text-black dark:text-gray-2">{notificationCount.notification_count}개</span>의 읽지 않은

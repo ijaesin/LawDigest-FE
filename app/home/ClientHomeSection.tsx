@@ -2,14 +2,12 @@
 
 import { Suspense } from 'react';
 import { Loading } from '@/app/common/components/Loading';
-import { SearchBarButton } from '@/app/search/components';
 import { Feed } from '@/app/bill/components';
 import { NotificationTopThree } from '@/app/notification/components';
 
 export default function ClientHomeSection() {
   return (
     <section className="lg:w-[880px] mx-auto ">
-      <SearchBarButton />
       <Suspense fallback={<Loading />}>
         <NotificationTopThree />
         <Feed />

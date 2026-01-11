@@ -5,12 +5,18 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { siteConfig } from '@/app/common/config/site';
 import { Button } from '@/app/common/components/ui/button';
+import { useSearchModalStore } from '@/app/common/store';
+import { useCallback } from 'react';
 
 function Nav() {
   const { navItems } = siteConfig;
   const pathname = usePathname();
+  const open = useSearchModalStore((s) => s.open);
 
-  // Find active tab index for animation
+  const onClickSearchBar = useCallback(() => {
+    open();
+  }, [open]);
+
   const activeIndex = navItems.findIndex(({ href }) =>
     pathname === '/' ? pathname?.endsWith(href) : href !== '/' && pathname?.startsWith(href),
   );
@@ -45,7 +51,6 @@ function Nav() {
             })}
           </ul>
 
-          {/* Animated glass background for active tab */}
           {activeIndex >= 0 && (
             <div
               className="absolute top-1 bottom-1 z-0 rounded-full border shadow-lg backdrop-blur-xl transition-all duration-500 ease-out pointer-events-none bg-white/40 border-white/60"
@@ -57,8 +62,8 @@ function Nav() {
           )}
         </div>
 
-        {/* Rainbow border search button */}
         <Button
+          onClick={onClickSearchBar}
           variant="ghost"
           size="icon"
           className="h-auto w-auto p-[2px] rounded-full bg-gradient-to-r from-yellow-500 via-red-500 to-blue-500 hover:from-yellow-600 hover:via-red-600 hover:to-blue-600 transition-all duration-300 shadow-lg"
