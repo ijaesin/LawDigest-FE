@@ -27,8 +27,7 @@ export default function Feed() {
   const isLatest = feedType === FEED_TAB.sortedByLatest;
   const displayBills = isLatest ? bills : popularBills;
 
-  const fetchRef = useIntersect((entry, observer) => {
-    observer.unobserve(entry.target);
+  const fetchRef = useIntersect(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }

@@ -24,8 +24,7 @@ export default function SearchResult() {
     dataBill ? dataBill.pages.flatMap(({ search_response: responses }) => responses) : [],
   );
 
-  const fetchRefBill = useIntersect(async (entry: any, observer: any) => {
-    observer.unobserve(entry.target);
+  const fetchRefBill = useIntersect(() => {
     if (hasNextPageBill && !isFetchingBill) {
       fetchNextPageBill();
     }

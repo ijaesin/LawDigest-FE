@@ -18,8 +18,7 @@ export default function ListContainer() {
     data ? data.pages.flatMap(({ timeline_response_list }) => timeline_response_list) : [],
   );
 
-  const fetchRef = useIntersect(async (entry: any, observer: any) => {
-    observer.unobserve(entry.target);
+  const fetchRef = useIntersect(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }

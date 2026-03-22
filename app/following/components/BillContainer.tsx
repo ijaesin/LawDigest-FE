@@ -9,8 +9,7 @@ export default function BillContainer() {
   const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteFollowingBill();
   const [bills, setBills] = useState(data ? data.pages.flatMap(({ bill_list }) => bill_list) : []);
 
-  const fetchRef = useIntersect(async (entry: any, observer: any) => {
-    observer.unobserve(entry.target);
+  const fetchRef = useIntersect(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
