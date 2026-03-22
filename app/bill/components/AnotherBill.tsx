@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { Card, CardContent, CardFooter } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';

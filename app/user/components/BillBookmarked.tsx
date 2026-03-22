@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { BillProps } from '@/app/bill/types';
 import { Card, CardContent, CardFooter } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';

@@ -10,9 +10,9 @@ export default function SearchParty({ party_id, party_name, party_image_url }: S
         <PartyLogo
           partyName={party_name}
           partyImageUrl={party_image_url}
-          variant="badge"
-          imageWidth={40}
-          imageHeight={16}
+          variant="wide"
+          imageWidth={80}
+          imageHeight={32}
         />
         <p className="text-lg font-semibold">{party_name}</p>
       </div>
