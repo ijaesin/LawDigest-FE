@@ -42,6 +42,7 @@
     "qs": "^6.11.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-error-boundary": "^6.1.1",
     "react-hook-form": "^7.62.0",
     "tailwind-merge": "^3.3.1",
     "tailwind-variants": "^0.1.18",
