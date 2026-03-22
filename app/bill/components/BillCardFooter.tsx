@@ -15,7 +15,14 @@ interface BillCardFooterProps {
   onCopyLink: () => void;
 }
 
-function FeedFooter({ billId, isLiked, likeCount, viewCount, onClickScrap, onCopyLink }: Omit<BillCardFooterProps, 'detail'>) {
+function FeedFooter({
+  billId,
+  isLiked,
+  likeCount,
+  viewCount,
+  onClickScrap,
+  onCopyLink,
+}: Omit<BillCardFooterProps, 'detail'>) {
   return (
     <div className="flex justify-between items-center p-0 mt-5 -ml-1">
       <div className="flex gap-2">
@@ -55,7 +62,13 @@ function FeedFooter({ billId, isLiked, likeCount, viewCount, onClickScrap, onCop
   );
 }
 
-function DetailFooter({ isLiked, likeCount, viewCount, onClickScrap, onCopyLink }: Omit<BillCardFooterProps, 'detail' | 'billId'>) {
+function DetailFooter({
+  isLiked,
+  likeCount,
+  viewCount,
+  onClickScrap,
+  onCopyLink,
+}: Omit<BillCardFooterProps, 'detail' | 'billId'>) {
   return (
     <div className="flex justify-between items-center p-0 mt-10">
       <div className="flex gap-4">
@@ -87,23 +100,31 @@ function DetailFooter({ isLiked, likeCount, viewCount, onClickScrap, onCopyLink 
   );
 }
 
-export default function BillCardFooter(props: BillCardFooterProps) {
-  return props.detail ? (
+export default function BillCardFooter({
+  detail,
+  isLiked,
+  likeCount,
+  viewCount,
+  onClickScrap,
+  onCopyLink,
+  billId,
+}: BillCardFooterProps) {
+  return detail ? (
     <DetailFooter
-      isLiked={props.isLiked}
-      likeCount={props.likeCount}
-      viewCount={props.viewCount}
-      onClickScrap={props.onClickScrap}
-      onCopyLink={props.onCopyLink}
+      isLiked={isLiked}
+      likeCount={likeCount}
+      viewCount={viewCount}
+      onClickScrap={onClickScrap}
+      onCopyLink={onCopyLink}
     />
   ) : (
     <FeedFooter
-      billId={props.billId}
-      isLiked={props.isLiked}
-      likeCount={props.likeCount}
-      viewCount={props.viewCount}
-      onClickScrap={props.onClickScrap}
-      onCopyLink={props.onCopyLink}
+      billId={billId}
+      isLiked={isLiked}
+      likeCount={likeCount}
+      viewCount={viewCount}
+      onClickScrap={onClickScrap}
+      onCopyLink={onCopyLink}
     />
   );
 }

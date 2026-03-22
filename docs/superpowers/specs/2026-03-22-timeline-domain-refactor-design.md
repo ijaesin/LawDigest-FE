@@ -24,14 +24,16 @@
 ## 2. ListContainer 파생 상태 안티패턴 제거
 
 **현재:**
+
 ```tsx
 const [timeline, setTimeline] = useState(data ? data.pages.flatMap(...) : []);
 useEffect(() => { if (data) setTimeline(() => [...data.pages.flatMap(...)]); }, [data]);
 ```
 
 **개선:** `useMemo`로 직접 파생 계산.
+
 ```tsx
-const timeline = useMemo(() => data?.pages.flatMap(p => p.timeline_response_list) ?? [], [data]);
+const timeline = useMemo(() => data?.pages.flatMap((p) => p.timeline_response_list) ?? [], [data]);
 ```
 
 추가로 `convertDateFormat(date)` 3회 호출을 변수로 1회 호출로 최적화.
@@ -49,8 +51,8 @@ const timeline = useMemo(() => data?.pages.flatMap(p => p.timeline_response_list
 ```tsx
 interface PartyLogoProps {
   partyInfo: PartyInfo;
-  size?: number;          // default 22
-  linkEnabled?: boolean;  // default true
+  size?: number; // default 22
+  linkEnabled?: boolean; // default true
   className?: string;
 }
 ```
@@ -74,7 +76,7 @@ interface UseResponsivePaginationReturn<T> {
 
 function useResponsivePagination<T>(
   items: T[],
-  breakpoints?: { md?: number; lg?: number }
+  breakpoints?: { md?: number; lg?: number },
 ): UseResponsivePaginationReturn<T>;
 ```
 
@@ -130,6 +132,7 @@ const VARIANT_CONFIG = {
 `PlenaryList`와 `CommitteeAuditList`는 구조가 충분히 다르므로 (투표 결과, 위원회 그룹핑) 별도 컴포넌트로 유지. 공유 훅/컴포넌트를 사용하여 중복을 제거.
 
 **SubmittedList vs PromulgationList 미세 차이 해결:**
+
 - 카드 로고 위치: SubmittedList는 `index === 0`일 때만 `-left-[39px]`, 나머지는 `left-0`. PromulgationList는 항상 `-left-[39px]`. → PromulgationList 방식(`-left-[39px]` 고정)을 채택. 모바일에서만 보이므로(`md:hidden`) 일관된 위치가 적절.
 - CSS: `md:border` vs `md:border-1` → `md:border`로 통일 (Tailwind 표준).
 
@@ -150,6 +153,7 @@ const VARIANT_CONFIG = {
 **현재:** `page.tsx`에서 `useSuspenseInfiniteQuery` 사용인데 Suspense 래핑 없음.
 
 **개선:**
+
 ```tsx
 // page.tsx
 <ErrorBoundary FallbackComponent={TimelineErrorFallback}>
@@ -178,62 +182,62 @@ const VARIANT_CONFIG = {
 
 ### 신규 생성
 
-| 파일 | 책임 |
-|------|------|
-| `services/query-keys.ts` | timelineKeys 팩토리 |
-| `services/apis.ts` | API 호출 (기존 services/index.ts 리네임) |
-| `services/queries.ts` | React Query 훅 |
-| `hooks/useResponsivePagination.ts` | 반응형 페이지네이션 훅 |
-| `components/PartyLogo.tsx` | 정당 로고 공유 컴포넌트 |
-| `components/TimelinePagination.tsx` | 페이지네이션 UI 공유 컴포넌트 |
-| `components/BillOutlineList.tsx` | Submitted + Promulgation 통합 |
-| `components/TimelineErrorFallback.tsx` | 에러 폴백 UI |
-| `components/TimelineSkeleton.tsx` | 로딩 스켈레톤 UI |
+| 파일                                   | 책임                                     |
+| -------------------------------------- | ---------------------------------------- |
+| `services/query-keys.ts`               | timelineKeys 팩토리                      |
+| `services/apis.ts`                     | API 호출 (기존 services/index.ts 리네임) |
+| `services/queries.ts`                  | React Query 훅                           |
+| `hooks/useResponsivePagination.ts`     | 반응형 페이지네이션 훅                   |
+| `components/PartyLogo.tsx`             | 정당 로고 공유 컴포넌트                  |
+| `components/TimelinePagination.tsx`    | 페이지네이션 UI 공유 컴포넌트            |
+| `components/BillOutlineList.tsx`       | Submitted + Promulgation 통합            |
+| `components/TimelineErrorFallback.tsx` | 에러 폴백 UI                             |
+| `components/TimelineSkeleton.tsx`      | 로딩 스켈레톤 UI                         |
 
 ### 수정
 
-| 파일 | 변경 내용 |
-|------|-----------|
-| `hooks/index.ts` | re-export only |
-| `components/ListContainer.tsx` | useMemo 파생, convertDateFormat 최적화 |
-| `components/PlenaryList.tsx` | 공유 컴포넌트 사용으로 축소 |
-| `components/CommitteeAuditList.tsx` | 공유 컴포넌트 사용으로 축소 |
-| `components/TimelineBoard.tsx` | optional chaining 개선 |
-| `components/TimelineModal.tsx` | onOpenChange 패턴 정렬 |
-| `components/index.tsx` | 배럴 파일 업데이트 |
-| `page.tsx` | Suspense + ErrorBoundary 추가 |
+| 파일                                | 변경 내용                              |
+| ----------------------------------- | -------------------------------------- |
+| `hooks/index.ts`                    | re-export only                         |
+| `components/ListContainer.tsx`      | useMemo 파생, convertDateFormat 최적화 |
+| `components/PlenaryList.tsx`        | 공유 컴포넌트 사용으로 축소            |
+| `components/CommitteeAuditList.tsx` | 공유 컴포넌트 사용으로 축소            |
+| `components/TimelineBoard.tsx`      | optional chaining 개선                 |
+| `components/TimelineModal.tsx`      | onOpenChange 패턴 정렬                 |
+| `components/index.tsx`              | 배럴 파일 업데이트                     |
+| `page.tsx`                          | Suspense + ErrorBoundary 추가          |
 
 ### 삭제
 
-| 파일 | 사유 |
-|------|------|
-| `components/SubmittedList.tsx` | BillOutlineList로 통합 |
+| 파일                              | 사유                   |
+| --------------------------------- | ---------------------- |
+| `components/SubmittedList.tsx`    | BillOutlineList로 통합 |
 | `components/PromulgationList.tsx` | BillOutlineList로 통합 |
-| `services/index.ts` | apis.ts로 리네임 |
+| `services/index.ts`               | apis.ts로 리네임       |
 
 ---
 
 ## 적용 규칙/패턴
 
-| 영역 | 적용 규칙 |
-|------|-----------|
-| 서비스 분리 | 프로젝트 표준 (apis/queries/query-keys) |
-| ListContainer | `rerender-derived-state-no-effect` |
-| PartyLogo 추출 | DRY, 컴포넌트 합성 |
-| useResponsivePagination | DRY, 커스텀 훅 추출 |
-| BillOutlineList 통합 | `architecture-avoid-boolean-props`, `patterns-explicit-variants` |
-| Suspense/ErrorBoundary | Next.js error boundary 필수 조합 |
-| key 버그 | React reconciliation 최적화 |
+| 영역                    | 적용 규칙                                                        |
+| ----------------------- | ---------------------------------------------------------------- |
+| 서비스 분리             | 프로젝트 표준 (apis/queries/query-keys)                          |
+| ListContainer           | `rerender-derived-state-no-effect`                               |
+| PartyLogo 추출          | DRY, 컴포넌트 합성                                               |
+| useResponsivePagination | DRY, 커스텀 훅 추출                                              |
+| BillOutlineList 통합    | `architecture-avoid-boolean-props`, `patterns-explicit-variants` |
+| Suspense/ErrorBoundary  | Next.js error boundary 필수 조합                                 |
+| key 버그                | React reconciliation 최적화                                      |
 
 ## 개선 효과 요약
 
-| 영역 | Before | After |
-|------|--------|-------|
-| 데이터 흐름 | useState + useEffect 동기화 | useMemo 파생 계산 |
-| 정당 로고 | 9회 ~30줄 중복 | PartyLogo 단일 컴포넌트 |
-| 페이지네이션 로직 | 4곳 ~25줄 중복 | useResponsivePagination 훅 |
-| 페이지네이션 UI | 4곳 ~30줄 중복 | TimelinePagination 컴포넌트 |
-| 컴포넌트 수 | Submitted + Promulgation 별도 | BillOutlineList variant 통합 |
-| 에러 처리 | Suspense/ErrorBoundary 없음 | ErrorBoundary + Skeleton |
-| 서비스 구조 | hooks/services 혼재 | 표준 3파일 분리 |
-| 버그 | 링크 참조 오류, key 버그 | 수정 완료 |
+| 영역              | Before                        | After                        |
+| ----------------- | ----------------------------- | ---------------------------- |
+| 데이터 흐름       | useState + useEffect 동기화   | useMemo 파생 계산            |
+| 정당 로고         | 9회 ~30줄 중복                | PartyLogo 단일 컴포넌트      |
+| 페이지네이션 로직 | 4곳 ~25줄 중복                | useResponsivePagination 훅   |
+| 페이지네이션 UI   | 4곳 ~30줄 중복                | TimelinePagination 컴포넌트  |
+| 컴포넌트 수       | Submitted + Promulgation 별도 | BillOutlineList variant 통합 |
+| 에러 처리         | Suspense/ErrorBoundary 없음   | ErrorBoundary + Skeleton     |
+| 서비스 구조       | hooks/services 혼재           | 표준 3파일 분리              |
+| 버그              | 링크 참조 오류, key 버그      | 수정 완료                    |

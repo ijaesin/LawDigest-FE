@@ -90,11 +90,7 @@ export default function Bill({
 
         <section className={!detail ? 'md:flex-1' : ''}>
           <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
-            <BillSummaryContent
-              gptSummary={gpt_summary}
-              summary={summary}
-              isCollapsed={!detail && !toggleMore}
-            />
+            <BillSummaryContent gptSummary={gpt_summary} summary={summary} isCollapsed={!detail && !toggleMore} />
             {!detail && !toggleMore && (
               <Button variant="link" onClick={onClickToggleMore} className="p-0 text-gray-2 dark:text-gray-3">
                 더 보기
@@ -136,8 +132,7 @@ export default function Bill({
       <BillProposerSection
         representativeProposerList={representative_proposer_dto_list}
         publicProposerList={public_proposer_dto_list}
-        detail={detail}
-      >
+        detail={detail}>
         {children}
       </BillProposerSection>
       <Separator className={`h-[10px] md:h-[1px] bg-gray-0.5 dark:bg-gray-4 ${detail ? 'hidden' : 'block'}`} />

@@ -40,7 +40,10 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                       <div className="flex flex-col gap-3">
                         {bill_outline_dto_list.map(({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                           <div key={bill_id} className="flex gap-[18px] items-center">
-                            <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
+                            <PartyLogo
+                              partyName={party_info[0].party_name}
+                              partyImageUrl={party_info[0].party_image_url}
+                            />
                             <div className="flex flex-col gap-1">
                               <Link href={`/bill/${bill_id}`}>
                                 <p className="text-xs font-bold">{bill_brief_summary}</p>
@@ -86,7 +89,10 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                         {item.bill_outline_dto_list.map(
                           ({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                             <div key={bill_id} className="flex gap-[18px] items-center">
-                              <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
+                              <PartyLogo
+                                partyName={party_info[0].party_name}
+                                partyImageUrl={party_info[0].party_image_url}
+                              />
                               <div className="flex flex-col gap-1">
                                 <Link href={`/bill/${bill_id}`}>
                                   <p className="text-xs font-bold">{bill_brief_summary}</p>
@@ -104,7 +110,10 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                       .slice(0, 5)
                       .map(({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                         <div key={bill_id} className="flex gap-[18px] items-center">
-                          <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
+                          <PartyLogo
+                            partyName={party_info[0].party_name}
+                            partyImageUrl={party_info[0].party_image_url}
+                          />
                           <div className="flex flex-col gap-1">
                             <Link href={`/bill/${bill_id}`}>
                               <p className="text-xs font-bold">{bill_brief_summary}</p>

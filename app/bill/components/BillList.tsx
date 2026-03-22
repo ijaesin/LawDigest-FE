@@ -21,7 +21,7 @@ export default function BillList({
   return (
     <section className="xl:w-[840px]">
       {bills.map((bill, index) => (
-        <Bill key={`${bill.bill_info_dto.bill_id}-${index}`} {...bill} detail={detail} />
+        <Bill key={`${bill.bill_info_dto.bill_id + index}`} {...bill} detail={detail} />
       ))}
       {feedType === 'sorted_by_latest' && isFetching && (
         <div className="flex justify-center my-4 w-full">

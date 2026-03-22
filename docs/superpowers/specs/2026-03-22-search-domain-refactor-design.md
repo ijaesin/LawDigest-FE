@@ -40,6 +40,7 @@ services/
 ### Area 2: 파생 상태 제거 (`search/[id]/page.tsx`)
 
 **현재:**
+
 ```tsx
 const [searchResultsCP, setSearchResultsCP] = useState(dataCP ? dataCP.search_response : []);
 const [searchResultsBill, setSearchResultsBill] = useState(...);
@@ -53,6 +54,7 @@ useEffect(() => { refetchCP(); refetchBill(); }, [dataCP, dataBill]); // 무한�
 ```
 
 **변경:**
+
 ```tsx
 const searchResultsCP = dataCP?.search_response ?? [];
 const searchResultsBill = useMemo(
@@ -108,6 +110,7 @@ export const useDeleteRecentKeyword = (options?) =>
 **현재:** 수동 `fixed` overlay + Zustand `show` 상태
 
 **변경:**
+
 - shadcn `Dialog` 컴포넌트 사용 (`DialogContent`, `DialogHeader`, `DialogTitle`)
 - Zustand `useSearchModalStore` 유지 — `open` 값을 Dialog의 `open` prop에 바인딩, `close`를 `onOpenChange`에 바인딩
 - 접근성 자동 확보: 포커스 트랩, ESC 닫기, aria 속성
@@ -117,12 +120,12 @@ export const useDeleteRecentKeyword = (options?) =>
 
 **현재:** 4개 도메인에 각각 별도 구현
 
-| 도메인 | 파일 | 인터페이스 |
-|--------|------|-----------|
-| timeline | `PartyLogo.tsx` | `partyInfo: PartyInfo`, `size`, `linkEnabled`, `className`, `style` |
-| congressman | `PartyLogo.tsx` | `party_id`, `party_name`, `party_image_url` (flat) |
-| party | `PartyLogo.tsx` | `party_name`, `party_img_url` (large hero) |
-| party | `PartyLogoReplacement.tsx` | `partyName`, `circle` (text fallback) |
+| 도메인      | 파일                       | 인터페이스                                                          |
+| ----------- | -------------------------- | ------------------------------------------------------------------- |
+| timeline    | `PartyLogo.tsx`            | `partyInfo: PartyInfo`, `size`, `linkEnabled`, `className`, `style` |
+| congressman | `PartyLogo.tsx`            | `party_id`, `party_name`, `party_image_url` (flat)                  |
+| party       | `PartyLogo.tsx`            | `party_name`, `party_img_url` (large hero)                          |
+| party       | `PartyLogoReplacement.tsx` | `partyName`, `circle` (text fallback)                               |
 
 **변경:** `app/common/components/PartyLogo.tsx` 신규 생성
 
@@ -131,8 +134,8 @@ interface PartyLogoProps {
   partyId?: number;
   partyName: string;
   partyImageUrl: string | null;
-  size?: 'sm' | 'md' | 'lg';       // sm: 28px, md: 54px, lg: 130px
-  linkEnabled?: boolean;             // default: false
+  size?: 'sm' | 'md' | 'lg'; // sm: 28px, md: 54px, lg: 130px
+  linkEnabled?: boolean; // default: false
   className?: string;
   style?: React.CSSProperties;
 }
@@ -144,6 +147,7 @@ interface PartyLogoProps {
 - `size` variant로 크기 관리 (숫자 `size` prop은 커스텀 용도로 별도 유지 가능)
 
 **교체 범위:**
+
 - timeline: `PartyLogo` → common 교체, 기존 삭제
 - congressman: `PartyLogo` → common 교체, 기존 삭제 (이미 변경 시 무시)
 - party: `PartyLogo` + `PartyLogoReplacement` → common 교체, 기존 삭제

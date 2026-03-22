@@ -24,9 +24,7 @@ function useRecentKeywords() {
     }
   }, [isAuthenticated]);
 
-  const keywords: string[] = isAuthenticated
-    ? (serverKeywords?.map((k) => k.search_word) ?? [])
-    : localKeywords;
+  const keywords: string[] = isAuthenticated ? (serverKeywords?.map((k) => k.search_word) ?? []) : localKeywords;
 
   const removeKeyword = (keyword: string) => {
     if (isAuthenticated) {

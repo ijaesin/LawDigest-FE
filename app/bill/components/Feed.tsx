@@ -39,12 +39,7 @@ export default function Feed() {
         <FeedTab value={feedType} onValueChange={handleFeedTypeChange} />
         {isLatest && <StageDropdown selectedStage={selectedStage} onStageChange={setSelectedStage} />}
       </section>
-      <BillList
-        bills={displayBills}
-        isFetching={isFetching}
-        fetchRef={fetchRef}
-        feedType={feedType}
-      />
+      <BillList bills={displayBills} isFetching={isFetching} fetchRef={fetchRef} feedType={feedType} />
     </section>
   );
 }

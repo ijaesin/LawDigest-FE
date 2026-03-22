@@ -44,14 +44,11 @@ apiClient.interceptors.request.use(
   },
 );
 
-apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    const payload = response.data;
-    // 공통 응답 래퍼({ status, code, message, data })를 사용하는 경우 내부 data만 반환
-    if (payload && typeof payload === 'object' && 'data' in payload) {
-      return (payload as ApiResponse).data;
-    }
-    return payload;
-  },
-  createAuthErrorHandler(apiClient),
-);
+apiClient.interceptors.response.use((response: AxiosResponse) => {
+  const payload = response.data;
+  // 공통 응답 래퍼({ status, code, message, data })를 사용하는 경우 내부 data만 반환
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return (payload as ApiResponse).data;
+  }
+  return payload;
+}, createAuthErrorHandler(apiClient));

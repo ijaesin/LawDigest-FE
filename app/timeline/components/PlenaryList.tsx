@@ -37,7 +37,10 @@ export default function PlenaryList({ plenary_list }: { plenary_list: PlenaryIte
                     <div key={bill_info.bill_id} className="flex flex-col gap-2">
                       <p className="text-lg font-bold">{bill_info.bill_name}</p>
                       <div className="flex gap-[18px] items-center">
-                        <PartyLogo partyName={bill_info.party_info[0].party_name} partyImageUrl={bill_info.party_info[0].party_image_url} />
+                        <PartyLogo
+                          partyName={bill_info.party_info[0].party_name}
+                          partyImageUrl={bill_info.party_info[0].party_image_url}
+                        />
                         <div className="flex flex-col gap-1">
                           <Link href={`/bill/${bill_info.bill_id}`}>
                             <p className="text-xs font-bold">{bill_info.bill_brief_summary}</p>

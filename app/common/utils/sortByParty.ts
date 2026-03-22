@@ -8,11 +8,7 @@ interface PartyGroup {
   proposers: string[][];
 }
 
-export default function sortByParty({
-  publicProposerList,
-}: {
-  publicProposerList: PublicProposer[];
-}): PartyGroup[] {
+export default function sortByParty({ publicProposerList }: { publicProposerList: PublicProposer[] }): PartyGroup[] {
   const partyMap = new Map<string, string[][]>();
 
   publicProposerList

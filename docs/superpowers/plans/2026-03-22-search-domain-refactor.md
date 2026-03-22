@@ -15,12 +15,14 @@
 ## File Structure
 
 ### 신규 생성
+
 - `app/common/components/PartyLogo.tsx` — 공통 PartyLogo 컴포넌트
 - `app/search/services/apis.ts` — API 호출 함수
 - `app/search/services/queries.ts` — React Query hooks
 - `app/search/services/query-keys.ts` — Query key factory
 
 ### 수정
+
 - `app/search/[id]/page.tsx` — 파생 상태 제거, mutation hook 적용
 - `app/search/components/SearchModal.tsx` — Dialog 전환, 서버 API 적용
 - `app/search/components/SearchBar.tsx` — prop drilling 제거, mutation hook 적용
@@ -42,6 +44,7 @@
 - `app/following/components/CongressmanItem.tsx` — PartyLogoReplacement → PartyLogo
 
 ### 삭제
+
 - `app/search/services/index.ts` — 3-file로 분리 후 삭제
 - `app/search/hooks/index.ts` — queries.ts로 이관 후 삭제
 - `app/timeline/components/PartyLogo.tsx` — common으로 이관
@@ -54,9 +57,11 @@
 ## Task 1: PartyLogo 공통 컴포넌트 생성
 
 **Files:**
+
 - Create: `app/common/components/PartyLogo.tsx`
 
 PartyLogo는 3가지 variant를 지원한다:
+
 - `badge`: 작은 원형 (timeline 카드, 28px 기본)
 - `wide`: 가로형 이미지 (의원 상세, 법안 카드 등)
 - `hero`: 큰 원형 (정당 상세, 130px)
@@ -86,23 +91,24 @@ interface PartyLogoProps {
   style?: React.CSSProperties;
 }
 
-const VARIANT_DEFAULTS: Record<PartyLogoVariant, { containerClass: string; imageWidth: number; imageHeight: number }> = {
-  badge: {
-    containerClass: 'flex items-center justify-center w-7 h-7 rounded-full shadow-lg shrink-0 border-1.5',
-    imageWidth: 22,
-    imageHeight: 22,
-  },
-  wide: {
-    containerClass: 'flex items-center',
-    imageWidth: 60,
-    imageHeight: 30,
-  },
-  hero: {
-    containerClass: 'flex items-center justify-center shadow-lg rounded-full w-[130px] h-[130px] border',
-    imageWidth: 100,
-    imageHeight: 45,
-  },
-};
+const VARIANT_DEFAULTS: Record<PartyLogoVariant, { containerClass: string; imageWidth: number; imageHeight: number }> =
+  {
+    badge: {
+      containerClass: 'flex items-center justify-center w-7 h-7 rounded-full shadow-lg shrink-0 border-1.5',
+      imageWidth: 22,
+      imageHeight: 22,
+    },
+    wide: {
+      containerClass: 'flex items-center',
+      imageWidth: 60,
+      imageHeight: 30,
+    },
+    hero: {
+      containerClass: 'flex items-center justify-center shadow-lg rounded-full w-[130px] h-[130px] border',
+      imageWidth: 100,
+      imageHeight: 45,
+    },
+  };
 
 export default function PartyLogo({
   partyName,
@@ -187,6 +193,7 @@ git commit -m "feat: PartyLogo 공통 컴포넌트 생성"
 ## Task 2: Timeline 도메인 PartyLogo 교체
 
 **Files:**
+
 - Modify: `app/timeline/components/PlenaryList.tsx:12` — import 변경
 - Modify: `app/timeline/components/CommitteeAuditList.tsx:10` — import 변경
 - Modify: `app/timeline/components/BillOutlineList.tsx:11` — import 변경
@@ -242,6 +249,7 @@ git commit -m "refactor: timeline PartyLogo를 공통 컴포넌트로 교체"
 ## Task 3: Congressman/Party/Bill/Following/User 도메인 PartyLogo 교체
 
 **Files:**
+
 - Modify: `app/congressman/components/CongressmanDetail.tsx` (이미 변경 시 무시)
 - Modify: `app/congressman/components/index.tsx` (이미 변경 시 무시)
 - Delete: `app/congressman/components/PartyLogo.tsx` (이미 변경 시 무시)
@@ -257,10 +265,11 @@ git commit -m "refactor: timeline PartyLogo를 공통 컴포넌트로 교체"
 - [ ] **Step 1: Congressman 도메인 (이미 변경 시 무시)**
 
 CongressmanDetail에서:
+
 ```tsx
 // Before
 import PartyLogo from './PartyLogo';
-<PartyLogo party_id={party_id} party_name={party_name} party_image_url={party_image_url} />
+<PartyLogo party_id={party_id} party_name={party_name} party_image_url={party_image_url} />;
 
 // After
 import PartyLogo from '@/app/common/components/PartyLogo';
@@ -272,7 +281,7 @@ import PartyLogo from '@/app/common/components/PartyLogo';
   imageWidth={64}
   imageHeight={30}
   linkEnabled
-/>
+/>;
 ```
 
 congressman의 PartyLogo.tsx 삭제, index.tsx에서 export 제거.
@@ -280,14 +289,15 @@ congressman의 PartyLogo.tsx 삭제, index.tsx에서 export 제거.
 - [ ] **Step 2: Party 도메인**
 
 PartyDetail에서:
+
 ```tsx
 // Before
 import PartyLogo from './PartyLogo';
-<PartyLogo party_name={party_name} party_img_url={party_img_url} />
+<PartyLogo party_name={party_name} party_img_url={party_img_url} />;
 
 // After
 import PartyLogo from '@/app/common/components/PartyLogo';
-<PartyLogo partyName={party_name} partyImageUrl={party_img_url} variant="hero" />
+<PartyLogo partyName={party_name} partyImageUrl={party_img_url} variant="hero" />;
 ```
 
 party의 `PartyLogo.tsx` 삭제. `PartyLogoReplacement.tsx`는 다른 도메인 교체 완료 후 삭제.
@@ -310,7 +320,7 @@ import PartyLogo from '@/app/common/components/PartyLogo';
   imageHeight={20}
   linkEnabled
   className="hidden xl:block"
-/>
+/>;
 ```
 
 기존 조건부 렌더링 블록(Image + PartyLogoReplacement) 전체를 PartyLogo 한 줄로 교체.
@@ -320,11 +330,11 @@ import PartyLogo from '@/app/common/components/PartyLogo';
 ```tsx
 // Before
 import { PartyLogoReplacement } from '@/app/party/components';
-<PartyLogoReplacement partyName={partyName} circle={false} />
+<PartyLogoReplacement partyName={partyName} circle={false} />;
 
 // After
 import PartyLogo from '@/app/common/components/PartyLogo';
-<PartyLogo partyName={partyName} partyImageUrl={null} variant="wide" />
+<PartyLogo partyName={partyName} partyImageUrl={null} variant="wide" />;
 ```
 
 Note: BillProposerSection은 partyImageUrl이 데이터에 없으므로 항상 null 전달.
@@ -332,6 +342,7 @@ Note: BillProposerSection은 partyImageUrl이 데이터에 없으므로 항상 n
 - [ ] **Step 5: Bill 도메인 — AnotherBill**
 
 단일 정당 케이스의 Image + PartyLogoReplacement를 교체:
+
 ```tsx
 // 단일 정당 케이스 (isRepresentativeSolo === true)
 // Before: 조건부 Image/PartyLogoReplacement
@@ -352,6 +363,7 @@ Note: BillProposerSection은 partyImageUrl이 데이터에 없으므로 항상 n
 - [ ] **Step 6: User 도메인 — BillBookmarked**
 
 단일 정당 케이스 교체:
+
 ```tsx
 // Before: Link + 조건부 Image/PartyLogoReplacement (href="#" 안티패턴 포함)
 // After:
@@ -391,6 +403,7 @@ git commit -m "refactor: 전 도메인 PartyLogo를 공통 컴포넌트로 교�
 ## Task 4: 서비스 레이어 3-file 분리
 
 **Files:**
+
 - Create: `app/search/services/apis.ts`
 - Create: `app/search/services/queries.ts`
 - Create: `app/search/services/query-keys.ts`
@@ -496,9 +509,7 @@ export const useGetRecentKeywords = (
     ...options,
   });
 
-export const usePostRecentKeyword = (
-  options?: Omit<UseMutationOptions<void, Error, string>, 'mutationFn'>,
-) => {
+export const usePostRecentKeyword = (options?: Omit<UseMutationOptions<void, Error, string>, 'mutationFn'>) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postRecentKeyword,
@@ -510,9 +521,7 @@ export const usePostRecentKeyword = (
   });
 };
 
-export const useDeleteRecentKeyword = (
-  options?: Omit<UseMutationOptions<void, Error, string>, 'mutationFn'>,
-) => {
+export const useDeleteRecentKeyword = (options?: Omit<UseMutationOptions<void, Error, string>, 'mutationFn'>) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteRecentKeyword,
@@ -548,6 +557,7 @@ git commit -m "refactor: search 서비스 레이어 3-file 분리"
 ## Task 5: 파생 상태 제거 (search/[id]/page.tsx)
 
 **Files:**
+
 - Modify: `app/search/[id]/page.tsx`
 
 - [ ] **Step 1: useState + useEffect 제거, useMemo로 교체**
@@ -597,6 +607,7 @@ git commit -m "refactor: search 결과 페이지 파생 상태 안티패턴 제�
 ## Task 6: SearchModal → shadcn Dialog 전환 + 최근 검색어 서버 API 적용
 
 **Files:**
+
 - Modify: `app/search/components/SearchModal.tsx`
 - Modify: `app/search/components/SearchBar.tsx`
 
@@ -684,6 +695,7 @@ export default function SearchBar() {
 ```
 
 주요 변경:
+
 - `setRecentKeywords` prop 제거
 - `useCallback` 제거 (불필요)
 - 인증/비인증 분기 최근검색어 저장
@@ -720,9 +732,7 @@ function useRecentKeywords() {
     }
   }, [isAuthenticated]);
 
-  const keywords: string[] = isAuthenticated
-    ? (serverKeywords?.map((k) => k.search_word) ?? [])
-    : localKeywords;
+  const keywords: string[] = isAuthenticated ? (serverKeywords?.map((k) => k.search_word) ?? []) : localKeywords;
 
   const removeKeyword = (keyword: string) => {
     if (isAuthenticated) {
@@ -802,6 +812,7 @@ export default function SearchModal() {
 ```
 
 주요 변경:
+
 - `useRecentKeywords` 커스텀 훅으로 인증/비인증 분기 추상화
 - shadcn `Dialog`로 전환 — 포커스 트랩, ESC, aria 자동 확보
 - `setRecentKeywords` prop drilling 완전 제거
@@ -825,6 +836,7 @@ git commit -m "refactor: SearchModal을 shadcn Dialog로 전환, 최근 검색�
 ## Task 7: 컴포넌트 정리
 
 **Files:**
+
 - Modify: `app/search/components/SearchBarButton.tsx`
 - Modify: `app/search/components/SearchParty.tsx`
 - Modify: `app/search/components/index.tsx`

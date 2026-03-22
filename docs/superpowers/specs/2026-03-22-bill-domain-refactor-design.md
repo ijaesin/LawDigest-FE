@@ -11,17 +11,17 @@
 
 ## 수정 대상 파일
 
-| 파일 | 변경 요약 |
-|------|-----------|
-| `app/bill/components/BillDetail.tsx` | useEffect 버그 수정, viewCount 로컬 상태 제거 |
-| `app/bill/services/queries.ts` | `as any` 4건 제거, viewCount mutation 캐시 갱신 |
-| `app/bill/components/HalfDonutChart.tsx` | D3 `null as any` 제거, rAF cleanup, tooltip 정리, useMemo 의존성 |
-| `app/bill/components/AnotherBill.tsx` | router.push → Link, 조건부 preventDefault 제거 |
-| `app/bill/components/ProposerList.tsx` | Zod 추론 타입 사용, ESLint suppress 제거, popover→variant |
-| `app/bill/components/VoteResultBoard.tsx` | `.sort()` → `.toSorted()` |
-| `app/bill/components/BillTab.tsx` | `as keyof typeof` 제거, 콜백 타입 개선 |
-| `app/bill/components/GPTSummary.tsx` | 불필요한 loader prop 제거 |
-| `app/bill/components/index.tsx` | 내부 전용 컴포넌트 배럴 export 제거 |
+| 파일                                      | 변경 요약                                                        |
+| ----------------------------------------- | ---------------------------------------------------------------- |
+| `app/bill/components/BillDetail.tsx`      | useEffect 버그 수정, viewCount 로컬 상태 제거                    |
+| `app/bill/services/queries.ts`            | `as any` 4건 제거, viewCount mutation 캐시 갱신                  |
+| `app/bill/components/HalfDonutChart.tsx`  | D3 `null as any` 제거, rAF cleanup, tooltip 정리, useMemo 의존성 |
+| `app/bill/components/AnotherBill.tsx`     | router.push → Link, 조건부 preventDefault 제거                   |
+| `app/bill/components/ProposerList.tsx`    | Zod 추론 타입 사용, ESLint suppress 제거, popover→variant        |
+| `app/bill/components/VoteResultBoard.tsx` | `.sort()` → `.toSorted()`                                        |
+| `app/bill/components/BillTab.tsx`         | `as keyof typeof` 제거, 콜백 타입 개선                           |
+| `app/bill/components/GPTSummary.tsx`      | 불필요한 loader prop 제거                                        |
+| `app/bill/components/index.tsx`           | 내부 전용 컴포넌트 배럴 export 제거                              |
 
 ---
 
@@ -163,18 +163,23 @@ export const useMutateViewCount = (
 D3 arc generator에 `DefaultArcObject`를 명시적으로 전달하여 `null as any` 3건을 모두 제거한다:
 
 **배경 아크 (L303):**
+
 ```tsx
 const backgroundArcPath = arc({
-  innerRadius, outerRadius,
-  startAngle: -Math.PI / 2, endAngle: Math.PI / 2,
+  innerRadius,
+  outerRadius,
+  startAngle: -Math.PI / 2,
+  endAngle: Math.PI / 2,
 });
 // JSX: <path d={backgroundArcPath ?? ''} ... />
 ```
 
 **진행 아크 (L307):**
+
 ```tsx
 const progressArcPath = progressArc({
-  innerRadius, outerRadius,
+  innerRadius,
+  outerRadius,
   startAngle: -Math.PI / 2,
   endAngle: (animatedValue / 100) * Math.PI - Math.PI / 2,
 });
@@ -182,18 +187,20 @@ const progressArcPath = progressArc({
 ```
 
 **정당별 서브 아크 (L240, partyArcs useMemo 내부):**
+
 ```tsx
-const arcPath = d3.arc()
+const arcPath = d3
+  .arc()
   .innerRadius(subInnerRadius)
   .outerRadius(subOuterRadius)
   .startAngle(adjustedStartAngle)
   .endAngle(finalEndAngle)
   .cornerRadius(cornerRadius / 2)({
-    innerRadius: subInnerRadius,
-    outerRadius: subOuterRadius,
-    startAngle: adjustedStartAngle,
-    endAngle: finalEndAngle,
-  });
+  innerRadius: subInnerRadius,
+  outerRadius: subOuterRadius,
+  startAngle: adjustedStartAngle,
+  endAngle: finalEndAngle,
+});
 ```
 
 ### 3-2. requestAnimationFrame cleanup
@@ -262,30 +269,30 @@ useEffect(() => {
 
 ```tsx
 // 다수 정당 — Avatar를 Link로 래핑
-{party.map(({ party_image_url, party_id, party_name }) =>
-  party_image_url !== null ? (
-    <Link href={`/party/${party_id}`} key={party_id}>
-      <Avatar className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>
+{
+  party.map(({ party_image_url, party_id, party_name }) =>
+    party_image_url !== null ? (
+      <Link href={`/party/${party_id}`} key={party_id}>
+        <Avatar className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>{/* ... */}</Avatar>
+      </Link>
+    ) : (
+      <Avatar key={party_id} className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>
         {/* ... */}
       </Avatar>
-    </Link>
-  ) : (
-    <Avatar key={party_id} className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>
-      {/* ... */}
-    </Avatar>
-  )
-)}
+    ),
+  );
+}
 
 // 단일 정당 — party_image_url null 시 Link 대신 div
-{party[0].party_image_url !== null ? (
-  <Link href={`/party/${party[0].party_id}`}>
-    {/* Image components */}
-  </Link>
-) : (
-  <div>
-    <PartyLogoReplacement partyName={party[0].party_name} circle={false} />
-  </div>
-)}
+{
+  party[0].party_image_url !== null ? (
+    <Link href={`/party/${party[0].party_id}`}>{/* Image components */}</Link>
+  ) : (
+    <div>
+      <PartyLogoReplacement partyName={party[0].party_name} circle={false} />
+    </div>
+  );
+}
 ```
 
 `useRouter` import 제거 가능 (더 이상 사용하지 않음).
@@ -326,10 +333,10 @@ interface ProposerListProps {
 
 ```tsx
 // Before
-party_vote_list.sort((a, b) => b.party_approval_count - a.party_approval_count)
+party_vote_list.sort((a, b) => b.party_approval_count - a.party_approval_count);
 
 // After
-party_vote_list.toSorted((a, b) => b.party_approval_count - a.party_approval_count)
+party_vote_list.toSorted((a, b) => b.party_approval_count - a.party_approval_count);
 ```
 
 ---
@@ -380,27 +387,27 @@ party_vote_list.toSorted((a, b) => b.party_approval_count - a.party_approval_cou
 
 ## 변경하지 않는 것
 
-| 대상 | 이유 |
-|------|------|
-| `bill.schema.ts` | 백엔드 계약 미확정, TODO 주석 존재 |
-| `ProcessResult.tsx` | switch-case 패턴 적절 |
-| `ProgressStage.tsx` | 현재 구조 적절 |
-| `BillContainer.tsx` / `SectionContainer.tsx` | thin wrapper로 적절 |
-| HalfDonutChart 반응형 | 디자인 변경 수반, 별도 작업 |
-| HalfDonutChart tooltip 재구현 | 기존 TODO 범위, 별도 작업 |
+| 대상                                         | 이유                               |
+| -------------------------------------------- | ---------------------------------- |
+| `bill.schema.ts`                             | 백엔드 계약 미확정, TODO 주석 존재 |
+| `ProcessResult.tsx`                          | switch-case 패턴 적절              |
+| `ProgressStage.tsx`                          | 현재 구조 적절                     |
+| `BillContainer.tsx` / `SectionContainer.tsx` | thin wrapper로 적절                |
+| HalfDonutChart 반응형                        | 디자인 변경 수반, 별도 작업        |
+| HalfDonutChart tooltip 재구현                | 기존 TODO 범위, 별도 작업          |
 
 ---
 
 ## 적용 규칙 매핑
 
-| 영역 | 적용 규칙 |
-|------|-----------|
-| 1 | `rerender-derived-state-no-effect`, `advanced-event-handler-refs` |
-| 2 | TypeScript strict, React Query v5 generics |
-| 3 | `rendering-animate-svg-wrapper`, cleanup 패턴, `rerender-dependencies` |
-| 4 | Next.js `<Link>` 우선, `patterns-explicit-variants` |
-| 5 | `architecture-avoid-boolean-props`, Zod type inference |
-| 6 | `js-tosorted-immutable` |
-| 7 | TypeScript strict, shadcn Tabs API |
-| 8 | Next.js Image optimization |
-| 9 | `bundle-barrel-imports` |
+| 영역 | 적용 규칙                                                              |
+| ---- | ---------------------------------------------------------------------- |
+| 1    | `rerender-derived-state-no-effect`, `advanced-event-handler-refs`      |
+| 2    | TypeScript strict, React Query v5 generics                             |
+| 3    | `rendering-animate-svg-wrapper`, cleanup 패턴, `rerender-dependencies` |
+| 4    | Next.js `<Link>` 우선, `patterns-explicit-variants`                    |
+| 5    | `architecture-avoid-boolean-props`, Zod type inference                 |
+| 6    | `js-tosorted-immutable`                                                |
+| 7    | TypeScript strict, shadcn Tabs API                                     |
+| 8    | Next.js Image optimization                                             |
+| 9    | `bundle-barrel-imports`                                                |

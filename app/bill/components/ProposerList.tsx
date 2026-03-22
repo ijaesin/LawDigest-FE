@@ -41,8 +41,8 @@ export default function ProposerList({
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-5 my-[18px]">
-          {proposerListByParty.map(({ party, proposers }: { party: string; proposers: string[][] }) => (
-            <div key={party} className="flex items-center gap-10">
+          {proposerListByParty.map(({ party, proposers }) => (
+            <div key={party} className="flex gap-10 items-center">
               <div className="relative">
                 <Link
                   href={`/party/${proposers[0][0]}`}
@@ -80,8 +80,8 @@ export default function ProposerList({
                     <Link href={`/congressman/${proposer[0]}`} key={proposer[0]} className="whitespace-nowrap">
                       {proposer[1].length === 2 ? (
                         <div className="flex justify-between">
-                          {proposer[1].split('').map((char, i) => (
-                            <p key={`${proposer[0]}-${i}`}>{char}</p>
+                          {proposer[1].split('').map((char) => (
+                            <p key={char}>{char}</p>
                           ))}
                         </div>
                       ) : (

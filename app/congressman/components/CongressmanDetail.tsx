@@ -52,7 +52,10 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
 
       <div className="flex gap-5 justify-between w-full">
         <Avatar className="w-[100px] h-[100px] border-1.5 shadow-lg shrink-0 rounded-full">
-          <AvatarImage src={process.env.NEXT_PUBLIC_IMAGE_URL + congressman_image_url} alt={`${congressman_name} 의원`} />
+          <AvatarImage
+            src={process.env.NEXT_PUBLIC_IMAGE_URL + congressman_image_url}
+            alt={`${congressman_name} 의원`}
+          />
           <AvatarFallback>{congressman_name[0]}</AvatarFallback>
         </Avatar>
 
@@ -114,9 +117,7 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
           <AccordionContent>
             <div className="flex flex-col gap-5 pt-4 h-full">
               <p className="text-sm font-medium whitespace-pre-line text-gray-3 dark:text-gray-2">
-                {brief_history
-                  ? decodeHtmlEntities(brief_history)
-                  : '해당 의원의 약력이 존재하지 않습니다.'}
+                {brief_history ? decodeHtmlEntities(brief_history) : '해당 의원의 약력이 존재하지 않습니다.'}
               </p>
 
               {homepage ? (
@@ -124,7 +125,11 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
                   asChild
                   variant="outline"
                   className="w-[135px] h-8 text-gray-2 mx-auto border-gray-1 dark:border-gray-2 dark:text-gray-3 rounded-full">
-                  <Link href={homepage} target="_blank" rel="noopener noreferrer" aria-label="홈페이지 방문 (새 창에서 열림)">
+                  <Link
+                    href={homepage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="홈페이지 방문 (새 창에서 열림)">
                     홈페이지 방문
                     <IconWeb />
                   </Link>

@@ -15,6 +15,7 @@
 ## 파일 구조
 
 ### 생성
+
 - `app/party/services/query-keys.ts` — 쿼리 키 팩토리
 - `app/party/services/queries.ts` — React Query 훅
 - `app/party/components/PartyErrorFallback.tsx` — 에러 fallback UI
@@ -23,6 +24,7 @@
 - `app/common/utils/getPartyConstant.ts` — 타입 안전 상수 조회 유틸
 
 ### 변경
+
 - `app/party/services/index.ts` → `app/party/services/apis.ts` (rename)
 - `app/party/hooks/index.ts` — re-export만 유지
 - `app/party/components/BillContainer.tsx` — 파생 상태 → useMemo
@@ -37,10 +39,12 @@
 - `app/common/utils/index.ts` — getPartyConstant export 추가
 
 ### 삭제
+
 - `app/party/components/PartyLogo.tsx`
 - `app/party/components/PartyLogoReplacement.tsx`
 
 ### 외부 import 업데이트
+
 - `app/search/components/SearchParty.tsx` (inline Image + PartyLogoReplacement → 통합 PartyLogo)
 - `app/congressman/components/PartyLogo.tsx` (PartyLogoReplacement import → 통합 PartyLogo)
 - `app/following/components/CongressmanItem.tsx`
@@ -55,6 +59,7 @@
 ## Task 1: 서비스 레이어 3파일 분리
 
 **Files:**
+
 - Create: `app/party/services/query-keys.ts`
 - Create: `app/party/services/queries.ts`
 - Rename: `app/party/services/index.ts` → `app/party/services/apis.ts`
@@ -214,6 +219,7 @@ export { partyKeys } from '@/app/party/services/query-keys';
 - [ ] **Step 5: page.tsx import 경로 변경**
 
 `app/party/[id]/page.tsx`에서:
+
 ```typescript
 // Before
 import { getPartyDetail } from '@/app/party/services';
@@ -229,6 +235,7 @@ import { partyKeys } from '@/app/party/services/query-keys';
 ```bash
 npm run typecheck
 ```
+
 Expected: 에러 없음
 
 - [ ] **Step 7: 커밋**
@@ -243,6 +250,7 @@ git commit -m "refactor: party 서비스 레이어 3파일 분리 (query-keys, a
 ## Task 2: 타입/상수 정리
 
 **Files:**
+
 - Create: `app/common/utils/getPartyConstant.ts`
 - Modify: `app/common/utils/index.ts`
 - Modify: `app/common/constants/theme.ts`
@@ -260,11 +268,7 @@ git commit -m "refactor: party 서비스 레이어 3파일 분리 (query-keys, a
  * 타입 안전한 정당 상수 조회.
  * `as keyof typeof` 단언 없이 런타임 키 검증 후 값을 반환한다.
  */
-export function getPartyConstant<T extends Record<string, string>>(
-  map: T,
-  key: string,
-  fallback = '',
-): string {
+export function getPartyConstant<T extends Record<string, string>>(map: T, key: string, fallback = ''): string {
   return key in map ? map[key as keyof T] : fallback;
 }
 ```
@@ -323,6 +327,7 @@ grep -r "import.*COLOR.*from.*theme" app/ --include="*.ts" --include="*.tsx"
 - [ ] **Step 5: party/constants/index.ts에서 간부 상수 + PARTY_COLOR 제거**
 
 제거 대상:
+
 - `PARTY_LEADER`
 - `PARTY_FLOOR_LEADER`
 - `PARTY_SECRETARY_GENERAL`
@@ -330,6 +335,7 @@ grep -r "import.*COLOR.*from.*theme" app/ --include="*.ts" --include="*.tsx"
 - `PARTY_COLOR`
 
 유지 대상:
+
 - `PARTY_NAME_EN`
 - `PARTY_NAME_KO`
 - `PARTY_POSITION`
@@ -353,11 +359,11 @@ if (Number.isNaN(partyId)) notFound();
 
 ```typescript
 // Before
-PARTY_POSITION[detail.party_name as keyof typeof PARTY_NAME_KO]
+PARTY_POSITION[detail.party_name as keyof typeof PARTY_NAME_KO];
 
 // After
 import { getPartyConstant } from '@/app/common/utils';
-getPartyConstant(PARTY_POSITION, detail.party_name)
+getPartyConstant(PARTY_POSITION, detail.party_name);
 ```
 
 - [ ] **Step 8: 빌드 확인**
@@ -378,6 +384,7 @@ git commit -m "refactor: PARTY_COLOR common 통합, 간부 상수 제거, getPar
 ## Task 3: BillContainer 파생 상태 제거
 
 **Files:**
+
 - Modify: `app/party/components/BillContainer.tsx`
 
 - [ ] **Step 1: useState + useEffect → useMemo 변환**
@@ -426,6 +433,7 @@ export default function BillContainer({ id }: { id: number }) {
 ```
 
 변경 요약:
+
 - `useState(bills)` + 2개 `useEffect` → `useMemo` 1줄
 - `refetch()` 수동 호출 제거
 - props `id` 유지 (Task 7에서 PartyContainer와 함께 `partyId`로 일괄 변경)
@@ -448,6 +456,7 @@ git commit -m "refactor: BillContainer 파생 상태 안티패턴 제거, useMem
 ## Task 4: FollowBoard optimistic update with rollback
 
 **Files:**
+
 - Modify: `app/party/services/queries.ts` (useMutatePartyFollow)
 - Modify: `app/party/components/FollowBoard.tsx`
 
@@ -547,6 +556,7 @@ export default function FollowBoard({ partyId }: { partyId: number }) {
 ```
 
 변경 요약:
+
 - `useState(followed)`, `useState(follow_count)` 제거
 - `useGetPartyDetail(partyId)`에서 직접 읽기
 - props: `partyId: number`만 받음
@@ -588,6 +598,7 @@ git commit -m "refactor: FollowBoard optimistic update with rollback, React Quer
 ## Task 5: PartyLogo 통합 + common 이동
 
 **Files:**
+
 - Create: `app/common/components/PartyLogo.tsx`
 - Delete: `app/party/components/PartyLogo.tsx`
 - Delete: `app/party/components/PartyLogoReplacement.tsx`
@@ -603,6 +614,7 @@ git commit -m "refactor: FollowBoard optimistic update with rollback, React Quer
 - [ ] **Step 1: 통합 PartyLogo 컴포넌트 생성**
 
 `variant` prop으로 기존 `circle` prop의 두 가지 모드를 대체:
+
 - `'badge'` (default): 원형 컨테이너 안에 이미지 또는 텍스트 (기존 PartyLogo + `circle={true}` PartyLogoReplacement)
 - `'text'`: 텍스트만 표시, 컨테이너 없음 (기존 `circle={false}` PartyLogoReplacement)
 
@@ -732,10 +744,12 @@ import PartyLogo from '@/app/common/components/PartyLogo';
 - [ ] **Step 5: 외부 소비자 import 업데이트**
 
 각 파일을 읽고 현재 사용 패턴을 확인한 후 변경. `circle` prop → `variant` + `size` 매핑:
+
 - `circle={true}` → `variant="badge" size="sm"` (또는 `size="sm"`, badge가 기본값)
 - `circle={false}` → `variant="text"`
 
 **`circle={true}` 소비자 (badge variant):**
+
 ```typescript
 // app/search/components/SearchParty.tsx — circle={true} fallback + inline Image
 // Before: inline Image 로직 + <PartyLogoReplacement partyName={name} circle />
@@ -748,6 +762,7 @@ import PartyLogo from '@/app/common/components/PartyLogo';
 ```
 
 **`circle={false}` 소비자 (text variant):**
+
 ```typescript
 // Before (공통 패턴)
 import { PartyLogoReplacement } from '@/app/party/components';
@@ -759,6 +774,7 @@ import PartyLogo from '@/app/common/components/PartyLogo';
 ```
 
 대상 파일:
+
 - `app/following/components/CongressmanItem.tsx` — `circle={false}` → `variant="text"`
 - `app/bill/components/BillProposerSection.tsx` — `circle={false}` → `variant="text"`
 - `app/bill/components/AnotherBill.tsx` — `circle={false}` → `variant="text"`
@@ -784,6 +800,7 @@ git commit -m "refactor: PartyLogo + PartyLogoReplacement 통합, common 이동"
 ## Task 6: PartyDetail 간부 정보 API 전환
 
 **Files:**
+
 - Modify: `app/party/components/PartyDetail.tsx`
 
 - [ ] **Step 1: PartyDetail 리팩토링**
@@ -877,6 +894,7 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
 ```
 
 변경 요약:
+
 - 간부 상수 import 제거 → `useGetPartyExecutive` API 사용
 - `as keyof typeof` 단언 → `getPartyConstant` 유틸
 - `FollowBoard` props 단순화 (Task 4에서 완료)
@@ -900,6 +918,7 @@ git commit -m "refactor: PartyDetail 간부 정보 API 전환, 타입 단언 제
 ## Task 7: 에러 바운더리 + 컴포넌트 정리
 
 **Files:**
+
 - Create: `app/party/components/PartyErrorFallback.tsx`
 - Create: `app/party/components/PartySkeleton.tsx`
 - Modify: `app/party/[id]/page.tsx`
@@ -971,6 +990,7 @@ const onClickButton = useCallback(() => {
 ```
 
 또한 key 수정:
+
 ```typescript
 // Before
 key={`${congressman.congressman_id + index}`}

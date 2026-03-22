@@ -46,9 +46,7 @@ export default function ListContainer() {
                 </div>
                 <div className="flex flex-col gap-5">
                   {plenary_list.length > 0 && <PlenaryList plenary_list={plenary_list} />}
-                  {promulgation_list.length > 0 && (
-                    <BillOutlineList variant="promulgation" bills={promulgation_list} />
-                  )}
+                  {promulgation_list.length > 0 && <BillOutlineList variant="promulgation" bills={promulgation_list} />}
                   {committee_audit_list.length > 0 && (
                     <CommitteeAuditList committee_audit_list={committee_audit_list} />
                   )}

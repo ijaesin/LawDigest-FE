@@ -16,33 +16,34 @@
 
 ### 수정 대상 파일
 
-| 파일 | 책임 | 변경 내용 |
-|------|------|-----------|
-| `app/common/lib/api.ts` | Axios 인스턴스 + 인터셉터 | `as any` 제거, 누락 return, structuredClone, non-null assertion |
-| `app/common/validation/api.schema.ts` | API 에러 추출 | `as any` → `isAxiosError` |
-| `app/common/utils/sortByParty.ts` | 정당별 발의자 그룹핑 | 타입 명시, 변수명 수정, Array.of 제거 |
-| `app/common/store/snackbar.ts` | Zustand snackbar 스토어 | `action` 필드 추가 |
-| `app/common/components/Snackbar/Snackbar.tsx` | 스낵바 UI | 하드코딩 메시지 → action 기반 렌더링 |
-| `app/common/components/Button/NotifcationButton.tsx` | 알림 버튼 | 조건부 훅 → enabled 옵션, ESLint suppress 제거 |
-| `app/common/utils/getTimeRemaining.ts` | 상대 시간 표시 | nested ternary → early return, ESLint suppress 제거 |
-| `app/common/components/Button/GoToTopButton.tsx` | 맨 위로 버튼 | passive 스크롤 리스너 |
-| `app/common/lib/auth-events.ts` | 인증 이벤트 버스 | 모듈 스코프 변수, ESLint suppress 제거 |
+| 파일                                                 | 책임                      | 변경 내용                                                       |
+| ---------------------------------------------------- | ------------------------- | --------------------------------------------------------------- |
+| `app/common/lib/api.ts`                              | Axios 인스턴스 + 인터셉터 | `as any` 제거, 누락 return, structuredClone, non-null assertion |
+| `app/common/validation/api.schema.ts`                | API 에러 추출             | `as any` → `isAxiosError`                                       |
+| `app/common/utils/sortByParty.ts`                    | 정당별 발의자 그룹핑      | 타입 명시, 변수명 수정, Array.of 제거                           |
+| `app/common/store/snackbar.ts`                       | Zustand snackbar 스토어   | `action` 필드 추가                                              |
+| `app/common/components/Snackbar/Snackbar.tsx`        | 스낵바 UI                 | 하드코딩 메시지 → action 기반 렌더링                            |
+| `app/common/components/Button/NotifcationButton.tsx` | 알림 버튼                 | 조건부 훅 → enabled 옵션, ESLint suppress 제거                  |
+| `app/common/utils/getTimeRemaining.ts`               | 상대 시간 표시            | nested ternary → early return, ESLint suppress 제거             |
+| `app/common/components/Button/GoToTopButton.tsx`     | 맨 위로 버튼              | passive 스크롤 리스너                                           |
+| `app/common/lib/auth-events.ts`                      | 인증 이벤트 버스          | 모듈 스코프 변수, ESLint suppress 제거                          |
 
 ### 영향 받는 소비자 파일 (action 마이그레이션)
 
-| 파일 | action 추가 | 이유 |
-|------|------------|------|
-| `app/bill/components/Bill.tsx` | 필요 | snackbar만 표시 |
-| `app/party/components/FollowBoard.tsx` | 필요 | snackbar만 표시 |
-| `app/congressman/components/FollowBoard.tsx` | 필요 | snackbar만 표시 |
-| `app/following/page.tsx` | 불필요 | router.push로 직접 이동 |
-| `app/user/mypage/MyPageContent.tsx` | 불필요 | router.push로 직접 이동 |
+| 파일                                         | action 추가 | 이유                    |
+| -------------------------------------------- | ----------- | ----------------------- |
+| `app/bill/components/Bill.tsx`               | 필요        | snackbar만 표시         |
+| `app/party/components/FollowBoard.tsx`       | 필요        | snackbar만 표시         |
+| `app/congressman/components/FollowBoard.tsx` | 필요        | snackbar만 표시         |
+| `app/following/page.tsx`                     | 불필요      | router.push로 직접 이동 |
+| `app/user/mypage/MyPageContent.tsx`          | 불필요      | router.push로 직접 이동 |
 
 ---
 
 ## Task 1: api.ts `as any` 제거 + 누락 return + structuredClone
 
 **Files:**
+
 - Modify: `app/common/lib/api.ts`
 
 **배경:** 응답 인터셉터에서 `as any`, request 에러 인터셉터에서 `return` 누락, token reissue에서 lodash `cloneDeep` 사용.
@@ -141,6 +142,7 @@ git commit -m "fix: api 인터셉터 as any 제거, 누락된 return 추가, lod
 ## Task 2: api.schema.ts `as any` → isAxiosError
 
 **Files:**
+
 - Modify: `app/common/validation/api.schema.ts`
 
 - [ ] **Step 1: extractApiMessage 수정**
@@ -183,6 +185,7 @@ git commit -m "refactor: extractApiMessage as any 제거, isAxiosError 타입 �
 ## Task 3: sortByParty.ts 타입 안전성 + 가독성
 
 **Files:**
+
 - Modify: `app/common/utils/sortByParty.ts`
 
 **배경:** `any` 타입, forEach 파라미터 이름 혼동, 불필요한 `Array.of`, 반환 타입 미지정.
@@ -200,11 +203,7 @@ interface PartyGroup {
   proposers: string[][];
 }
 
-export default function sortByParty({
-  publicProposerList,
-}: {
-  publicProposerList: PublicProposer[];
-}): PartyGroup[] {
+export default function sortByParty({ publicProposerList }: { publicProposerList: PublicProposer[] }): PartyGroup[] {
   const partyMap = new Map<string, string[][]>();
 
   publicProposerList
@@ -235,6 +234,7 @@ export default function sortByParty({
 ```
 
 주요 변경:
+
 - `any` → `PartyGroup[]` 타입 명시
 - `Map.forEach` 파라미터 이름 올바르게 수정 (`proposers`, `party`)
 - `Array.of` 제거 → `existing.push()` 직접 사용
@@ -259,6 +259,7 @@ git commit -m "refactor: sortByParty 타입 안전성 개선, any 제거, forEac
 ## Task 4: Snackbar action 필드 추가 + 소비자 마이그레이션
 
 **Files:**
+
 - Modify: `app/common/store/snackbar.ts`
 - Modify: `app/common/components/Snackbar/Snackbar.tsx`
 - Modify: `app/bill/components/Bill.tsx` (또는 BillCardFooter.tsx — 선행 리팩토링에 따라)
@@ -305,22 +306,26 @@ setSnackbar: (next) =>
 
 ```tsx
 // Before (L47-51)
-{message === '로그인이 필요한 서비스입니다.' && (
-  <Link href="/auth/login" className="mr-2">
-    <p className="text-xs font-medium text-white underline lg:text-sm">로그인 하기</p>
-  </Link>
-)}
+{
+  message === '로그인이 필요한 서비스입니다.' && (
+    <Link href="/auth/login" className="mr-2">
+      <p className="text-xs font-medium text-white underline lg:text-sm">로그인 하기</p>
+    </Link>
+  );
+}
 
 // After
 const action = useSnackbarStore((s) => s.action);
 // ... (기존 selector 아래에 추가)
 
 // JSX:
-{action && (
-  <Link href={action.href} className="mr-2">
-    <p className="text-xs font-medium text-white underline lg:text-sm">{action.label}</p>
-  </Link>
-)}
+{
+  action && (
+    <Link href={action.href} className="mr-2">
+      <p className="text-xs font-medium text-white underline lg:text-sm">{action.label}</p>
+    </Link>
+  );
+}
 ```
 
 - [ ] **Step 3: 소비자 파일에 action 추가 — Bill.tsx (또는 BillCardFooter.tsx)**
@@ -360,6 +365,7 @@ git commit -m "feat: Snackbar에 구조화된 action 필드 추가, 하드코딩
 ## Task 5: NotificationButton Rules of Hooks 수정
 
 **Files:**
+
 - Modify: `app/common/components/Button/NotifcationButton.tsx`
 
 **배경:** 조건부 early return 이후에 `useGetNotificationCount` 호출 — Rules of Hooks 위반. ESLint suppress로 무시 중.
@@ -415,9 +421,7 @@ export default function NotificationButton() {
     <Link href="/notification">
       <div className="relative">
         <IconNotification />
-        {hasNotification && (
-          <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
-        )}
+        {hasNotification && <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />}
       </div>
     </Link>
   );
@@ -425,6 +429,7 @@ export default function NotificationButton() {
 ```
 
 주요 변경:
+
 - 훅을 컴포넌트 최상단에서 무조건 호출, `enabled: !!accessToken`으로 비인증 시 fetch 방지
 - ESLint suppress 2건 제거 (`react-hooks/rules-of-hooks`, `jsx-a11y/anchor-is-valid`)
 - `Link href="#"` → `Button` 컴포넌트
@@ -433,6 +438,7 @@ export default function NotificationButton() {
 - [ ] **Step 3: useGetNotificationCount가 enabled를 지원하지 않는 경우**
 
 `useSuspenseQuery`를 사용하는 경우 `enabled` 미지원. 이 경우:
+
 - `useQuery`로 전환하거나
 - 래퍼 훅에서 `enabled` 옵션을 passthrough하도록 수정
 
@@ -453,6 +459,7 @@ git commit -m "fix: NotificationButton 조건부 훅 호출 제거 (Rules of Hoo
 ## Task 6: getTimeRemaining, GoToTopButton, auth-events 소규모 개선
 
 **Files:**
+
 - Modify: `app/common/utils/getTimeRemaining.ts`
 - Modify: `app/common/components/Button/GoToTopButton.tsx`
 - Modify: `app/common/lib/auth-events.ts`
@@ -542,22 +549,22 @@ git commit -m "refactor: getTimeRemaining early return, GoToTopButton passive �
 
 ## 적용 규칙 매핑
 
-| Task | 적용 규칙 |
-|------|-----------|
+| Task   | 적용 규칙                                                                       |
+| ------ | ------------------------------------------------------------------------------- |
 | Task 1 | TypeScript strict, `return` 누락 수정, `bundle-defer-third-party` (lodash 제거) |
-| Task 2 | TypeScript strict, Axios 타입 가드 |
-| Task 3 | TypeScript strict, `js-tosorted-immutable`, 타입 일관성 |
-| Task 4 | `patterns-explicit-variants`, 데이터 기반 렌더링 |
-| Task 5 | Rules of Hooks, `architecture-avoid-boolean-props` |
-| Task 6 | `client-passive-event-listeners`, ESLint suppress 제거, 가독성 |
+| Task 2 | TypeScript strict, Axios 타입 가드                                              |
+| Task 3 | TypeScript strict, `js-tosorted-immutable`, 타입 일관성                         |
+| Task 4 | `patterns-explicit-variants`, 데이터 기반 렌더링                                |
+| Task 5 | Rules of Hooks, `architecture-avoid-boolean-props`                              |
+| Task 6 | `client-passive-event-listeners`, ESLint suppress 제거, 가독성                  |
 
 ## 요약 — 개선 효과
 
-| 영역 | Before | After |
-|------|--------|-------|
-| **타입 안전성** | `as any` 3건 (api.ts, api.schema.ts, sortByParty) | 0건 |
-| **React 규칙** | Rules of Hooks 위반 1건 | 위반 없음 |
-| **ESLint suppress** | 6건 | 0건 |
-| **코드 품질** | lodash 의존, 하드코딩 메시지 비교, nested ternary | structuredClone, 구조화된 action, early return |
-| **성능** | scroll non-passive | passive 리스너 |
-| **버그** | request interceptor 에러 무시 | 에러 정상 전파 |
+| 영역                | Before                                            | After                                          |
+| ------------------- | ------------------------------------------------- | ---------------------------------------------- |
+| **타입 안전성**     | `as any` 3건 (api.ts, api.schema.ts, sortByParty) | 0건                                            |
+| **React 규칙**      | Rules of Hooks 위반 1건                           | 위반 없음                                      |
+| **ESLint suppress** | 6건                                               | 0건                                            |
+| **코드 품질**       | lodash 의존, 하드코딩 메시지 비교, nested ternary | structuredClone, 구조화된 action, early return |
+| **성능**            | scroll non-passive                                | passive 리스너                                 |
+| **버그**            | request interceptor 에러 무시                     | 에러 정상 전파                                 |

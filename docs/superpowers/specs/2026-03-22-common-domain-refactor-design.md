@@ -11,17 +11,17 @@
 
 ## 수정 대상 파일
 
-| 파일 | 변경 요약 |
-|------|-----------|
-| `app/common/components/Button/NotifcationButton.tsx` | 조건부 훅 호출 제거 (Rules of Hooks) |
-| `app/common/utils/sortByParty.ts` | 타입 안전성, 변수 이름 수정, `Array.of` 제거 |
-| `app/common/lib/api.ts` | `as any` 제거, 누락 return, lodash→spread |
-| `app/common/validation/api.schema.ts` | `as any` → `isAxiosError` 타입 가드 |
-| `app/common/components/Snackbar/Snackbar.tsx` | 하드코딩 메시지 비교 → 구조화된 action |
-| `app/common/store/snackbar.ts` | action 필드 추가 |
-| `app/common/utils/getTimeRemaining.ts` | nested ternary → early return, ESLint suppress 제거 |
-| `app/common/components/Button/GoToTopButton.tsx` | passive 스크롤 리스너 |
-| `app/common/lib/auth-events.ts` | ESLint suppress 제거, Symbol 기반 전역 키 |
+| 파일                                                 | 변경 요약                                           |
+| ---------------------------------------------------- | --------------------------------------------------- |
+| `app/common/components/Button/NotifcationButton.tsx` | 조건부 훅 호출 제거 (Rules of Hooks)                |
+| `app/common/utils/sortByParty.ts`                    | 타입 안전성, 변수 이름 수정, `Array.of` 제거        |
+| `app/common/lib/api.ts`                              | `as any` 제거, 누락 return, lodash→spread           |
+| `app/common/validation/api.schema.ts`                | `as any` → `isAxiosError` 타입 가드                 |
+| `app/common/components/Snackbar/Snackbar.tsx`        | 하드코딩 메시지 비교 → 구조화된 action              |
+| `app/common/store/snackbar.ts`                       | action 필드 추가                                    |
+| `app/common/utils/getTimeRemaining.ts`               | nested ternary → early return, ESLint suppress 제거 |
+| `app/common/components/Button/GoToTopButton.tsx`     | passive 스크롤 리스너                               |
+| `app/common/lib/auth-events.ts`                      | ESLint suppress 제거, Symbol 기반 전역 키           |
 
 ---
 
@@ -45,6 +45,7 @@ React의 Rules of Hooks를 위반: 조건부 early return 이후에 훅을 호�
 ### 설계
 
 `useGetNotificationCount`가 `enabled` 옵션을 지원하는지 확인 후:
+
 - `enabled: !!accessToken` 옵션으로 비인증 시 fetch를 방지
 - 훅을 컴포넌트 최상단에서 무조건 호출
 - ESLint suppress 제거
@@ -83,9 +84,7 @@ export default function NotificationButton() {
     <Link href="/notification">
       <div className="relative">
         <IconNotification />
-        {hasNotification && (
-          <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
-        )}
+        {hasNotification && <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />}
       </div>
     </Link>
   );
@@ -101,9 +100,10 @@ export default function NotificationButton() {
 ### 현재 문제
 
 ```tsx
-const newProposerList: any = [];           // L14: 타입 없음
-Array.of([proposerId, proposerName]);      // L24: 불필요한 래퍼
-map.forEach((key, value) => {              // L36: 파라미터 이름 반대
+const newProposerList: any = []; // L14: 타입 없음
+Array.of([proposerId, proposerName]); // L24: 불필요한 래퍼
+map.forEach((key, value) => {
+  // L36: 파라미터 이름 반대
   newProposerList.push({ party: value, proposers: key });
 });
 ```
@@ -123,11 +123,7 @@ interface PartyGroup {
   proposers: string[][];
 }
 
-export default function sortByParty({
-  publicProposerList,
-}: {
-  publicProposerList: PublicProposer[];
-}): PartyGroup[] {
+export default function sortByParty({ publicProposerList }: { publicProposerList: PublicProposer[] }): PartyGroup[] {
   const partyMap = new Map<string, string[][]>();
 
   publicProposerList
@@ -158,6 +154,7 @@ export default function sortByParty({
 ```
 
 변경:
+
 - `any` → `PartyGroup[]` 타입 명시
 - `Map.forEach` 파라미터 이름 수정 (`proposers`, `party`)
 - `Array.of` 제거 → `existing.push()` 직접 사용
@@ -258,9 +255,9 @@ export function extractApiMessage(error: unknown, fallback = '요청에 실패�
 
 ```tsx
 // Snackbar.tsx L47
-{message === '로그인이 필요한 서비스입니다.' && (
-  <Link href="/auth/login">...로그인 하기...</Link>
-)}
+{
+  message === '로그인이 필요한 서비스입니다.' && <Link href="/auth/login">...로그인 하기...</Link>;
+}
 ```
 
 ### 설계
@@ -282,23 +279,25 @@ Snackbar 컴포넌트에서 action 사용:
 
 ```tsx
 // Snackbar.tsx
-{action && (
-  <Link href={action.href} className="mr-2">
-    <p className="text-xs font-medium text-white underline lg:text-sm">{action.label}</p>
-  </Link>
-)}
+{
+  action && (
+    <Link href={action.href} className="mr-2">
+      <p className="text-xs font-medium text-white underline lg:text-sm">{action.label}</p>
+    </Link>
+  );
+}
 ```
 
 기존 호출처 마이그레이션:
 
-| 파일 | action 추가 여부 | 이유 |
-|------|-----------------|------|
-| `app/common/components/Button/NotifcationButton.tsx` | 추가 | snackbar만 표시 |
-| `app/bill/components/Bill.tsx` | 추가 | snackbar만 표시 |
-| `app/party/components/FollowBoard.tsx` | 추가 | snackbar만 표시 |
-| `app/congressman/components/FollowBoard.tsx` | 추가 | snackbar만 표시 |
-| `app/following/page.tsx` | 불필요 | `router.push('/auth/login')` 직접 호출 |
-| `app/user/mypage/MyPageContent.tsx` | 불필요 | `router.push('/auth/login')` 직접 호출 |
+| 파일                                                 | action 추가 여부 | 이유                                   |
+| ---------------------------------------------------- | ---------------- | -------------------------------------- |
+| `app/common/components/Button/NotifcationButton.tsx` | 추가             | snackbar만 표시                        |
+| `app/bill/components/Bill.tsx`                       | 추가             | snackbar만 표시                        |
+| `app/party/components/FollowBoard.tsx`               | 추가             | snackbar만 표시                        |
+| `app/congressman/components/FollowBoard.tsx`         | 추가             | snackbar만 표시                        |
+| `app/following/page.tsx`                             | 불필요           | `router.push('/auth/login')` 직접 호출 |
+| `app/user/mypage/MyPageContent.tsx`                  | 불필요           | `router.push('/auth/login')` 직접 호출 |
 
 **구현 순서:** Area 5 (store 변경)를 Area 1 (NotificationButton) 이전에 구현해야 TypeScript 에러 방지.
 
@@ -321,6 +320,7 @@ export default function getTimeRemaining(time: string): string {
 ```
 
 변경:
+
 - `time.replace('T', ' ')` → `new Date(time)` 직접 파싱
 - nested ternary → early return
 - ESLint suppress 2건 제거
@@ -380,10 +380,10 @@ ESLint suppress, global declare, underscore dangle 모두 제거. 모듈 스코�
 
 ## 변경하지 않는 것
 
-| 대상 | 이유 |
-|------|------|
-| `useIntersect.ts` / `useTabType.ts` | main-feed-refactor 커버 |
-| Header.tsx boolean props 구조 | 아키텍처 변경 필요, 별도 작업 |
-| Nav.tsx / Header.tsx active 로직 중복 | desktop/mobile 구현이 다름 |
-| `snackbar.ts` `show: next.show ?? true` | 현재 패턴에서 정상 |
-| `getMetadata.ts` title 새니타이제이션 | Next.js metadata API가 자동 이스케이프 |
+| 대상                                    | 이유                                   |
+| --------------------------------------- | -------------------------------------- |
+| `useIntersect.ts` / `useTabType.ts`     | main-feed-refactor 커버                |
+| Header.tsx boolean props 구조           | 아키텍처 변경 필요, 별도 작업          |
+| Nav.tsx / Header.tsx active 로직 중복   | desktop/mobile 구현이 다름             |
+| `snackbar.ts` `show: next.show ?? true` | 현재 패턴에서 정상                     |
+| `getMetadata.ts` title 새니타이제이션   | Next.js metadata API가 자동 이스케이프 |

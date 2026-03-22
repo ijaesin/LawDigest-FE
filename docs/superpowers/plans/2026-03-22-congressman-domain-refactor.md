@@ -16,35 +16,36 @@
 
 ### 신규 생성
 
-| 파일 | 역할 |
-| --- | --- |
-| `app/congressman/services/query-keys.ts` | Query key 팩토리 |
-| `app/congressman/services/apis.ts` | API 호출 (기존 `services/index.ts` rename) |
-| `app/congressman/services/queries.ts` | React Query 훅 (기존 `hooks/index.ts`에서 이동) |
-| `app/common/utils/decodeHtmlEntities.ts` | HTML entity 디코딩 유틸 |
-| `app/congressman/components/CongressmanDetailSkeleton.tsx` | 스켈레톤 UI |
-| `tests/congressman/services/apis.test.ts` | API 함수 테스트 |
-| `tests/congressman/components/FollowBoard.test.tsx` | FollowBoard 테스트 |
+| 파일                                                       | 역할                                            |
+| ---------------------------------------------------------- | ----------------------------------------------- |
+| `app/congressman/services/query-keys.ts`                   | Query key 팩토리                                |
+| `app/congressman/services/apis.ts`                         | API 호출 (기존 `services/index.ts` rename)      |
+| `app/congressman/services/queries.ts`                      | React Query 훅 (기존 `hooks/index.ts`에서 이동) |
+| `app/common/utils/decodeHtmlEntities.ts`                   | HTML entity 디코딩 유틸                         |
+| `app/congressman/components/CongressmanDetailSkeleton.tsx` | 스켈레톤 UI                                     |
+| `tests/congressman/services/apis.test.ts`                  | API 함수 테스트                                 |
+| `tests/congressman/components/FollowBoard.test.tsx`        | FollowBoard 테스트                              |
 
 ### 수정
 
-| 파일 | 변경 요약 |
-| --- | --- |
-| `app/congressman/hooks/index.ts` | re-export only |
-| `app/congressman/services/index.ts` | 삭제 (apis.ts로 대체) |
-| `app/congressman/components/BillContainer.tsx` | `useMemo`, 타입 캐스트 제거, 상수화 |
-| `app/congressman/components/FollowBoard.tsx` | rollback, 접근성 |
-| `app/congressman/components/CongressmanDetail.tsx` | HTML entity, homepage, 접근성 |
-| `app/congressman/components/PartyLogo.tsx` | falsy guard, 다크모드 URL 변수 |
-| `app/congressman/components/index.tsx` | 배럴 정리 |
-| `app/congressman/[id]/page.tsx` | Suspense + ErrorBoundary |
-| `app/common/utils/index.ts` | `decodeHtmlEntities` export 추가 |
+| 파일                                               | 변경 요약                           |
+| -------------------------------------------------- | ----------------------------------- |
+| `app/congressman/hooks/index.ts`                   | re-export only                      |
+| `app/congressman/services/index.ts`                | 삭제 (apis.ts로 대체)               |
+| `app/congressman/components/BillContainer.tsx`     | `useMemo`, 타입 캐스트 제거, 상수화 |
+| `app/congressman/components/FollowBoard.tsx`       | rollback, 접근성                    |
+| `app/congressman/components/CongressmanDetail.tsx` | HTML entity, homepage, 접근성       |
+| `app/congressman/components/PartyLogo.tsx`         | falsy guard, 다크모드 URL 변수      |
+| `app/congressman/components/index.tsx`             | 배럴 정리                           |
+| `app/congressman/[id]/page.tsx`                    | Suspense + ErrorBoundary            |
+| `app/common/utils/index.ts`                        | `decodeHtmlEntities` export 추가    |
 
 ---
 
 ### Task 1: 서비스 레이어 3파일 분리
 
 **Files:**
+
 - Create: `app/congressman/services/query-keys.ts`
 - Create: `app/congressman/services/apis.ts`
 - Create: `app/congressman/services/queries.ts`
@@ -145,16 +146,20 @@ export {
 - [ ] **Step 5: import 경로 확인 및 업데이트**
 
 `app/congressman/[id]/page.tsx`에서:
+
 - `congressmanKeys` import: `@/app/congressman/hooks` -> `@/app/congressman/services/query-keys`
 - `getCongressmanDetail` import: `@/app/congressman/services` -> `@/app/congressman/services/apis`
 
 `app/congressman/components/BillContainer.tsx`에서:
+
 - `useInfiniteCongressmanBills` import: 기존 `@/app/congressman/hooks` 유지 (re-export)
 
 `app/congressman/components/CongressmanDetail.tsx`에서:
+
 - `useGetCongressmanDetail` import: `@/app/congressman/services` -> `@/app/congressman/services/queries`로 변경
 
 `app/congressman/components/FollowBoard.tsx`에서:
+
 - `useMutateCongressmanFollow` import: `@/app/congressman/services` -> `@/app/congressman/services/queries`로 변경
 
 - [ ] **Step 6: 빌드 확인**
@@ -177,6 +182,7 @@ git commit -m "refactor: congressman 서비스 레이어 3파일 분리 (query-k
 ### Task 2: BillContainer 파생 상태 안티패턴 제거
 
 **Files:**
+
 - Modify: `app/congressman/components/BillContainer.tsx`
 
 - [ ] **Step 1: `useState + useEffect` -> `useMemo`로 변환**
@@ -215,6 +221,7 @@ export default function BillContainer({ id }: { id: string }) {
 ```
 
 변경 요약:
+
 - `useState`, `useEffect` import 제거, `useMemo` 추가
 - `bills` 로컬 상태 -> `useMemo` 파생
 - `billType` 변경 시 수동 `refetch()` 제거 (queryKey에 billType 포함)
@@ -228,6 +235,7 @@ npm run typecheck
 ```
 
 `useTabType`이 제네릭을 지원하여 `billType`이 `ValueOf<typeof BILL_TAB>`으로 추론되는지 확인. 또한 `BillTab`의 `clickHandler` prop 타입이 `setBillType`과 호환되는지 확인. `BillTab.clickHandler`가 `(value: string) => void`를 기대하면 타입 불일치가 발생할 수 있으므로, 필요 시 어댑터 함수 사용:
+
 ```ts
 // 타입 불일치 시:
 <BillTab type={billType} clickHandler={(value: string) => setBillType(value as ValueOf<typeof BILL_TAB>)} />
@@ -245,6 +253,7 @@ git commit -m "refactor: BillContainer useState+useEffect -> useMemo 파생 상�
 ### Task 3: FollowBoard Optimistic Update Rollback + 접근성
 
 **Files:**
+
 - Modify: `app/congressman/components/FollowBoard.tsx`
 
 - [ ] **Step 1: FollowBoard 리팩터링**
@@ -340,6 +349,7 @@ export default function FollowBoard({
 ```
 
 변경 요약:
+
 - `mutate()` 인라인 `onError`로 stale closure 방지 롤백 구현
 - `!isFollowed` 중복 -> `nextFollowed` 로컬 변수
 - `<div>` -> `<dl>/<dt>/<dd>` 시맨틱 마크업
@@ -372,6 +382,7 @@ git commit -m "fix: FollowBoard optimistic update rollback 구현 + 접근성 �
 ### Task 4: CongressmanDetail — HTML Entity + Homepage + 접근성
 
 **Files:**
+
 - Create: `app/common/utils/decodeHtmlEntities.ts`
 - Modify: `app/common/utils/index.ts`
 - Modify: `app/congressman/components/CongressmanDetail.tsx`
@@ -399,12 +410,22 @@ export default function decodeHtmlEntities(html: string): string {
 import decodeHtmlEntities from './decodeHtmlEntities';
 // ... 기존 imports
 
-export { getTimeRemaining, copyClipBoard, sortByParty, getMetadata, getDateStatus, getDDay, convertDateFormat, decodeHtmlEntities };
+export {
+  getTimeRemaining,
+  copyClipBoard,
+  sortByParty,
+  getMetadata,
+  getDateStatus,
+  getDDay,
+  convertDateFormat,
+  decodeHtmlEntities,
+};
 ```
 
 - [ ] **Step 3: CongressmanDetail.tsx 수정**
 
 주요 변경:
+
 1. `brief_history` 수동 replaceAll -> `decodeHtmlEntities()` 호출
 2. homepage 빈 문자열 시 버튼 미렌더링 + `target="_blank"` + `rel="noopener noreferrer"` + `aria-label`
 3. Avatar에 `alt` prop 추가
@@ -471,6 +492,7 @@ git commit -m "refactor: CongressmanDetail HTML entity 안전 처리, homepage �
 ### Task 5: PartyLogo 내부 정리
 
 **Files:**
+
 - Modify: `app/congressman/components/PartyLogo.tsx`
 
 - [ ] **Step 1: PartyLogo 수정**
@@ -517,6 +539,7 @@ export default function PartyLogo({
 ```
 
 변경:
+
 - `!== null` -> falsy 체크 (`!party_image_url`)로 빈 문자열도 처리
 - fallback 시 빈 href `<Link>` 제거 (PartyLogoReplacement만 렌더링)
 - 다크모드 URL을 `darkImageUrl` 변수로 추출
@@ -539,6 +562,7 @@ git commit -m "fix: PartyLogo falsy guard 강화, 빈 href Link 제거"
 ### Task 6: page.tsx — Suspense + ErrorBoundary + Skeleton
 
 **Files:**
+
 - Create: `app/congressman/components/CongressmanDetailSkeleton.tsx`
 - Modify: `app/congressman/[id]/page.tsx`
 
@@ -657,6 +681,7 @@ git commit -m "feat: congressman 페이지 Suspense/ErrorBoundary 추가, 스켈
 ### Task 7: 배럴 파일 정리
 
 **Files:**
+
 - Modify: `app/congressman/components/index.tsx`
 
 - [ ] **Step 1: 외부 사용 컴포넌트만 export**
@@ -693,6 +718,7 @@ git commit -m "refactor: congressman 배럴 파일 정리, 내부 전용 컴포�
 ### Task 8: 테스트 — API 함수 + FollowBoard
 
 **Files:**
+
 - Create: `tests/congressman/services/apis.test.ts`
 - Create: `tests/congressman/components/FollowBoard.test.tsx`
 
@@ -766,9 +792,7 @@ export const congressmanHandlers = [
 // tests/msw/handlers.ts
 import { congressmanHandlers } from './congressman-handlers';
 
-export const handlers = [
-  ...congressmanHandlers,
-];
+export const handlers = [...congressmanHandlers];
 ```
 
 **Note:** API 함수 테스트가 동작하려면 `apiClient`의 Axios 인터셉터가 활성화되어야 하며, `NEXT_PUBLIC_URL` 환경변수가 필요하다. `.env.test` 파일에 `NEXT_PUBLIC_URL=http://localhost:3000`을 설정하거나, vitest.config.ts의 `define` 옵션으로 주입한다.
@@ -929,6 +953,7 @@ grep -r "from '@/app/congressman/components/PartyLogo\|from '@/app/congressman/c
 ```
 
 다른 에이전트가 이미 common PartyLogo를 추출했는지 확인:
+
 ```bash
 ls app/common/components/PartyLogo.tsx 2>/dev/null && echo "EXISTS" || echo "NOT_EXISTS"
 ```
@@ -939,6 +964,7 @@ ls app/common/components/PartyLogo.tsx 2>/dev/null && echo "EXISTS" || echo "NOT
 - [ ] **Step 4: 최종 커밋 (필요시)**
 
 PartyLogo 변경이 있었을 경우에만:
+
 ```bash
 git add app/congressman/components/PartyLogo.tsx app/congressman/components/CongressmanDetail.tsx
 git commit -m "refactor: congressman PartyLogo를 common 공유 컴포넌트로 전환"

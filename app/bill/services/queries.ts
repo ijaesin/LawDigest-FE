@@ -120,30 +120,27 @@ export const useMutateBookmark = (billId: string) => {
 
       const previousData = qc.getQueriesData<InfiniteData<Feed>>({ queryKey: billKeys.root() });
 
-      qc.setQueriesData<InfiniteData<Feed>>(
-        { queryKey: billKeys.root() },
-        (old) => {
-          if (!old?.pages) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page) => ({
-              ...page,
-              bill_list: page.bill_list.map((bill) =>
-                bill.bill_info_dto.bill_id === billId
-                  ? {
-                      ...bill,
-                      is_book_mark: likeChecked,
-                      bill_info_dto: {
-                        ...bill.bill_info_dto,
-                        bill_like_count: bill.bill_info_dto.bill_like_count + (likeChecked ? 1 : -1),
-                      },
-                    }
-                  : bill,
-              ),
-            })),
-          };
-        },
-      );
+      qc.setQueriesData<InfiniteData<Feed>>({ queryKey: billKeys.root() }, (old) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            bill_list: page.bill_list.map((bill) =>
+              bill.bill_info_dto.bill_id === billId
+                ? {
+                    ...bill,
+                    is_book_mark: likeChecked,
+                    bill_info_dto: {
+                      ...bill.bill_info_dto,
+                      bill_like_count: bill.bill_info_dto.bill_like_count + (likeChecked ? 1 : -1),
+                    },
+                  }
+                : bill,
+            ),
+          })),
+        };
+      });
 
       const previousDetail = qc.getQueryData<BillDetail>(billKeys.detail(billId));
       qc.setQueryData<BillDetail>(billKeys.detail(billId), (old) => {

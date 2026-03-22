@@ -40,9 +40,7 @@ export default async function Congressman({ params }: { params: Promise<{ id: st
     <HydrationBoundary state={dehydrate(queryClient)}>
       <section className="flex flex-col gap-10">
         <SubHeader title="의원 프로필" />
-        <ErrorBoundary
-          fallback={<p className="text-center py-10 text-gray-2">의원 정보를 불러올 수 없습니다.</p>}
-        >
+        <ErrorBoundary fallback={<p className="text-center py-10 text-gray-2">의원 정보를 불러올 수 없습니다.</p>}>
           <Suspense fallback={<CongressmanDetailSkeleton />}>
             <CongressmanContainer id={id} />
           </Suspense>

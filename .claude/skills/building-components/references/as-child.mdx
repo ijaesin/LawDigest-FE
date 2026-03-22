@@ -131,7 +131,7 @@ Traditional composition often creates deeply nested DOM structures. `asChild` el
 `asChild` enables seamless integration with your existing design system components:
 
 ```tsx
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 <DropdownMenu.Trigger asChild>
   <Button variant="outline" size="icon">
@@ -250,7 +250,7 @@ Verify that custom components work correctly with `asChild`:
 ```tsx
 // Test that props are properly forwarded
 const TestButton = (props) => {
-  console.log("Received props:", props);
+  console.log('Received props:', props);
   return <button {...props} />;
 };
 
@@ -265,13 +265,7 @@ Consider edge cases like conditional rendering:
 
 ```tsx
 // Handle conditional children
-<Dialog.Trigger asChild>
-  {isLoading ? (
-    <Skeleton className="h-10 w-20" />
-  ) : (
-    <Button>Open Dialog</Button>
-  )}
-</Dialog.Trigger>
+<Dialog.Trigger asChild>{isLoading ? <Skeleton className="h-10 w-20" /> : <Button>Open Dialog</Button>}</Dialog.Trigger>
 ```
 
 ## Common Pitfalls
@@ -285,9 +279,7 @@ As discussed in [Types](/docs/types), you should always spread props to the unde
 const BadButton = ({ children }) => <button>{children}</button>;
 
 // ✅ Properly receives all props
-const GoodButton = ({ children, ...props }) => (
-  <button {...props}>{children}</button>
-);
+const GoodButton = ({ children, ...props }) => <button {...props}>{children}</button>;
 ```
 
 ### Multiple Children

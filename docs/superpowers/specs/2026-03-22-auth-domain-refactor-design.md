@@ -11,14 +11,14 @@
 
 ## 현재 문제점
 
-| 영역 | 문제 | 위치 |
-|------|------|------|
-| 인증 가드 불일치 | 서버(`cookies()` + `redirect`)와 클라이언트(`getCookie` + `useEffect` + `router.push`) 패턴 혼재, 동일 코드 반복 | `mypage/page.tsx`, `following/page.tsx`, `MyPageContent.tsx` 등 |
-| 로그아웃 로직 분산 | API 호출은 `user/services`, mutation 훅은 `user/hooks`, cookie 삭제는 `LogoutButton`, 이벤트는 `providers.tsx`에 분산 | 4개 파일에 걸쳐 분산 |
-| 회원 탈퇴 패턴 불일치 | `useDeleteWithdraw`의 `onSuccess`/`onError`가 단순 passthrough, cookie 삭제가 컴포넌트에 위치 | `auth/hooks`, `WithdrawModal.tsx` |
-| API 인터셉터 결합 | `api.ts`에 401 처리, cookie 삭제, auth 이벤트 발행 등 auth 도메인 로직이 결합 | `common/lib/api.ts` |
-| 인증 필요 UI 중복 | `getCookie` + 스낵바 + 리다이렉트 패턴이 5곳에서 반복 | `Bill.tsx`, `FollowBoard.tsx`(2곳), `NotificationButton.tsx`, `MyPageContent.tsx` |
-| Providers 책임 과다 | QueryClient, ThemeProvider, auth 이벤트 리스너가 한 컴포넌트에 혼재 | `providers.tsx` |
+| 영역                  | 문제                                                                                                                  | 위치                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 인증 가드 불일치      | 서버(`cookies()` + `redirect`)와 클라이언트(`getCookie` + `useEffect` + `router.push`) 패턴 혼재, 동일 코드 반복      | `mypage/page.tsx`, `following/page.tsx`, `MyPageContent.tsx` 등                   |
+| 로그아웃 로직 분산    | API 호출은 `user/services`, mutation 훅은 `user/hooks`, cookie 삭제는 `LogoutButton`, 이벤트는 `providers.tsx`에 분산 | 4개 파일에 걸쳐 분산                                                              |
+| 회원 탈퇴 패턴 불일치 | `useDeleteWithdraw`의 `onSuccess`/`onError`가 단순 passthrough, cookie 삭제가 컴포넌트에 위치                         | `auth/hooks`, `WithdrawModal.tsx`                                                 |
+| API 인터셉터 결합     | `api.ts`에 401 처리, cookie 삭제, auth 이벤트 발행 등 auth 도메인 로직이 결합                                         | `common/lib/api.ts`                                                               |
+| 인증 필요 UI 중복     | `getCookie` + 스낵바 + 리다이렉트 패턴이 5곳에서 반복                                                                 | `Bill.tsx`, `FollowBoard.tsx`(2곳), `NotificationButton.tsx`, `MyPageContent.tsx` |
+| Providers 책임 과다   | QueryClient, ThemeProvider, auth 이벤트 리스너가 한 컴포넌트에 혼재                                                   | `providers.tsx`                                                                   |
 
 ---
 
@@ -43,6 +43,7 @@ export async function requireAuth(): Promise<string> {
 ```
 
 **사용처 변경:**
+
 - `app/user/mypage/page.tsx`: 인라인 쿠키 체크 → `await requireAuth()`
 - `app/following/page.tsx`: 인라인 쿠키 체크 → `await requireAuth()`
 
@@ -78,6 +79,7 @@ export function useAuthGuard() {
 ```
 
 **사용처 변경 (5곳):**
+
 - `app/bill/components/Bill.tsx`: `getCookie` + 스낵바 → `useAuthGuard().requireLogin()`
 - `app/party/components/FollowBoard.tsx`: 동일 패턴 교체
 - `app/congressman/components/FollowBoard.tsx`: 동일 패턴 교체
@@ -91,6 +93,7 @@ export function useAuthGuard() {
 **배경:** `postLogout` API와 `usePostLogout` 훅은 인증 lifecycle 로직이므로 auth 도메인에 속해야 한다. 현재 `user/services`와 `user/hooks`에 위치하여 도메인 경계가 불분명하다.
 
 **변경:**
+
 - `postLogout` 함수 → `app/auth/services/index.ts`로 이동
 - `usePostLogout` 훅 → `app/auth/hooks/index.ts`로 이동
 - `usePostLogout`의 `onSuccess`에 `deleteCookie(ACCESS_TOKEN)` 내장 (현재 `LogoutButton`에 분산)
@@ -100,6 +103,7 @@ export function useAuthGuard() {
 **동작 변경 사항:** 기존 `usePostLogout`은 caller의 `onSuccess`를 무시하고 내부 로직만 실행했다. 개선 후에는 내부 cleanup 후 caller의 `onSuccess`를 정상 호출한다.
 
 **`usePostLogout` 개선 후:**
+
 ```tsx
 export const usePostLogout = (options?: UseMutationOptions<void, Error, void, unknown>) => {
   const queryClient = useQueryClient();
@@ -126,10 +130,12 @@ export const usePostLogout = (options?: UseMutationOptions<void, Error, void, un
 **배경:** `useDeleteWithdraw`의 `onSuccess`/`onError`가 options passthrough만 하여 의미 없음. cookie 삭제가 `WithdrawModal` 컴포넌트에 위치.
 
 **변경:**
+
 - `useDeleteWithdraw`의 `onSuccess`에 `deleteCookie(ACCESS_TOKEN)` + `queryClient.removeQueries()` 내장
 - `WithdrawModal`에서 `deleteCookie` 호출 제거
 
 **`useDeleteWithdraw` 개선 후:**
+
 ```tsx
 export const useDeleteWithdraw = (options?: UseMutationOptions<void, Error, void, unknown>) => {
   const queryClient = useQueryClient();
@@ -227,42 +233,42 @@ export function AuthEventListener() {
 
 ### 신규 파일
 
-| 파일 | 책임 |
-|------|------|
-| `app/auth/lib/require-auth.ts` | 서버 컴포넌트 인증 가드 유틸 |
-| `app/auth/hooks/useAuthGuard.ts` | 클라이언트 인증 체크 훅 |
-| `app/auth/lib/token-reissue.ts` | 401 인터셉터 핸들러 |
-| `app/auth/components/AuthEventListener.tsx` | auth 이벤트 리스너 컴포넌트 |
+| 파일                                        | 책임                         |
+| ------------------------------------------- | ---------------------------- |
+| `app/auth/lib/require-auth.ts`              | 서버 컴포넌트 인증 가드 유틸 |
+| `app/auth/hooks/useAuthGuard.ts`            | 클라이언트 인증 체크 훅      |
+| `app/auth/lib/token-reissue.ts`             | 401 인터셉터 핸들러          |
+| `app/auth/components/AuthEventListener.tsx` | auth 이벤트 리스너 컴포넌트  |
 
 ### 수정 파일
 
-| 파일 | 변경 내용 |
-|------|-----------|
-| `app/auth/services/index.ts` | `postLogout` 추가 |
-| `app/auth/hooks/index.ts` | `usePostLogout`, `useAuthGuard` 추가, `useDeleteWithdraw` 개선 |
-| `app/common/lib/api.ts` | 인라인 401 핸들러 → `createAuthErrorHandler` 사용 |
-| `app/providers.tsx` | auth 이벤트 제거, `AuthEventListener` 래핑 |
-| `app/user/mypage/page.tsx` | 인라인 가드 → `requireAuth()` |
-| `app/following/page.tsx` | 인라인 가드 → `requireAuth()` |
-| `app/user/services/index.ts` | `postLogout` 제거, auth에서 re-export |
-| `app/user/hooks/index.ts` | `usePostLogout` 제거, auth에서 re-export |
-| `app/user/components/LogoutButton.tsx` | `deleteCookie` 제거 |
-| `app/auth/components/WithdrawModal.tsx` | `deleteCookie` 제거 |
-| `app/bill/components/Bill.tsx` | `getCookie` + 스낵바 → `useAuthGuard()` |
-| `app/party/components/FollowBoard.tsx` | `getCookie` + 스낵바 → `useAuthGuard()` |
-| `app/congressman/components/FollowBoard.tsx` | `getCookie` + 스낵바 → `useAuthGuard()` |
-| `app/common/components/Button/NotifcationButton.tsx` | `getCookie` → `useAuthGuard()` |
-| `app/user/mypage/MyPageContent.tsx` | `useEffect` 인증 체크 → `useAuthGuard()` |
+| 파일                                                 | 변경 내용                                                      |
+| ---------------------------------------------------- | -------------------------------------------------------------- |
+| `app/auth/services/index.ts`                         | `postLogout` 추가                                              |
+| `app/auth/hooks/index.ts`                            | `usePostLogout`, `useAuthGuard` 추가, `useDeleteWithdraw` 개선 |
+| `app/common/lib/api.ts`                              | 인라인 401 핸들러 → `createAuthErrorHandler` 사용              |
+| `app/providers.tsx`                                  | auth 이벤트 제거, `AuthEventListener` 래핑                     |
+| `app/user/mypage/page.tsx`                           | 인라인 가드 → `requireAuth()`                                  |
+| `app/following/page.tsx`                             | 인라인 가드 → `requireAuth()`                                  |
+| `app/user/services/index.ts`                         | `postLogout` 제거, auth에서 re-export                          |
+| `app/user/hooks/index.ts`                            | `usePostLogout` 제거, auth에서 re-export                       |
+| `app/user/components/LogoutButton.tsx`               | `deleteCookie` 제거                                            |
+| `app/auth/components/WithdrawModal.tsx`              | `deleteCookie` 제거                                            |
+| `app/bill/components/Bill.tsx`                       | `getCookie` + 스낵바 → `useAuthGuard()`                        |
+| `app/party/components/FollowBoard.tsx`               | `getCookie` + 스낵바 → `useAuthGuard()`                        |
+| `app/congressman/components/FollowBoard.tsx`         | `getCookie` + 스낵바 → `useAuthGuard()`                        |
+| `app/common/components/Button/NotifcationButton.tsx` | `getCookie` → `useAuthGuard()`                                 |
+| `app/user/mypage/MyPageContent.tsx`                  | `useEffect` 인증 체크 → `useAuthGuard()`                       |
 
 ---
 
 ## 개선 효과 요약
 
-| 영역 | Before | After |
-|------|--------|-------|
-| 서버 가드 | 2곳에서 동일 코드 반복 | `requireAuth()` 단일 유틸 |
-| 클라이언트 인증 체크 | 5곳에서 `getCookie` + 스낚바 반복 | `useAuthGuard()` 단일 훅 |
-| 로그아웃 | API, 훅, cookie 삭제가 3개 도메인에 분산 | auth 도메인에 응집 |
-| 회원 탈퇴 | cookie 삭제가 컴포넌트에 위치 | mutation 훅에 내장 |
-| API 인터셉터 | auth 로직이 `api.ts`에 결합 | auth 모듈로 분리 |
-| Providers | 3가지 관심사 혼재 | 각각 독립 컴포넌트 |
+| 영역                 | Before                                   | After                     |
+| -------------------- | ---------------------------------------- | ------------------------- |
+| 서버 가드            | 2곳에서 동일 코드 반복                   | `requireAuth()` 단일 유틸 |
+| 클라이언트 인증 체크 | 5곳에서 `getCookie` + 스낚바 반복        | `useAuthGuard()` 단일 훅  |
+| 로그아웃             | API, 훅, cookie 삭제가 3개 도메인에 분산 | auth 도메인에 응집        |
+| 회원 탈퇴            | cookie 삭제가 컴포넌트에 위치            | mutation 훅에 내장        |
+| API 인터셉터         | auth 로직이 `api.ts`에 결합              | auth 모듈로 분리          |
+| Providers            | 3가지 관심사 혼재                        | 각각 독립 컴포넌트        |

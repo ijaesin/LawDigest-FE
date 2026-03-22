@@ -91,12 +91,14 @@ Key env vars: `NEXT_PUBLIC_URL` (API base), `NEXT_PUBLIC_IMAGE_URL`, `NEXT_PUBLI
 프로젝트에 포함된 로컬 스킬 파일들. 해당 작업 시 `.agents/skills/{name}/SKILL.md`를 읽고 지침을 따를 것.
 
 ### UI/컴포넌트
+
 - **shadcn** — shadcn/ui 컴포넌트 추가, 스타일링, 디버깅 시
 - **building-components** — 새 컴포넌트 설계, 접근성, composable API 구현 시
 - **web-design-guidelines** — UI 리뷰, 접근성 점검, UX 감사 시
 - **before-and-after** — UI 변경 전후 스크린샷 비교 시
 
 ### Next.js
+
 - **next-best-practices** — Next.js 코드 작성/리뷰 시 (RSC, 데이터 패턴, 메타데이터, 에러 처리 등)
 - **next-cache-components** — PPR, use cache, cacheLife, cacheTag 등 캐시 관련 작업 시
 - **next-upgrade** — Next.js 버전 업그레이드 시
@@ -104,6 +106,7 @@ Key env vars: `NEXT_PUBLIC_URL` (API base), `NEXT_PUBLIC_IMAGE_URL`, `NEXT_PUBLI
 - **vercel-composition-patterns** — 컴포넌트 합성 패턴, 코드 구조 개선 시
 
 ### SEO
+
 - **seo-audit** — SEO 감사, 기술 SEO 진단, 랭킹/트래픽 이슈 시
 - **programmatic-seo** — 템플릿 기반 대량 페이지 생성, 키워드/지역 타겟 페이지 시
 - **audit-website** — 사이트 전반 감사 (SEO, 성능, 보안, 접근성 등 230+ 규칙)

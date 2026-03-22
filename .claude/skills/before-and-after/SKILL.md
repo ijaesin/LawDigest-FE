@@ -24,10 +24,12 @@ allowed-tools:
 ## Agent Behavior Rules
 
 **DO NOT:**
+
 - Switch git branches, stash changes, start dev servers, or assume what "before" is
 - Use `--full` unless user explicitly asks for full page / full scroll capture
 
 **DO:**
+
 - Use `--markdown` when user wants PR integration or markdown output
 - Use `--mobile` / `--tablet` if user mentions phone, mobile, tablet, responsive, etc.
 - Assume current state is **After**
@@ -67,15 +69,15 @@ before-and-after before.png after.png --markdown
 npx @vercel/before-and-after url1 url2
 ```
 
-| Flag | Description |
-|------|-------------|
-| `-m, --mobile` | Mobile viewport (375x812) |
-| `-t, --tablet` | Tablet viewport (768x1024) |
-| `--size <WxH>` | Custom viewport |
-| `-f, --full` | Full scrollable page |
-| `-s, --selector` | CSS selector to capture |
-| `-o, --output` | Output directory (default: ~/Downloads) |
-| `--markdown` | Upload images & output markdown table |
+| Flag                 | Description                              |
+| -------------------- | ---------------------------------------- |
+| `-m, --mobile`       | Mobile viewport (375x812)                |
+| `-t, --tablet`       | Tablet viewport (768x1024)               |
+| `--size <WxH>`       | Custom viewport                          |
+| `-f, --full`         | Full scrollable page                     |
+| `-s, --selector`     | CSS selector to capture                  |
+| `-o, --output`       | Output directory (default: ~/Downloads)  |
+| `--markdown`         | Upload images & output markdown table    |
 | `--upload-url <url>` | Custom upload endpoint (default: 0x0.st) |
 
 ## Image Upload
@@ -116,9 +118,9 @@ If no `gh` CLI: output markdown and tell user to paste manually.
 
 ## Error Reference
 
-| Error | Fix |
-|-------|-----|
-| `command not found` | `npm install -g @vercel/before-and-after` |
+| Error                            | Fix                                            |
+| -------------------------------- | ---------------------------------------------- |
+| `command not found`              | `npm install -g @vercel/before-and-after`      |
 | `could not determine executable` | Use `npx @vercel/before-and-after` (full name) |
-| 401/403 on .vercel.app | See Vercel protection section |
-| Element not found | Verify selector exists on page |
+| 401/403 on .vercel.app           | See Vercel protection section                  |
+| Element not found                | Verify selector exists on page                 |

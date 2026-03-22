@@ -16,44 +16,44 @@
 
 ### 수정 대상 파일
 
-| 파일 | 책임 | 변경 내용 |
-|------|------|-----------|
-| `app/timeline/hooks/index.ts` | 훅 re-export | 전체 교체 → services re-export only |
-| `app/timeline/components/ListContainer.tsx` | 피드 오케스트레이터 | useState+useEffect → useMemo, convertDateFormat 최적화 |
-| `app/timeline/components/TimelineModal.tsx` | 모달 래퍼 | title prop 추가, onOpenChange 패턴 정렬 |
-| `app/timeline/components/TimelineBoard.tsx` | 통계 헤더 | optional chaining 개선 |
-| `app/timeline/components/PlenaryList.tsx` | 본회의 심사 | 공유 컴포넌트 사용으로 축소 |
-| `app/timeline/components/CommitteeAuditList.tsx` | 위원회 심사 | 공유 컴포넌트 사용, 멀티모달 버그 수정 |
-| `app/timeline/components/index.tsx` | 배럴 파일 | 신규 컴포넌트 추가, 삭제된 컴포넌트 제거 |
-| `app/timeline/page.tsx` | 페이지 엔트리 | Suspense + ErrorBoundary 추가 |
+| 파일                                             | 책임                | 변경 내용                                              |
+| ------------------------------------------------ | ------------------- | ------------------------------------------------------ |
+| `app/timeline/hooks/index.ts`                    | 훅 re-export        | 전체 교체 → services re-export only                    |
+| `app/timeline/components/ListContainer.tsx`      | 피드 오케스트레이터 | useState+useEffect → useMemo, convertDateFormat 최적화 |
+| `app/timeline/components/TimelineModal.tsx`      | 모달 래퍼           | title prop 추가, onOpenChange 패턴 정렬                |
+| `app/timeline/components/TimelineBoard.tsx`      | 통계 헤더           | optional chaining 개선                                 |
+| `app/timeline/components/PlenaryList.tsx`        | 본회의 심사         | 공유 컴포넌트 사용으로 축소                            |
+| `app/timeline/components/CommitteeAuditList.tsx` | 위원회 심사         | 공유 컴포넌트 사용, 멀티모달 버그 수정                 |
+| `app/timeline/components/index.tsx`              | 배럴 파일           | 신규 컴포넌트 추가, 삭제된 컴포넌트 제거               |
+| `app/timeline/page.tsx`                          | 페이지 엔트리       | Suspense + ErrorBoundary 추가                          |
 
 ### 신규 생성 파일
 
-| 파일 | 책임 |
-|------|------|
-| `app/timeline/services/query-keys.ts` | timelineKeys 팩토리 |
-| `app/timeline/services/apis.ts` | API 호출 (기존 services/index.ts 리네임) |
-| `app/timeline/services/queries.ts` | React Query 훅 |
-| `app/timeline/hooks/useResponsivePagination.ts` | 반응형 페이지네이션 훅 |
-| `app/timeline/components/PartyLogo.tsx` | 정당 로고 공유 컴포넌트 |
-| `app/timeline/components/TimelinePagination.tsx` | 페이지네이션 UI 공유 컴포넌트 |
-| `app/timeline/components/BillOutlineList.tsx` | Submitted + Promulgation 통합 |
-| `app/timeline/components/TimelineErrorFallback.tsx` | 에러 폴백 UI |
-| `app/timeline/components/TimelineSkeleton.tsx` | 로딩 스켈레톤 UI |
-| `app/timeline/components/TimelineContent.tsx` | ErrorBoundary+Suspense 클라이언트 래퍼 |
+| 파일                                                | 책임                                     |
+| --------------------------------------------------- | ---------------------------------------- |
+| `app/timeline/services/query-keys.ts`               | timelineKeys 팩토리                      |
+| `app/timeline/services/apis.ts`                     | API 호출 (기존 services/index.ts 리네임) |
+| `app/timeline/services/queries.ts`                  | React Query 훅                           |
+| `app/timeline/hooks/useResponsivePagination.ts`     | 반응형 페이지네이션 훅                   |
+| `app/timeline/components/PartyLogo.tsx`             | 정당 로고 공유 컴포넌트                  |
+| `app/timeline/components/TimelinePagination.tsx`    | 페이지네이션 UI 공유 컴포넌트            |
+| `app/timeline/components/BillOutlineList.tsx`       | Submitted + Promulgation 통합            |
+| `app/timeline/components/TimelineErrorFallback.tsx` | 에러 폴백 UI                             |
+| `app/timeline/components/TimelineSkeleton.tsx`      | 로딩 스켈레톤 UI                         |
+| `app/timeline/components/TimelineContent.tsx`       | ErrorBoundary+Suspense 클라이언트 래퍼   |
 
 ### 삭제 파일
 
-| 파일 | 사유 |
-|------|------|
-| `app/timeline/components/SubmittedList.tsx` | BillOutlineList로 통합 |
+| 파일                                           | 사유                   |
+| ---------------------------------------------- | ---------------------- |
+| `app/timeline/components/SubmittedList.tsx`    | BillOutlineList로 통합 |
 | `app/timeline/components/PromulgationList.tsx` | BillOutlineList로 통합 |
-| `app/timeline/services/index.ts` | apis.ts로 리네임 |
+| `app/timeline/services/index.ts`               | apis.ts로 리네임       |
 
 ### 영향 받는 소비자 파일 (변경 없이 호환성 확인 필요)
 
-| 파일 | 사용 방식 | 확인 사항 |
-|------|-----------|-----------|
+| 파일                                        | 사용 방식                   | 확인 사항                 |
+| ------------------------------------------- | --------------------------- | ------------------------- |
 | `app/timeline/components/ListContainer.tsx` | `useInfiniteTimelineFeed()` | hooks re-export 경로 유지 |
 | `app/timeline/components/TimelineBoard.tsx` | `useGetTimelineBillState()` | hooks re-export 경로 유지 |
 
@@ -62,6 +62,7 @@
 ## Task 1: 서비스 계층 분리
 
 **Files:**
+
 - Create: `app/timeline/services/query-keys.ts`
 - Create: `app/timeline/services/apis.ts`
 - Create: `app/timeline/services/queries.ts`
@@ -212,6 +213,7 @@ git commit -m "refactor: timeline 서비스 계층을 프로젝트 표준(apis/q
 ## Task 2: 공유 훅/컴포넌트 생성 — useResponsivePagination, PartyLogo, TimelinePagination, TimelineModal
 
 **Files:**
+
 - Create: `app/timeline/hooks/useResponsivePagination.ts`
 - Create: `app/timeline/components/PartyLogo.tsx`
 - Create: `app/timeline/components/TimelinePagination.tsx`
@@ -319,7 +321,11 @@ export default function PartyLogo({ partyInfo, size = 22, linkEnabled = true, cl
     );
 
   if (!linkEnabled) {
-    return <div className={containerClass} style={style}>{content}</div>;
+    return (
+      <div className={containerClass} style={style}>
+        {content}
+      </div>
+    );
   }
 
   return (
@@ -434,6 +440,7 @@ git commit -m "refactor: timeline 공유 훅/컴포넌트 추출 (PartyLogo, use
 ## Task 3: BillOutlineList — SubmittedList + PromulgationList 통합
 
 **Files:**
+
 - Create: `app/timeline/components/BillOutlineList.tsx`
 - Modify: `app/timeline/components/ListContainer.tsx` (import 경로만)
 - Delete: `app/timeline/components/SubmittedList.tsx`
@@ -570,6 +577,7 @@ export default function BillOutlineList({ variant, bills }: BillOutlineListProps
 `ListContainer.tsx`에서 `SubmittedList`, `PromulgationList` import를 `BillOutlineList`로 교체. JSX 부분 변경:
 
 변경 전:
+
 ```tsx
 {promulgation_list.length !== 0 && <PromulgationList promulgation_list={promulgation_list} />}
 ...
@@ -577,6 +585,7 @@ export default function BillOutlineList({ variant, bills }: BillOutlineListProps
 ```
 
 변경 후:
+
 ```tsx
 {promulgation_list.length !== 0 && <BillOutlineList variant="promulgation" bills={promulgation_list} />}
 ...
@@ -607,6 +616,7 @@ git commit -m "refactor: SubmittedList/PromulgationList를 BillOutlineList varia
 ## Task 4: ListContainer 리팩토링 — 파생 상태 + convertDateFormat
 
 **Files:**
+
 - Modify: `app/timeline/components/ListContainer.tsx`
 
 **배경:** `useState` + `useEffect`로 React Query data를 복사하는 파생 상태 안티패턴 제거. `convertDateFormat(date)` 3회 호출을 1회로 최적화.
@@ -662,9 +672,7 @@ export default function ListContainer() {
                 </div>
                 <div className="flex flex-col gap-5">
                   {plenary_list.length > 0 && <PlenaryList plenary_list={plenary_list} />}
-                  {promulgation_list.length > 0 && (
-                    <BillOutlineList variant="promulgation" bills={promulgation_list} />
-                  )}
+                  {promulgation_list.length > 0 && <BillOutlineList variant="promulgation" bills={promulgation_list} />}
                   {committee_audit_list.length > 0 && (
                     <CommitteeAuditList committee_audit_list={committee_audit_list} />
                   )}
@@ -703,6 +711,7 @@ git commit -m "refactor: ListContainer 파생 상태 안티패턴 제거, conver
 ## Task 5: PlenaryList 리팩토링 — 공유 컴포넌트 적용
 
 **Files:**
+
 - Modify: `app/timeline/components/PlenaryList.tsx`
 
 **배경:** PlenaryList에서 중복된 정당 로고 렌더링(2곳), 페이지네이션 로직, 페이지네이션 UI를 공유 컴포넌트로 교체. 기존 기능(ProcessResult 투표 결과 표시)은 유지.
@@ -851,9 +860,11 @@ git commit -m "refactor: PlenaryList 공유 컴포넌트 적용으로 중복 제
 ## Task 6: CommitteeAuditList 리팩토링 — 공유 컴포넌트 + 버그 수정
 
 **Files:**
+
 - Modify: `app/timeline/components/CommitteeAuditList.tsx`
 
 **배경:** CommitteeAuditList에서 공유 컴포넌트를 적용하고, 3가지 버그를 수정한다:
+
 1. `isOpenIndividual` 단일 상태로 N개 모달이 동시 열리는 멀티모달 버그 → 개별 위원회 이름 기반 상태
 2. `.map()` 내부의 불필요한 `committee_audit_list.length !== 0` 가드 제거
 3. prev 버튼 `Math.ceil` 누락 → useResponsivePagination 훅 사용으로 자동 수정
@@ -896,10 +907,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
               <Button variant="ghost" size="icon" className="p-0 w-4 h-4" onClick={() => setIsOpenAll(true)}>
                 <IconEnter />
               </Button>
-              <TimelineModal
-                open={isOpenAll}
-                onOpenChange={setIsOpenAll}
-                title="심사한 법안">
+              <TimelineModal open={isOpenAll} onOpenChange={setIsOpenAll} title="심사한 법안">
                 <div className="flex flex-col gap-4">
                   {committee_audit_list.map(({ committee_name, bill_outline_dto_list }) => (
                     <div key={committee_name} className="flex flex-col gap-2">
@@ -1017,6 +1025,7 @@ git commit -m "fix: CommitteeAuditList 멀티모달/페이지네이션 버그 �
 ## Task 7: TimelineBoard 개선 + Suspense/ErrorBoundary 추가
 
 **Files:**
+
 - Modify: `app/timeline/components/TimelineBoard.tsx`
 - Create: `app/timeline/components/TimelineErrorFallback.tsx`
 - Create: `app/timeline/components/TimelineSkeleton.tsx`
@@ -1171,6 +1180,7 @@ git commit -m "feat: timeline에 Suspense/ErrorBoundary 추가, TimelineBoard op
 ## Task 8: 배럴 파일 정리 + 최종 검증
 
 **Files:**
+
 - Modify: `app/timeline/components/index.tsx`
 
 **배경:** 신규/삭제된 컴포넌트를 반영하여 배럴 파일 업데이트. 최종 빌드 + lint 확인.
@@ -1224,26 +1234,26 @@ git commit -m "chore: timeline 배럴 파일 정리, 최종 검증 완료"
 
 ## 적용된 규칙/패턴 매핑
 
-| Task | 적용 규칙 |
-|------|-----------|
-| Task 1 | 프로젝트 표준 (apis/queries/query-keys), DRY |
-| Task 2 | DRY, 커스텀 훅 추출, `advanced-event-handler-refs` |
+| Task   | 적용 규칙                                                             |
+| ------ | --------------------------------------------------------------------- |
+| Task 1 | 프로젝트 표준 (apis/queries/query-keys), DRY                          |
+| Task 2 | DRY, 커스텀 훅 추출, `advanced-event-handler-refs`                    |
 | Task 3 | `architecture-avoid-boolean-props`, `patterns-explicit-variants`, DRY |
-| Task 4 | `rerender-derived-state-no-effect`, 성능 최적화 |
-| Task 5 | DRY, 컴포넌트 합성 |
-| Task 6 | 버그 수정, DRY, 컴포넌트 합성 |
-| Task 7 | Next.js Suspense/ErrorBoundary 필수 조합, optional chaining |
-| Task 8 | 코드 정리, 최종 검증 |
+| Task 4 | `rerender-derived-state-no-effect`, 성능 최적화                       |
+| Task 5 | DRY, 컴포넌트 합성                                                    |
+| Task 6 | 버그 수정, DRY, 컴포넌트 합성                                         |
+| Task 7 | Next.js Suspense/ErrorBoundary 필수 조합, optional chaining           |
+| Task 8 | 코드 정리, 최종 검증                                                  |
 
 ## 개선 효과 요약
 
-| 영역 | Before | After |
-|------|--------|-------|
-| **데이터 흐름** | useState + useEffect 동기화 | useMemo 파생 계산 |
-| **정당 로고** | 9회 ~30줄 중복 | PartyLogo 단일 컴포넌트 |
-| **페이지네이션 로직** | 4곳 ~25줄 중복 | useResponsivePagination 훅 |
-| **페이지네이션 UI** | 4곳 ~30줄 중복 | TimelinePagination 컴포넌트 |
-| **컴포넌트 수** | Submitted + Promulgation 별도 | BillOutlineList variant 통합 |
-| **에러 처리** | Suspense/ErrorBoundary 없음 | ErrorBoundary + Skeleton |
-| **서비스 구조** | hooks/services 혼재 | 표준 3파일 분리 |
-| **버그** | 링크 참조 오류, key 버그, 멀티모달, Math.ceil 누락 | 모두 수정 |
+| 영역                  | Before                                             | After                        |
+| --------------------- | -------------------------------------------------- | ---------------------------- |
+| **데이터 흐름**       | useState + useEffect 동기화                        | useMemo 파생 계산            |
+| **정당 로고**         | 9회 ~30줄 중복                                     | PartyLogo 단일 컴포넌트      |
+| **페이지네이션 로직** | 4곳 ~25줄 중복                                     | useResponsivePagination 훅   |
+| **페이지네이션 UI**   | 4곳 ~30줄 중복                                     | TimelinePagination 컴포넌트  |
+| **컴포넌트 수**       | Submitted + Promulgation 별도                      | BillOutlineList variant 통합 |
+| **에러 처리**         | Suspense/ErrorBoundary 없음                        | ErrorBoundary + Skeleton     |
+| **서비스 구조**       | hooks/services 혼재                                | 표준 3파일 분리              |
+| **버그**              | 링크 참조 오류, key 버그, 멀티모달, Math.ceil 누락 | 모두 수정                    |

@@ -14,41 +14,42 @@
 
 ### 수정 대상 파일
 
-| 파일 | 책임 | 변경 내용 |
-|------|------|-----------|
-| `app/bill/components/Feed.tsx` | 피드 오케스트레이터 | 로컬 상태 제거, React Query data 직접 사용, `as any` 제거 |
-| `app/bill/components/Bill.tsx` | 법안 카드 (268줄→분리) | unsafe innerHTML 제거, 로컬 북마크 상태 제거, 컴포넌트 분리 |
-| `app/bill/components/BillList.tsx` | 리스트 렌더러 | key 수정 |
-| `app/bill/components/FeedTab.tsx` | 탭 전환 | props 타입 개선 |
-| `app/bill/components/StageDropdown.tsx` | 필터 드롭다운 | Set→string 상태 단순화에 맞춰 props 타입 수정 |
-| `app/bill/services/queries.ts` | React Query 훅 (정본) | 북마크 optimistic update 구현 |
-| `app/bill/hooks/index.ts` | 훅 re-export | 중복 코드 제거, services/queries.ts re-export로 변경 |
-| `app/bill/services/query-keys.ts` | 쿼리 키 팩토리 (정본) | 변경 없음 (이미 올바름) |
-| `app/home/ClientHomeSection.tsx` | 홈 레이아웃 | ErrorBoundary 추가 |
-| `app/common/hooks/useIntersect.ts` | Intersection Observer | 콜백 안정성 개선 (ref 패턴) |
-| `app/common/hooks/useTabType.ts` | 탭 상태 훅 | 반환 타입 튜플 명시 |
+| 파일                                    | 책임                   | 변경 내용                                                   |
+| --------------------------------------- | ---------------------- | ----------------------------------------------------------- |
+| `app/bill/components/Feed.tsx`          | 피드 오케스트레이터    | 로컬 상태 제거, React Query data 직접 사용, `as any` 제거   |
+| `app/bill/components/Bill.tsx`          | 법안 카드 (268줄→분리) | unsafe innerHTML 제거, 로컬 북마크 상태 제거, 컴포넌트 분리 |
+| `app/bill/components/BillList.tsx`      | 리스트 렌더러          | key 수정                                                    |
+| `app/bill/components/FeedTab.tsx`       | 탭 전환                | props 타입 개선                                             |
+| `app/bill/components/StageDropdown.tsx` | 필터 드롭다운          | Set→string 상태 단순화에 맞춰 props 타입 수정               |
+| `app/bill/services/queries.ts`          | React Query 훅 (정본)  | 북마크 optimistic update 구현                               |
+| `app/bill/hooks/index.ts`               | 훅 re-export           | 중복 코드 제거, services/queries.ts re-export로 변경        |
+| `app/bill/services/query-keys.ts`       | 쿼리 키 팩토리 (정본)  | 변경 없음 (이미 올바름)                                     |
+| `app/home/ClientHomeSection.tsx`        | 홈 레이아웃            | ErrorBoundary 추가                                          |
+| `app/common/hooks/useIntersect.ts`      | Intersection Observer  | 콜백 안정성 개선 (ref 패턴)                                 |
+| `app/common/hooks/useTabType.ts`        | 탭 상태 훅             | 반환 타입 튜플 명시                                         |
 
 ### 영향 받는 소비자 파일 (변경 없이 호환성 확인 필요)
 
-| 파일 | Bill 사용 방식 | 확인 사항 |
-|------|---------------|-----------|
-| `app/bill/components/BillDetail.tsx` | `<Bill {...data} detail viewCount={viewCount}>` | `detail`, `viewCount` prop 유지 필수 |
-| `app/following/components/BillFollowedList.tsx` | `<Bill {...bill} />` (피드 모드) | 기본 props 인터페이스 유지 필수 |
+| 파일                                            | Bill 사용 방식                                  | 확인 사항                            |
+| ----------------------------------------------- | ----------------------------------------------- | ------------------------------------ |
+| `app/bill/components/BillDetail.tsx`            | `<Bill {...data} detail viewCount={viewCount}>` | `detail`, `viewCount` prop 유지 필수 |
+| `app/following/components/BillFollowedList.tsx` | `<Bill {...bill} />` (피드 모드)                | 기본 props 인터페이스 유지 필수      |
 
 ### 신규 생성 파일
 
-| 파일 | 책임 |
-|------|------|
-| `app/bill/components/BillCardFooter.tsx` | 카드 하단 (스크랩, 조회수, 링크복사, 자세히보기) |
-| `app/bill/components/BillProposerSection.tsx` | 발의자 아바타 및 정당 정보 표시 |
-| `app/bill/components/BillSummaryContent.tsx` | GPT/일반 요약 본문 렌더링 (XSS-safe) |
-| `app/bill/components/FeedErrorFallback.tsx` | 피드 전용 에러 폴백 UI |
+| 파일                                          | 책임                                             |
+| --------------------------------------------- | ------------------------------------------------ |
+| `app/bill/components/BillCardFooter.tsx`      | 카드 하단 (스크랩, 조회수, 링크복사, 자세히보기) |
+| `app/bill/components/BillProposerSection.tsx` | 발의자 아바타 및 정당 정보 표시                  |
+| `app/bill/components/BillSummaryContent.tsx`  | GPT/일반 요약 본문 렌더링 (XSS-safe)             |
+| `app/bill/components/FeedErrorFallback.tsx`   | 피드 전용 에러 폴백 UI                           |
 
 ---
 
 ## Task 1: 중복 훅/키 코드 통합
 
 **Files:**
+
 - Modify: `app/bill/hooks/index.ts` (전체 교체)
 - Reference: `app/bill/services/queries.ts` (정본, 변경 없음)
 - Reference: `app/bill/services/query-keys.ts` (정본, 변경 없음)
@@ -87,6 +88,7 @@ git commit -m "refactor: bill hooks를 services/queries re-export로 통합"
 ## Task 2: Feed.tsx 및 하위 컴포넌트 일괄 리팩토링
 
 **Files:**
+
 - Modify: `app/common/hooks/useTabType.ts`
 - Modify: `app/bill/components/Feed.tsx`
 - Modify: `app/bill/components/FeedTab.tsx`
@@ -94,6 +96,7 @@ git commit -m "refactor: bill hooks를 services/queries re-export로 통합"
 - Modify: `app/bill/components/BillList.tsx`
 
 **배경:**
+
 - `useTabType`의 반환 타입이 `(ValueOf<T> | Dispatch<...>)[]`로 추론되어 `as any`를 유발한다. 튜플 타입을 명시한다.
 - `rerender-derived-state-no-effect` 규칙: React Query `data`를 `useState`+`useEffect`로 복사하는 것은 파생 상태 안티패턴이다. `useMemo`로 직접 계산한다.
 - queryKey에 `stage`가 포함되어 있으므로 `stage` 변경 시 자동 refetch된다. 수동 `refetch()` + `setBills([])` 불필요.
@@ -129,6 +132,7 @@ props를 `selectedStage`/`onStageChange`로 변경.
 - [ ] **Step 5: Feed.tsx 전체 리팩토링**
 
 핵심 변경:
+
 - `useState` + `useEffect` 동기화 3건 → `useMemo` 파생 계산 2건
 - `Set` 기반 stageType → 단순 `string` 상태
 - 수동 `refetch()` + `setBills([])` 제거 — queryKey 자동 refetch에 위임
@@ -176,12 +180,7 @@ export default function Feed() {
         <FeedTab value={feedType} onValueChange={setFeedType} />
         {isLatest && <StageDropdown selectedStage={selectedStage} onStageChange={setSelectedStage} />}
       </section>
-      <BillList
-        bills={displayBills}
-        isFetching={isFetching}
-        fetchRef={fetchRef}
-        feedType={feedType}
-      />
+      <BillList bills={displayBills} isFetching={isFetching} fetchRef={fetchRef} feedType={feedType} />
     </section>
   );
 }
@@ -204,6 +203,7 @@ git commit -m "refactor: Feed 로컬 상태 동기화 제거, 타입 안전성 �
 ## Task 3: useIntersect 콜백 안정성 개선
 
 **Files:**
+
 - Modify: `app/common/hooks/useIntersect.ts`
 
 **배경:** 현재 `onIntersect`가 `useCallback` 의존성에 있어 매 렌더마다 Observer가 재생성될 수 있다. `useRef`로 최신 콜백을 추적하여 Observer 재생성을 방지한다. (`advanced-event-handler-refs` 규칙 적용)
@@ -267,6 +267,7 @@ git commit -m "perf: useIntersect 콜백/옵션 ref 패턴으로 Observer 재생
 ## Task 4: Bill.tsx에서 unsafe innerHTML 제거 (XSS 수정)
 
 **Files:**
+
 - Create: `app/bill/components/BillSummaryContent.tsx`
 - Modify: `app/bill/components/Bill.tsx`
 
@@ -281,9 +282,7 @@ git commit -m "perf: useIntersect 콜백/옵션 ref 패턴으로 Observer 재생
 import type { ReactNode } from 'react';
 
 function parseBoldMarkdown(text: string): ReactNode[] {
-  return text.split('**').map((segment, index) =>
-    index % 2 === 0 ? segment : <strong key={index}>{segment}</strong>,
-  );
+  return text.split('**').map((segment, index) => (index % 2 === 0 ? segment : <strong key={index}>{segment}</strong>));
 }
 
 export default function BillSummaryContent({
@@ -297,11 +296,7 @@ export default function BillSummaryContent({
 }) {
   const clampClass = isCollapsed ? 'line-clamp-[8]' : '';
 
-  return (
-    <p className={clampClass}>
-      {gptSummary ? parseBoldMarkdown(gptSummary) : summary}
-    </p>
-  );
+  return <p className={clampClass}>{gptSummary ? parseBoldMarkdown(gptSummary) : summary}</p>;
 }
 ```
 
@@ -312,11 +307,7 @@ export default function BillSummaryContent({
 
 ```tsx
 <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
-  <BillSummaryContent
-    gptSummary={gpt_summary}
-    summary={summary}
-    isCollapsed={!detail && !toggleMore}
-  />
+  <BillSummaryContent gptSummary={gpt_summary} summary={summary} isCollapsed={!detail && !toggleMore} />
   {!detail && !toggleMore && (
     <Button variant="link" onClick={onClickToggleMore} className="p-0 text-gray-2 dark:text-gray-3">
       더 보기
@@ -342,6 +333,7 @@ git commit -m "fix: unsafe innerHTML 제거하여 XSS 취약점 수정"
 ## Task 5: Bill.tsx 컴포넌트 분리 — BillCardFooter, BillProposerSection
 
 **Files:**
+
 - Create: `app/bill/components/BillCardFooter.tsx`
 - Create: `app/bill/components/BillProposerSection.tsx`
 - Modify: `app/bill/components/Bill.tsx`
@@ -349,6 +341,7 @@ git commit -m "fix: unsafe innerHTML 제거하여 XSS 취약점 수정"
 - Reference (호환성 확인): `app/bill/components/BillDetail.tsx`, `app/following/components/BillFollowedList.tsx`
 
 **배경:**
+
 - `architecture-avoid-boolean-props` / `patterns-explicit-variants` 규칙: Bill.tsx가 `detail` boolean으로 피드용/상세용 푸터를 두 벌 렌더링한다.
 - 268줄 단일 컴포넌트에 카드 헤더, 본문, 푸터(2벌), 발의자 섹션이 모두 포함.
 - 각 책임을 분리하여 가독성과 재사용성을 높인다.
@@ -365,6 +358,7 @@ git commit -m "fix: unsafe innerHTML 제거하여 XSS 취약점 수정"
 - [ ] **Step 3: Bill.tsx를 분리된 컴포넌트를 사용하도록 리팩토링**
 
 Bill.tsx에서:
+
 - 두 벌 `CardFooter` → `<BillCardFooter />`
 - 발의자 섹션 → `<BillProposerSection />`
 - 이전 Task에서 이미 요약 부분은 `<BillSummaryContent />`로 교체됨
@@ -388,16 +382,19 @@ git commit -m "refactor: Bill.tsx에서 Footer, ProposerSection 컴포넌트 분
 ## Task 6: 북마크 Optimistic Update 구현
 
 **Files:**
+
 - Modify: `app/bill/services/queries.ts` (`useMutateBookmark`)
 - Modify: `app/bill/components/Bill.tsx` (로컬 `isLiked`/`likeCount` 상태 제거)
 - Reference (호환성 확인): `app/bill/components/BillDetail.tsx`
 
 **배경:** 현재 Bill.tsx에서 `useState`로 북마크 상태를 로컬 관리하며, mutation 실패 시 롤백이 없다. React Query의 정식 optimistic update 패턴을 적용한다:
+
 - `onMutate`: 캐시를 낙관적으로 갱신 + 이전 데이터 스냅샷
 - `onError`: 스냅샷으로 롤백
 - `onSettled`: 서버와 재동기화
 
 **중요 — viewCount prop 호환:**
+
 - `BillDetail.tsx`는 `<Bill {...data} detail viewCount={viewCount}>`로 사용한다.
 - `viewCount`는 `useMutateViewCount`의 별도 mutation 결과이며, 북마크와 무관하다.
 - Bill.tsx에서 `viewCount` optional prop을 유지하고, 피드 모드에서는 `bill_info_dto.view_count`를, 상세 모드에서는 prop으로 전달받은 `viewCount`를 사용한다.
@@ -422,30 +419,27 @@ export const useMutateBookmark = (billId: string) => {
       const previousData = qc.getQueriesData<InfiniteData<Feed>>({ queryKey: billKeys.root() });
 
       // 3. InfiniteData<Feed> 페이지 구조 순회하며 낙관적 갱신
-      qc.setQueriesData<InfiniteData<Feed>>(
-        { queryKey: billKeys.root() },
-        (old) => {
-          if (!old?.pages) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page) => ({
-              ...page,
-              bill_list: page.bill_list.map((bill) =>
-                bill.bill_info_dto.bill_id === billId
-                  ? {
-                      ...bill,
-                      is_book_mark: likeChecked,
-                      bill_info_dto: {
-                        ...bill.bill_info_dto,
-                        bill_like_count: bill.bill_info_dto.bill_like_count + (likeChecked ? 1 : -1),
-                      },
-                    }
-                  : bill,
-              ),
-            })),
-          };
-        },
-      );
+      qc.setQueriesData<InfiniteData<Feed>>({ queryKey: billKeys.root() }, (old) => {
+        if (!old?.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            bill_list: page.bill_list.map((bill) =>
+              bill.bill_info_dto.bill_id === billId
+                ? {
+                    ...bill,
+                    is_book_mark: likeChecked,
+                    bill_info_dto: {
+                      ...bill.bill_info_dto,
+                      bill_like_count: bill.bill_info_dto.bill_like_count + (likeChecked ? 1 : -1),
+                    },
+                  }
+                : bill,
+            ),
+          })),
+        };
+      });
 
       // 4. 상세 페이지 캐시도 갱신
       const detailKey = billKeys.detail(billId);
@@ -489,6 +483,7 @@ export const useMutateBookmark = (billId: string) => {
 - [ ] **Step 2: Bill.tsx에서 로컬 북마크 상태 제거**
 
 변경 전:
+
 ```tsx
 const [isLiked, setIsLiked] = useState(is_book_mark);
 const [likeCount, setLikeCount] = useState(bill_like_count);
@@ -497,6 +492,7 @@ const [likeCount, setLikeCount] = useState(bill_like_count);
 변경 후: `is_book_mark`과 `bill_like_count`를 props에서 직접 사용. `onClickScrap`에서 `setIsLiked`/`setLikeCount` 호출 제거, `mutate(!is_book_mark)`만 호출. 스낵바는 유지.
 
 `viewCount` prop은 그대로 유지 (BillDetail.tsx 호환성):
+
 ```tsx
 // 피드: bill_info_dto.view_count 사용
 // 상세: viewCount prop 사용
@@ -525,6 +521,7 @@ git commit -m "feat: 북마크 React Query optimistic update 구현 및 로컬 �
 ## Task 7: ErrorBoundary 추가
 
 **Files:**
+
 - Create: `app/bill/components/FeedErrorFallback.tsx`
 - Modify: `app/home/ClientHomeSection.tsx`
 
@@ -560,25 +557,25 @@ git commit -m "feat: 메인 피드에 ErrorBoundary 추가"
 
 ## 적용된 스킬/규칙 매핑
 
-| Task | 적용 규칙 |
-|------|-----------|
-| Task 1 | DRY 원칙, 코드 중복 제거 |
+| Task   | 적용 규칙                                                                             |
+| ------ | ------------------------------------------------------------------------------------- |
+| Task 1 | DRY 원칙, 코드 중복 제거                                                              |
 | Task 2 | `rerender-derived-state-no-effect`, `rerender-functional-setstate`, TypeScript strict |
-| Task 3 | `advanced-event-handler-refs` |
-| Task 4 | OWASP XSS 방지, React 안전 렌더링 |
-| Task 5 | `architecture-avoid-boolean-props`, `patterns-explicit-variants` |
-| Task 6 | React Query optimistic update 패턴, `rerender-derived-state-no-effect` |
-| Task 7 | Next.js `error.tsx` 규칙, Suspense + ErrorBoundary 필수 조합 |
+| Task 3 | `advanced-event-handler-refs`                                                         |
+| Task 4 | OWASP XSS 방지, React 안전 렌더링                                                     |
+| Task 5 | `architecture-avoid-boolean-props`, `patterns-explicit-variants`                      |
+| Task 6 | React Query optimistic update 패턴, `rerender-derived-state-no-effect`                |
+| Task 7 | Next.js `error.tsx` 규칙, Suspense + ErrorBoundary 필수 조합                          |
 
 ## 요약 — 개선 효과
 
-| 영역 | Before | After |
-|------|--------|-------|
-| **데이터 흐름** | React Query → useState → useEffect 동기화 (3건) | React Query → useMemo 파생 계산 |
-| **보안** | unsafe innerHTML XSS 취약 | React 컴포넌트 기반 안전한 파싱 |
-| **북마크** | 로컬 useState, 실패 시 롤백 없음 | React Query optimistic update + 자동 롤백 |
-| **에러 처리** | Suspense만, ErrorBoundary 없음 | ErrorBoundary + 사용자 친화적 폴백 |
-| **코드 중복** | hooks/index.ts ≈ services/queries.ts | hooks/index.ts = re-export only |
-| **타입 안전성** | `as any` 4건, Set 기반 불필요 복잡성 | 정확한 타입, 단순 string 상태 |
-| **컴포넌트 크기** | Bill.tsx 268줄 단일 컴포넌트 | Bill.tsx + 3개 하위 컴포넌트 |
-| **성능** | useIntersect 매 렌더 Observer 재생성 | ref 패턴으로 Observer 안정 유지 |
+| 영역              | Before                                          | After                                     |
+| ----------------- | ----------------------------------------------- | ----------------------------------------- |
+| **데이터 흐름**   | React Query → useState → useEffect 동기화 (3건) | React Query → useMemo 파생 계산           |
+| **보안**          | unsafe innerHTML XSS 취약                       | React 컴포넌트 기반 안전한 파싱           |
+| **북마크**        | 로컬 useState, 실패 시 롤백 없음                | React Query optimistic update + 자동 롤백 |
+| **에러 처리**     | Suspense만, ErrorBoundary 없음                  | ErrorBoundary + 사용자 친화적 폴백        |
+| **코드 중복**     | hooks/index.ts ≈ services/queries.ts            | hooks/index.ts = re-export only           |
+| **타입 안전성**   | `as any` 4건, Set 기반 불필요 복잡성            | 정확한 타입, 단순 string 상태             |
+| **컴포넌트 크기** | Bill.tsx 268줄 단일 컴포넌트                    | Bill.tsx + 3개 하위 컴포넌트              |
+| **성능**          | useIntersect 매 렌더 Observer 재생성            | ref 패턴으로 Observer 안정 유지           |

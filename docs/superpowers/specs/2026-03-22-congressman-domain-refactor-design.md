@@ -11,20 +11,20 @@
 
 ## 수정 대상 파일
 
-| 파일 | 변경 요약 |
-| --- | --- |
-| `app/congressman/services/index.ts` | `services/apis.ts`로 rename |
-| `app/congressman/hooks/index.ts` | query keys -> `services/query-keys.ts`, hooks -> `services/queries.ts`로 분리, re-export 유지 |
-| `app/congressman/components/BillContainer.tsx` | `useState+useEffect` -> `useMemo`, 매직넘버 상수화, 타입 캐스트 제거 |
-| `app/congressman/components/FollowBoard.tsx` | optimistic update rollback 구현, 접근성 개선 |
-| `app/congressman/components/CongressmanDetail.tsx` | HTML entity 안전 처리, homepage 링크 검증, 접근성 개선 |
-| `app/congressman/components/PartyLogo.tsx` | 다크모드 URL 로직 정리, null guard 강화 |
-| `app/congressman/components/CongressmanContainer.tsx` | 변경 없음 (thin wrapper로 적절) |
-| `app/congressman/components/index.tsx` | 내부 전용 컴포넌트 배럴 export 제거 |
-| `app/congressman/[id]/page.tsx` | Suspense + ErrorBoundary 래핑, import 경로 업데이트 |
-| `app/congressman/[id]/layout.tsx` | 변경 없음 |
-| `app/congressman/validation/index.ts` | TODO 주석 유지 (백엔드 계약 미확정) |
-| `tests/congressman/` | 주요 로직 테스트 추가 |
+| 파일                                                  | 변경 요약                                                                                     |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `app/congressman/services/index.ts`                   | `services/apis.ts`로 rename                                                                   |
+| `app/congressman/hooks/index.ts`                      | query keys -> `services/query-keys.ts`, hooks -> `services/queries.ts`로 분리, re-export 유지 |
+| `app/congressman/components/BillContainer.tsx`        | `useState+useEffect` -> `useMemo`, 매직넘버 상수화, 타입 캐스트 제거                          |
+| `app/congressman/components/FollowBoard.tsx`          | optimistic update rollback 구현, 접근성 개선                                                  |
+| `app/congressman/components/CongressmanDetail.tsx`    | HTML entity 안전 처리, homepage 링크 검증, 접근성 개선                                        |
+| `app/congressman/components/PartyLogo.tsx`            | 다크모드 URL 로직 정리, null guard 강화                                                       |
+| `app/congressman/components/CongressmanContainer.tsx` | 변경 없음 (thin wrapper로 적절)                                                               |
+| `app/congressman/components/index.tsx`                | 내부 전용 컴포넌트 배럴 export 제거                                                           |
+| `app/congressman/[id]/page.tsx`                       | Suspense + ErrorBoundary 래핑, import 경로 업데이트                                           |
+| `app/congressman/[id]/layout.tsx`                     | 변경 없음                                                                                     |
+| `app/congressman/validation/index.ts`                 | TODO 주석 유지 (백엔드 계약 미확정)                                                           |
+| `tests/congressman/`                                  | 주요 로직 테스트 추가                                                                         |
 
 ---
 
@@ -154,6 +154,7 @@ export default function BillContainer({ id }: { id: string }) {
 ```
 
 변경 사항:
+
 1. `useState + useEffect` 2건 제거 -> `useMemo` 1건으로 대체
 2. `billType` 변경 시 `refetch()` 수동 호출 제거 — `queryKey`에 `billType` 포함되어 자동 리패치
 3. `size: 3` -> `BILL_PAGE_SIZE` 상수 (`services/apis.ts`에 정의, import)
@@ -264,7 +265,7 @@ export default function FollowBoard({
 **현재:**
 
 ```tsx
-brief_history.replaceAll('&middot;', '\u00B7').replaceAll('&nbsp;', '').replaceAll('&#39;', "'")
+brief_history.replaceAll('&middot;', '\u00B7').replaceAll('&nbsp;', '').replaceAll('&#39;', "'");
 ```
 
 수동 문자열 치환은 누락 가능성이 높고 확장성이 없다.
@@ -294,19 +295,16 @@ export function decodeHtmlEntities(html: string): string {
 **설계:**
 
 ```tsx
-{homepage ? (
-  <Button asChild variant="outline" className="...">
-    <Link
-      href={homepage}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="홈페이지 방문 (새 창에서 열림)"
-    >
-      홈페이지 방문
-      <IconWeb />
-    </Link>
-  </Button>
-) : null}
+{
+  homepage ? (
+    <Button asChild variant="outline" className="...">
+      <Link href={homepage} target="_blank" rel="noopener noreferrer" aria-label="홈페이지 방문 (새 창에서 열림)">
+        홈페이지 방문
+        <IconWeb />
+      </Link>
+    </Button>
+  ) : null;
+}
 ```
 
 빈 문자열이면 버튼 자체를 렌더링하지 않음. 외부 링크이므로 `target="_blank"` + `rel="noopener noreferrer"` + `aria-label` 추가.
@@ -326,9 +324,7 @@ export function decodeHtmlEntities(html: string): string {
 <dl className="ml-3 w-full">
   <div className="flex gap-2 justify-between items-center">
     <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">나이</dt>
-    <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">
-      {age ? `${age} 세` : '-'}
-    </dd>
+    <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{age ? `${age} 세` : '-'}</dd>
   </div>
   {/* 성별, 번호, 이메일, 의원실 동일 패턴 */}
 </dl>
@@ -339,6 +335,7 @@ export function decodeHtmlEntities(html: string): string {
 ## 영역 5: PartyLogo — 내부 정리
 
 **현재 문제:**
+
 - `party_image_url !== null` 체크가 있으나 Zod 스키마에서 `nullable().transform(v => v ?? '')` 처리로 빈 문자열이 올 수 있음 -> null 체크가 항상 true
 
 **설계:**
@@ -477,24 +474,24 @@ tests/congressman/components/BillContainer.test.tsx
 
 ## 변경하지 않는 것
 
-| 대상 | 이유 |
-| --- | --- |
+| 대상                              | 이유                               |
+| --------------------------------- | ---------------------------------- |
 | `validation/index.ts` 스키마 완화 | 백엔드 계약 미확정, TODO 주석 존재 |
-| `CongressmanContainer.tsx` | thin wrapper로 적절 |
-| `[id]/layout.tsx` | 현재 구조 적절 |
-| PartyLogo common 추출 | 다른 에이전트 작업 영역, 후순위 |
+| `CongressmanContainer.tsx`        | thin wrapper로 적절                |
+| `[id]/layout.tsx`                 | 현재 구조 적절                     |
+| PartyLogo common 추출             | 다른 에이전트 작업 영역, 후순위    |
 
 ---
 
 ## 적용 규칙 매핑
 
-| 영역 | 적용 규칙 |
-| --- | --- |
-| 1 | 프로젝트 표준 서비스 계층 분리, React Query v5 generics |
-| 2 | `rerender-derived-state-no-effect`, `js-cache-property-access` |
-| 3 | Optimistic UI rollback, `aria-pressed`, semantic HTML |
-| 4 | Safe HTML entity decode, `target="_blank"` + `rel`, semantic `<dl>` |
-| 5 | Falsy guard, DRY (다크모드 URL 변수 추출) |
-| 6 | `async-suspense-boundaries`, `error-handling` |
-| 7 | `bundle-barrel-imports` |
-| 8 | 주요 로직 단위 테스트 |
+| 영역 | 적용 규칙                                                           |
+| ---- | ------------------------------------------------------------------- |
+| 1    | 프로젝트 표준 서비스 계층 분리, React Query v5 generics             |
+| 2    | `rerender-derived-state-no-effect`, `js-cache-property-access`      |
+| 3    | Optimistic UI rollback, `aria-pressed`, semantic HTML               |
+| 4    | Safe HTML entity decode, `target="_blank"` + `rel`, semantic `<dl>` |
+| 5    | Falsy guard, DRY (다크모드 URL 변수 추출)                           |
+| 6    | `async-suspense-boundaries`, `error-handling`                       |
+| 7    | `bundle-barrel-imports`                                             |
+| 8    | 주요 로직 단위 테스트                                               |

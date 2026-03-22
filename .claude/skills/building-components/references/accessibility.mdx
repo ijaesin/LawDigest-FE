@@ -46,19 +46,19 @@ Every interactive element must be keyboard accessible. Users should be able to n
 function Menu() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
-      case "ArrowDown":
+      case 'ArrowDown':
         focusNextItem();
         break;
-      case "ArrowUp":
+      case 'ArrowUp':
         focusPreviousItem();
         break;
-      case "Home":
+      case 'Home':
         focusFirstItem();
         break;
-      case "End":
+      case 'End':
         focusLastItem();
         break;
-      case "Escape":
+      case 'Escape':
         closeMenu();
         break;
     }
@@ -235,24 +235,24 @@ function Modal({ isOpen, onClose, children }) {
       firstFocusable?.focus();
 
       // Prevent body scroll
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
       // Restore focus
       previousFocus.current?.focus();
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       onClose();
     }
 
-    if (e.key === "Tab") {
+    if (e.key === 'Tab') {
       // Trap focus within modal
       const focusables = modalRef.current?.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
@@ -282,13 +282,8 @@ function Modal({ isOpen, onClose, children }) {
       aria-labelledby="modal-title"
       ref={modalRef}
       onKeyDown={handleKeyDown}
-      className="modal"
-    >
-      <button
-        onClick={onClose}
-        aria-label="Close dialog"
-        className="close-button"
-      >
+      className="modal">
+      <button onClick={onClose} aria-label="Close dialog" className="close-button">
         ×
       </button>
       {children}
@@ -309,7 +304,7 @@ function DropdownMenu({ items }) {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
-      case "ArrowDown":
+      case 'ArrowDown':
         e.preventDefault();
         if (!isOpen) {
           setIsOpen(true);
@@ -319,15 +314,15 @@ function DropdownMenu({ items }) {
         }
         break;
 
-      case "ArrowUp":
+      case 'ArrowUp':
         e.preventDefault();
         if (isOpen) {
           setSelectedIndex((prev) => (prev > 0 ? prev - 1 : items.length - 1));
         }
         break;
 
-      case "Enter":
-      case " ":
+      case 'Enter':
+      case ' ':
         e.preventDefault();
         if (!isOpen) {
           setIsOpen(true);
@@ -337,7 +332,7 @@ function DropdownMenu({ items }) {
         }
         break;
 
-      case "Escape":
+      case 'Escape':
         setIsOpen(false);
         setSelectedIndex(-1);
         break;
@@ -351,18 +346,12 @@ function DropdownMenu({ items }) {
         aria-expanded={isOpen}
         aria-controls="dropdown-menu"
         onKeyDown={handleKeyDown}
-        onClick={() => setIsOpen(!isOpen)}
-      >
+        onClick={() => setIsOpen(!isOpen)}>
         Menu
       </button>
 
       {isOpen && (
-        <ul
-          id="dropdown-menu"
-          role="menu"
-          ref={menuRef}
-          onKeyDown={handleKeyDown}
-        >
+        <ul id="dropdown-menu" role="menu" ref={menuRef} onKeyDown={handleKeyDown}>
           {items.map((item, index) => (
             <li
               key={item.id}
@@ -372,8 +361,7 @@ function DropdownMenu({ items }) {
               onClick={() => {
                 item.onClick();
                 setIsOpen(false);
-              }}
-            >
+              }}>
               {item.label}
             </li>
           ))}
@@ -396,16 +384,16 @@ function Tabs({ tabs, defaultTab = 0 }) {
     let newIndex = index;
 
     switch (e.key) {
-      case "ArrowLeft":
+      case 'ArrowLeft':
         newIndex = index > 0 ? index - 1 : tabs.length - 1;
         break;
-      case "ArrowRight":
+      case 'ArrowRight':
         newIndex = index < tabs.length - 1 ? index + 1 : 0;
         break;
-      case "Home":
+      case 'Home':
         newIndex = 0;
         break;
-      case "End":
+      case 'End':
         newIndex = tabs.length - 1;
         break;
       default:
@@ -432,8 +420,7 @@ function Tabs({ tabs, defaultTab = 0 }) {
             aria-controls={`panel-${index}`}
             tabIndex={activeTab === index ? 0 : -1}
             onClick={() => setActiveTab(index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-          >
+            onKeyDown={(e) => handleKeyDown(e, index)}>
             {tab.label}
           </button>
         ))}
@@ -446,8 +433,7 @@ function Tabs({ tabs, defaultTab = 0 }) {
           role="tabpanel"
           aria-labelledby={`tab-${index}`}
           hidden={activeTab !== index}
-          tabIndex={0}
-        >
+          tabIndex={0}>
           {tab.content}
         </div>
       ))}
@@ -476,7 +462,7 @@ function AccessibleForm() {
           type="email"
           aria-required="true"
           aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? "email-error" : "email-help"}
+          aria-describedby={errors.email ? 'email-error' : 'email-help'}
         />
         <span id="email-help" className="help-text">
           We'll never share your email
@@ -491,21 +477,11 @@ function AccessibleForm() {
       <fieldset>
         <legend>Notification Preferences</legend>
         <div>
-          <input
-            id="notify-email"
-            type="checkbox"
-            name="notifications"
-            value="email"
-          />
+          <input id="notify-email" type="checkbox" name="notifications" value="email" />
           <label htmlFor="notify-email">Email notifications</label>
         </div>
         <div>
-          <input
-            id="notify-sms"
-            type="checkbox"
-            name="notifications"
-            value="sms"
-          />
+          <input id="notify-sms" type="checkbox" name="notifications" value="sms" />
           <label htmlFor="notify-sms">SMS notifications</label>
         </div>
       </fieldset>
@@ -553,13 +529,12 @@ function useFocusTrap(ref: React.RefObject<HTMLElement>, isActive: boolean) {
     const focusableSelector =
       'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])';
 
-    const focusableElements =
-      element.querySelectorAll<HTMLElement>(focusableSelector);
+    const focusableElements = element.querySelectorAll<HTMLElement>(focusableSelector);
     const firstFocusable = focusableElements[0];
     const lastFocusable = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       if (e.shiftKey) {
         if (document.activeElement === firstFocusable) {
@@ -574,11 +549,11 @@ function useFocusTrap(ref: React.RefObject<HTMLElement>, isActive: boolean) {
       }
     };
 
-    element.addEventListener("keydown", handleTabKey);
+    element.addEventListener('keydown', handleTabKey);
     firstFocusable?.focus();
 
     return () => {
-      element.removeEventListener("keydown", handleTabKey);
+      element.removeEventListener('keydown', handleTabKey);
     };
   }, [ref, isActive]);
 }
@@ -632,20 +607,9 @@ Announce dynamic content changes to screen readers:
 ```tsx
 function ProgressBar({ value, max = 100 }) {
   return (
-    <div
-      role="progressbar"
-      aria-valuenow={value}
-      aria-valuemin={0}
-      aria-valuemax={max}
-      aria-label="Upload progress"
-    >
-      <div
-        className="progress-fill"
-        style={{ width: `${(value / max) * 100}%` }}
-      />
-      <span className="sr-only">
-        {Math.round((value / max) * 100)}% complete
-      </span>
+    <div role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} aria-label="Upload progress">
+      <div className="progress-fill" style={{ width: `${(value / max) * 100}%` }} />
+      <span className="sr-only">{Math.round((value / max) * 100)}% complete</span>
     </div>
   );
 }
@@ -725,7 +689,7 @@ Ensure touch targets are large enough:
 }
 
 .icon-button::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -8px;
   right: -8px;
@@ -743,10 +707,7 @@ Allow users to zoom:
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <!-- ❌ Prevents zooming -->
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 ```
 
 ## Common Pitfalls

@@ -20,10 +20,6 @@ import {
   getBillBookmarked,
   getBillBookmarkedCount,
 } from '@/app/user/services';
-
-export { userKeys } from '@/app/user/services/query-keys';
-export { usePostLogout } from '@/app/auth/hooks';
-
 import { userKeys } from '@/app/user/services/query-keys';
 
 /**
@@ -115,3 +111,6 @@ export const fetchFollowingParty = (queryClient: QueryClient) =>
     queryKey: userKeys.followingParty(),
     queryFn: () => getFollowingParty(),
   });
+
+export { userKeys };
+export { usePostLogout } from '@/app/auth/hooks';

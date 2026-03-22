@@ -16,30 +16,31 @@
 
 ### 수정 대상 파일
 
-| 파일 | 책임 | 변경 내용 |
-|------|------|-----------|
-| `app/bill/services/queries.ts` | React Query 훅 | `as any` 4건 제거, `useMutateViewCount`에 캐시 갱신 추가 |
-| `app/bill/components/BillDetail.tsx` | 상세 페이지 오케스트레이터 | viewCount 로컬 상태 제거, mutate 1회 호출 |
-| `app/bill/components/HalfDonutChart.tsx` | D3 투표 시각화 | `null as any` 3건 제거, rAF cleanup, tooltip dead code 제거, useMemo 의존성 |
-| `app/bill/components/AnotherBill.tsx` | 유사 법안 카드 | router.push → Link, 조건부 preventDefault 제거, null guard |
-| `app/bill/components/ProposerList.tsx` | 발의자 명단 | Zod 추론 타입, popover→variant, ESLint suppress 제거 |
-| `app/bill/components/VoteResultBoard.tsx` | 정당별 투표 결과 | `.sort()` → `.toSorted()` |
-| `app/bill/components/BillTab.tsx` | 발의자 타입 탭 | `as keyof typeof` 제거, 콜백 타입 개선 |
-| `app/bill/components/GPTSummary.tsx` | GPT 귀속 표시 | loader prop 제거 |
-| `app/bill/components/index.tsx` | 배럴 export | 내부 전용 컴포넌트 제거 |
+| 파일                                      | 책임                       | 변경 내용                                                                   |
+| ----------------------------------------- | -------------------------- | --------------------------------------------------------------------------- |
+| `app/bill/services/queries.ts`            | React Query 훅             | `as any` 4건 제거, `useMutateViewCount`에 캐시 갱신 추가                    |
+| `app/bill/components/BillDetail.tsx`      | 상세 페이지 오케스트레이터 | viewCount 로컬 상태 제거, mutate 1회 호출                                   |
+| `app/bill/components/HalfDonutChart.tsx`  | D3 투표 시각화             | `null as any` 3건 제거, rAF cleanup, tooltip dead code 제거, useMemo 의존성 |
+| `app/bill/components/AnotherBill.tsx`     | 유사 법안 카드             | router.push → Link, 조건부 preventDefault 제거, null guard                  |
+| `app/bill/components/ProposerList.tsx`    | 발의자 명단                | Zod 추론 타입, popover→variant, ESLint suppress 제거                        |
+| `app/bill/components/VoteResultBoard.tsx` | 정당별 투표 결과           | `.sort()` → `.toSorted()`                                                   |
+| `app/bill/components/BillTab.tsx`         | 발의자 타입 탭             | `as keyof typeof` 제거, 콜백 타입 개선                                      |
+| `app/bill/components/GPTSummary.tsx`      | GPT 귀속 표시              | loader prop 제거                                                            |
+| `app/bill/components/index.tsx`           | 배럴 export                | 내부 전용 컴포넌트 제거                                                     |
 
 ### 영향 받는 소비자 파일 (호환성 확인 필요)
 
-| 파일 | 확인 사항 |
-|------|-----------|
+| 파일                                          | 확인 사항                                 |
+| --------------------------------------------- | ----------------------------------------- |
 | `app/bill/components/BillProposerSection.tsx` | `popover` → `variant="popover"` prop 변경 |
-| `app/user/components/BillBookmarked.tsx` | `popover` → `variant="popover"` prop 변경 |
+| `app/user/components/BillBookmarked.tsx`      | `popover` → `variant="popover"` prop 변경 |
 
 ---
 
 ## Task 1: queries.ts `as any` 제거 + useMutateViewCount 캐시 갱신
 
 **Files:**
+
 - Modify: `app/bill/services/queries.ts:84-98` (useMutateViewCount)
 
 **배경:** `useMutateViewCount`의 onSuccess/onError 콜백에서 `as any` 4건이 사용된다. 제네릭 파라미터를 concrete 타입으로 지정하고, onSuccess에서 React Query 캐시를 직접 갱신하여 BillDetail의 로컬 상태 의존을 제거한다.
@@ -100,6 +101,7 @@ git commit -m "refactor: useMutateViewCount as any 제거 및 캐시 갱신 추�
 ## Task 2: BillDetail.tsx viewCount 로컬 상태 제거
 
 **Files:**
+
 - Modify: `app/bill/components/BillDetail.tsx`
 
 **배경:** Task 1에서 `useMutateViewCount`가 캐시를 직접 갱신하므로, BillDetail의 `useState(viewCount)` + `useEffect` + `onSuccess` 콜백이 불필요해진다. `data.bill_info_dto.view_count`를 직접 사용한다.
@@ -172,6 +174,7 @@ export default function BillDetail({ id }: { id: string }) {
 ```
 
 주요 변경:
+
 - `useState` → `useRef` (import 변경)
 - `onSuccess` 콜백 전달 제거
 - `viewCount` 로컬 상태 제거 → `data.bill_info_dto.view_count` 직접 전달
@@ -194,9 +197,11 @@ git commit -m "refactor: BillDetail viewCount 로컬 상태 제거, mutate 1회 
 ## Task 3: HalfDonutChart.tsx D3 타입 + rAF cleanup + tooltip 정리
 
 **Files:**
+
 - Modify: `app/bill/components/HalfDonutChart.tsx`
 
 **배경:**
+
 - `null as any` 3건 — D3 arc generator 호출 시 타입 불일치
 - `requestAnimationFrame` cleanup 미구현
 - tooltip 핸들러 dead code (visible: false 고정)
@@ -205,6 +210,7 @@ git commit -m "refactor: BillDetail viewCount 로컬 상태 제거, mutate 1회 
 - [ ] **Step 1: tooltip 상태 및 핸들러 제거**
 
 삭제 대상:
+
 - `tooltip` useState (L73-82)
 - `handleMouseEnter` (L254-278)
 - `handleMouseLeave` (L280-282)
@@ -213,6 +219,7 @@ git commit -m "refactor: BillDetail viewCount 로컬 상태 제거, mutate 1회 
 - 서브 아크 path의 `onMouseEnter`, `onMouseLeave`, `onMouseMove` props (L331-333)
 
 추가: TODO 주석 유지
+
 ```tsx
 // TODO: 툴팁 UI 수정 후 다시 활성화 — 관련 코드 제거됨, git history 참조
 ```
@@ -251,6 +258,7 @@ useEffect(() => {
 - [ ] **Step 3: D3 `null as any` 3건 제거**
 
 배경 아크 (L303):
+
 ```tsx
 // Before
 <path d={arc(null as any) as string} fill="#e6e6e6" ... />
@@ -266,6 +274,7 @@ const backgroundArcPath = arc({
 ```
 
 진행 아크 (L307):
+
 ```tsx
 // Before
 <path d={progressArc(null as any) as string} fill={progressColor} ... />
@@ -282,6 +291,7 @@ const progressArcPath = progressArc({
 ```
 
 서브 아크 (L240, partyArcs useMemo 내부):
+
 ```tsx
 // Before
 .cornerRadius(cornerRadius / 2)(null as any);
@@ -298,6 +308,7 @@ const progressArcPath = progressArc({
 - [ ] **Step 4: useMemo 의존성 정리**
 
 partyArcs useMemo (L251):
+
 ```tsx
 // Before
 }, [partyVoteList, totalVoteCount, animatedValue]);
@@ -327,6 +338,7 @@ git commit -m "refactor: HalfDonutChart D3 null as any 제거, rAF cleanup, tool
 ## Task 4: AnotherBill.tsx 네비게이션 패턴 개선
 
 **Files:**
+
 - Modify: `app/bill/components/AnotherBill.tsx`
 
 **배경:** `router.push()`를 onClick에서 사용하고, `<Link>`에 조건부 `preventDefault()` 호출하는 안티패턴을 수정한다.
@@ -430,6 +442,7 @@ export default function AnotherBill({
 ```
 
 주요 변경:
+
 - `useRouter` import 제거
 - 단일 정당: `<Link href="#">` + preventDefault → null 분기로 Link 또는 plain 컴포넌트
 - 다수 정당: `router.push()` onClick → `<Link>` 래핑
@@ -452,6 +465,7 @@ git commit -m "refactor: AnotherBill router.push를 Link로 교체, 조건부 pr
 ## Task 5: ProposerList.tsx 타입 개선 + ESLint suppress 제거
 
 **Files:**
+
 - Modify: `app/bill/components/ProposerList.tsx`
 - Modify: `app/bill/components/BillProposerSection.tsx` (호출처)
 - Modify: `app/user/components/BillBookmarked.tsx` (호출처)
@@ -490,7 +504,8 @@ export default function ProposerList({
   const compareByName = (a: string[], b: string[]) => a[1].localeCompare(b[1]);
 
   return (
-    <Card className={`lg:shadow-none dark:lg:bg-dark-pb ${variant === 'popover' ? 'shadow-none dark:lg:bg-transparent' : ''}`}>
+    <Card
+      className={`lg:shadow-none dark:lg:bg-dark-pb ${variant === 'popover' ? 'shadow-none dark:lg:bg-transparent' : ''}`}>
       <CardHeader>
         <p className="font-medium">
           {representativeProposerLength === 1
@@ -562,6 +577,7 @@ export default function ProposerList({
 ```
 
 주요 변경:
+
 - 파일 상단 `/* eslint-disable no-nested-ternary */` 제거
 - 인라인 타입 → Zod 추론 타입
 - `popover: boolean` → `variant?: 'default' | 'popover'`
@@ -628,6 +644,7 @@ git commit -m "refactor: ProposerList Zod 타입 적용, popover→variant, ESLi
 ## Task 6: VoteResultBoard, BillTab, GPTSummary 소규모 개선
 
 **Files:**
+
 - Modify: `app/bill/components/VoteResultBoard.tsx`
 - Modify: `app/bill/components/BillTab.tsx`
 - Modify: `app/bill/components/GPTSummary.tsx`
@@ -689,6 +706,7 @@ export default function BillTab({
 - [ ] **Step 3: BillTab 소비자 파일 캐스트 정리**
 
 `app/congressman/components/BillContainer.tsx` (L37):
+
 ```tsx
 // Before
 <BillTab type={billType as ValueOf<typeof BILL_TAB>} clickHandler={setBillType as (key: Key) => void} />
@@ -696,9 +714,11 @@ export default function BillTab({
 // After
 <BillTab type={billType as ValueOf<typeof BILL_TAB>} clickHandler={setBillType} />
 ```
+
 `Key` import도 제거.
 
 `app/party/components/BillContainer.tsx` (L37):
+
 ```tsx
 // Before
 <BillTab type={billType as any} clickHandler={setBillType as any} />
@@ -736,6 +756,7 @@ git commit -m "refactor: VoteResultBoard immutable sort, BillTab 타입 캐스�
 ## Task 7: index.tsx 배럴 파일 정리
 
 **Files:**
+
 - Modify: `app/bill/components/index.tsx`
 
 **배경:** 내부 전용 컴포넌트들이 배럴에서 불필요하게 re-export되고 있다. `Bill.tsx`에서 직접 import하는 컴포넌트(`BillCardFooter`, `BillSummaryContent`, `BillProposerSection`, `GPTSummary`, `SectionContainer`)는 외부 모듈에서 사용하지 않으므로 배럴에서 제거한다.
@@ -804,23 +825,23 @@ git commit -m "refactor: 배럴 파일에서 내부 전용 컴포넌트 export �
 
 ## 적용 규칙 매핑
 
-| Task | 적용 규칙 |
-|------|-----------|
-| Task 1 | TypeScript strict, React Query v5 cache update |
-| Task 2 | `rerender-derived-state-no-effect`, `advanced-event-handler-refs` |
-| Task 3 | D3 typing, rAF cleanup, `rerender-dependencies`, dead code 제거 |
-| Task 4 | Next.js `<Link>` 우선, null safety |
+| Task   | 적용 규칙                                                                       |
+| ------ | ------------------------------------------------------------------------------- |
+| Task 1 | TypeScript strict, React Query v5 cache update                                  |
+| Task 2 | `rerender-derived-state-no-effect`, `advanced-event-handler-refs`               |
+| Task 3 | D3 typing, rAF cleanup, `rerender-dependencies`, dead code 제거                 |
+| Task 4 | Next.js `<Link>` 우선, null safety                                              |
 | Task 5 | Zod type inference, `architecture-avoid-boolean-props`, `js-tosorted-immutable` |
-| Task 6 | `js-tosorted-immutable`, TypeScript strict, Next.js Image |
-| Task 7 | `bundle-barrel-imports` |
+| Task 6 | `js-tosorted-immutable`, TypeScript strict, Next.js Image                       |
+| Task 7 | `bundle-barrel-imports`                                                         |
 
 ## 요약 — 개선 효과
 
-| 영역 | Before | After |
-|------|--------|-------|
-| **타입 안전성** | `as any` 8건 (queries 4, chart 3, tab 1) | 0건 |
-| **데이터 흐름** | BillDetail: useState + useEffect 동기화 | React Query 캐시 직접 갱신 |
-| **메모리 안전** | HalfDonutChart rAF cleanup 없음 | cleanup 구현 |
-| **네비게이션** | router.push + 조건부 preventDefault | Link 컴포넌트 + JSX 분기 |
-| **코드 품질** | ESLint suppress 3건, dead code | suppress 제거, dead code 정리 |
-| **불변성** | VoteResultBoard props 배열 직접 변이 | `.toSorted()` 사용 |
+| 영역            | Before                                   | After                         |
+| --------------- | ---------------------------------------- | ----------------------------- |
+| **타입 안전성** | `as any` 8건 (queries 4, chart 3, tab 1) | 0건                           |
+| **데이터 흐름** | BillDetail: useState + useEffect 동기화  | React Query 캐시 직접 갱신    |
+| **메모리 안전** | HalfDonutChart rAF cleanup 없음          | cleanup 구현                  |
+| **네비게이션**  | router.push + 조건부 preventDefault      | Link 컴포넌트 + JSX 분기      |
+| **코드 품질**   | ESLint suppress 3건, dead code           | suppress 제거, dead code 정리 |
+| **불변성**      | VoteResultBoard props 배열 직접 변이     | `.toSorted()` 사용            |
