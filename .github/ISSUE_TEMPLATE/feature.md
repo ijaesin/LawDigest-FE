@@ -1,7 +1,6 @@
 ---
 name: featrue
 about: Suggest an idea for this project
-title: 'Feature/#[Issue number]/[Issue name]'
 labels: 'feature'
 type: 'feature'
 assignees: ''
