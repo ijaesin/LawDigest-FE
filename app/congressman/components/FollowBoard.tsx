@@ -2,9 +2,9 @@
 
 import { useCallback, useState } from 'react';
 import { Button } from '@/app/common/components/ui/button';
-import { getCookie } from 'cookies-next';
-import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
+import { SNACKBAR_TYPE } from '@/app/common/constants';
 import { useSnackbarStore } from '@/app/common/store';
+import { useAuthGuard } from '@/app/auth/hooks';
 import { IconCheck, IconPlus } from '@/public/svgs';
 import { useMutateCongressmanFollow } from '@/app/congressman/services';
 
@@ -25,25 +25,20 @@ export default function FollowBoard({
   const [followCount, setFollowCount] = useState(follow_count);
   const mutationFollow = useMutateCongressmanFollow(id);
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
+  const { requireLogin } = useAuthGuard();
 
   const onClickFollow = useCallback(() => {
-    const accessToken = getCookie(ACCESS_TOKEN);
-
-    if (accessToken) {
-      setIsFollowed(!isFollowed);
-      setFollowCount(isFollowed ? followCount - 1 : followCount + 1);
-      setSnackbar({
-        show: true,
-        type: isFollowed ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
-        message: isFollowed ? '해당 의원의 팔로우를 취소했습니다.' : '해당 의원을 팔로우했습니다.',
-        duration: 3000,
-      });
-
-      mutationFollow.mutate(!isFollowed);
-    } else {
-      setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', action: { label: '로그인 하기', href: '/auth/login' }, duration: 3000 });
-    }
-  }, [isFollowed, setSnackbar, followCount]);
+    if (!requireLogin()) return;
+    setIsFollowed(!isFollowed);
+    setFollowCount(isFollowed ? followCount - 1 : followCount + 1);
+    setSnackbar({
+      show: true,
+      type: isFollowed ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
+      message: isFollowed ? '해당 의원의 팔로우를 취소했습니다.' : '해당 의원을 팔로우했습니다.',
+      duration: 3000,
+    });
+    mutationFollow.mutate(!isFollowed);
+  }, [isFollowed, setSnackbar, followCount, requireLogin]);
 
   return (
     <div className="flex flex-col gap-5 w-full">

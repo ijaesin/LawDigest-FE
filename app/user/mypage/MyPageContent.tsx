@@ -2,24 +2,21 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCookie } from 'cookies-next';
-import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
-import { useSnackbarStore } from '@/app/common/store';
+import { useAuthGuard } from '@/app/auth/hooks';
 import { CongressmanList, UserInfo, PartyList, BillContainer } from '@/app/user/components';
 
 export default function MyPageContent() {
   const router = useRouter();
-  const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
-  const accessToken = getCookie(ACCESS_TOKEN);
+  const { isAuthenticated, requireLogin } = useAuthGuard();
 
   useEffect(() => {
-    if (!accessToken) {
-      setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', duration: 3000 });
+    if (!isAuthenticated) {
+      requireLogin();
       router.push('/auth/login');
     }
-  }, [accessToken, router, setSnackbar]);
+  }, [isAuthenticated, requireLogin, router]);
 
-  if (!accessToken) return null;
+  if (!isAuthenticated) return null;
 
   return (
     <div className="flex flex-col gap-8 h-full lg:flex-row md:items-center lg:items-start lg:justify-center lg:mt-10 lg:mx-auto lg:ml-10 xl:ml-0">

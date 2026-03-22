@@ -9,9 +9,9 @@ import Link from 'next/link';
 import { IconClock } from '@/public/svgs';
 import { useMutateBookmark } from '@/app/bill/hooks';
 import { getTimeRemaining, copyClipBoard } from '@/app/common/utils';
-import { getCookie } from 'cookies-next';
 import { useSnackbarStore } from '@/app/common/store';
-import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
+import { SNACKBAR_TYPE } from '@/app/common/constants';
+import { useAuthGuard } from '@/app/auth/hooks';
 import type { BillProps } from '@/app/bill/types';
 import GPTSummary from './GPTSummary';
 import BillSummaryContent from './BillSummaryContent';
@@ -40,26 +40,22 @@ export default function Bill({
   const mutateBookmark = useMutateBookmark(bill_id);
   const [toggleMore, setToggleMore] = useState(false);
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
+  const { requireLogin } = useAuthGuard();
 
   const onClickToggleMore = useCallback(() => {
     setToggleMore(!toggleMore);
   }, [toggleMore]);
 
   const onClickScrap = useCallback(() => {
-    const accessToken = getCookie(ACCESS_TOKEN);
-
-    if (accessToken) {
-      setSnackbar({
-        show: true,
-        type: is_book_mark ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
-        message: is_book_mark ? '해당 법안의 스크랩을 취소했습니다.' : '해당 법안을 스크랩했습니다.',
-        duration: 3000,
-      });
-      mutateBookmark.mutate(!is_book_mark);
-    } else {
-      setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', action: { label: '로그인 하기', href: '/auth/login' }, duration: 3000 });
-    }
-  }, [is_book_mark, setSnackbar, mutateBookmark]);
+    if (!requireLogin()) return;
+    setSnackbar({
+      show: true,
+      type: is_book_mark ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
+      message: is_book_mark ? '해당 법안의 스크랩을 취소했습니다.' : '해당 법안을 스크랩했습니다.',
+      duration: 3000,
+    });
+    mutateBookmark.mutate(!is_book_mark);
+  }, [is_book_mark, setSnackbar, mutateBookmark, requireLogin]);
 
   const handleCopyClipBoard = useCallback(() => {
     copyClipBoard(`${process.env.NEXT_PUBLIC_DOMAIN}/bill/${bill_id}`);
