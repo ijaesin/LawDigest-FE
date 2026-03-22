@@ -1,5 +1,5 @@
 import { Layout } from '@/app/common/components/Layout/Layout';
-import ClientHomeSection from './home/ClientHomeSection';
+import ClientHomeSection from './ClientHomeSection';
 
 export const dynamic = 'force-dynamic';
 
