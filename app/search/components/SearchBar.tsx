@@ -1,54 +1,45 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { useState } from 'react';
+import { getCookie } from 'cookies-next';
 import { IconSearchbar, IconX } from '@/public/svgs';
 import { Input } from '@/app/common/components/ui/input';
 import { Button } from '@/app/common/components/ui/button';
 import { useSearchModalStore } from '@/app/common/store';
+import { ACCESS_TOKEN } from '@/app/common/constants';
+import { usePostRecentKeyword } from '@/app/search/services/queries';
 
-export default function SearchBar({
-  setRecentKeywords,
-}: {
-  setRecentKeywords: Dispatch<SetStateAction<string[]>>;
-}) {
+export default function SearchBar() {
   const router = useRouter();
   const [value, setValue] = useState('');
   const show = useSearchModalStore((s) => s.show);
   const close = useSearchModalStore((s) => s.close);
+  const { mutate: saveKeyword } = usePostRecentKeyword();
 
-  const onSubmitSearch = useCallback(
-    (event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      const newKeyword = value.trim();
-
-      if (newKeyword !== '') {
-        const recentKeywords = JSON.parse(localStorage.getItem('recentKeywords') || '[]');
-
-        if (recentKeywords.find((v: string) => v === newKeyword)) {
-          const newRecentKeywords = [...recentKeywords.filter((v: string) => v !== newKeyword), newKeyword];
-          localStorage.setItem('recentKeywords', JSON.stringify(newRecentKeywords));
-          setRecentKeywords(newRecentKeywords);
-        } else {
-          const newRecentKeywords = [...recentKeywords, newKeyword];
-          localStorage.setItem('recentKeywords', JSON.stringify(newRecentKeywords));
-          setRecentKeywords(newRecentKeywords);
-        }
-
-        router.push(`/search/${value.trim()}`);
-      } else {
-        setValue('');
-      }
-
+  const onSubmitSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const keyword = value.trim();
+    if (!keyword) {
       setValue('');
-      close();
-    },
-    [value, router, setRecentKeywords, close],
-  );
+      return;
+    }
+
+    if (getCookie(ACCESS_TOKEN)) {
+      saveKeyword(keyword);
+    } else {
+      const stored: string[] = JSON.parse(localStorage.getItem('recentKeywords') || '[]');
+      const updated = [...stored.filter((v) => v !== keyword), keyword].slice(-10);
+      localStorage.setItem('recentKeywords', JSON.stringify(updated));
+    }
+
+    router.push(`/search/${keyword}`);
+    setValue('');
+    close();
+  };
 
   const onClear = () => {
     setValue('');
-    router.push('/search');
   };
 
   return (
