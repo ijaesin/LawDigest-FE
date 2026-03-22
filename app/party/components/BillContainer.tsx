@@ -1,6 +1,7 @@
+// app/party/components/BillContainer.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useIntersect, useTabType } from '@/app/common/hooks';
 import { BILL_TAB } from '@/app/bill/constants';
 import type { ValueOf } from '@/app/common/types';
@@ -9,28 +10,21 @@ import { useInfinitePartyBills } from '@/app/party/hooks';
 
 export default function BillContainer({ id }: { id: number }) {
   const [billType, setBillType] = useTabType<typeof BILL_TAB>('represent_proposer');
-  const { data, hasNextPage, isFetching, fetchNextPage, refetch } = useInfinitePartyBills(
+  const { data, hasNextPage, isFetching, fetchNextPage } = useInfinitePartyBills(
     id,
     billType as ValueOf<typeof BILL_TAB>,
   );
-  const [bills, setBills] = useState(data ? data.pages.flatMap(({ bill_list: responses }) => responses) : []);
+
+  const bills = useMemo(
+    () => data?.pages.flatMap(({ bill_list }) => bill_list) ?? [],
+    [data],
+  );
 
   const fetchRef = useIntersect(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
   });
-
-  useEffect(() => {
-    if (data) {
-      setBills(() => [...data.pages.flatMap(({ bill_list: responses }) => responses)]);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    setBills([]);
-    refetch();
-  }, [billType]);
 
   return (
     <section>
