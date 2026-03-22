@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Layout } from '@/app/common/components/Layout/Layout';
+import { AppLayout } from '@/app/common/components/Layout/AppLayout/AppLayout';
 import { Loading } from '@/app/common/components/Loading';
 import { Feed } from '@/app/bill/components';
 import { NotificationTopThree } from '@/app/notification/components';
@@ -8,17 +8,24 @@ import FeedErrorFallback from '@/app/bill/components/FeedErrorFallback';
 
 export const dynamic = 'force-dynamic';
 
+function HomeSidebar() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <NotificationTopThree />
+    </Suspense>
+  );
+}
+
 export default function Home() {
   return (
-    <Layout nav logo notification>
-      <section className="lg:w-[880px] mx-auto">
+    <AppLayout rightSidebar={<HomeSidebar />}>
+      <section>
         <ErrorBoundary FallbackComponent={FeedErrorFallback}>
           <Suspense fallback={<Loading />}>
-            <NotificationTopThree />
             <Feed />
           </Suspense>
         </ErrorBoundary>
       </section>
-    </Layout>
+    </AppLayout>
   );
 }
