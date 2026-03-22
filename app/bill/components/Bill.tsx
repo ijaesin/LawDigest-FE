@@ -19,6 +19,7 @@ import { PartyLogoReplacement } from '@/app/party/components';
 import type { BillProps } from '@/app/bill/types';
 import ProposerList from './ProposerList';
 import GPTSummary from './GPTSummary';
+import BillSummaryContent from './BillSummaryContent';
 
 export default function Bill({
   bill_info_dto: {
@@ -52,13 +53,6 @@ export default function Bill({
       : '다수'
     : '정보 없음';
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
-
-  const formattedGptSummary = gpt_summary
-    ? gpt_summary
-        .split('**')
-        .map((value, index) => (index % 2 === 0 ? value : `<strong>${value}</strong>`))
-        .join('')
-    : '';
 
   const onClickToggleMore = useCallback(() => {
     setToggleMore(!toggleMore);
@@ -116,20 +110,17 @@ export default function Bill({
 
         <section className={!detail ? 'md:flex-1' : ''}>
           <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
-              {gpt_summary ? (
-                <p
-                  className={!detail && !toggleMore ? 'line-clamp-[8]' : ''}
-                  dangerouslySetInnerHTML={{ __html: formattedGptSummary }}
-                />
-              ) : (
-                <p className={!detail && !toggleMore ? 'line-clamp-[8]' : ''}>{summary}</p>
-              )}
-              {!detail && !toggleMore && (
-                <Button variant="link" onClick={onClickToggleMore} className="p-0 text-gray-2 dark:text-gray-3">
-                  더 보기
-                </Button>
-              )}
-            </CardContent>
+            <BillSummaryContent
+              gptSummary={gpt_summary}
+              summary={summary}
+              isCollapsed={!detail && !toggleMore}
+            />
+            {!detail && !toggleMore && (
+              <Button variant="link" onClick={onClickToggleMore} className="p-0 text-gray-2 dark:text-gray-3">
+                더 보기
+              </Button>
+            )}
+          </CardContent>
 
             {!detail && (
               <CardFooter className="flex justify-between items-center p-0 mt-5 -ml-1">
