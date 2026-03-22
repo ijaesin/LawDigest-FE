@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
-import { COLOR } from '@/app/common/constants/theme';
+import { PARTY_COLOR } from '@/app/common/constants/theme';
+import { getPartyConstant } from '@/app/common/utils';
 
 // TODO: 툴팁 UI 수정 후 다시 활성화 — 관련 코드 제거됨, git history 참조
 
@@ -262,7 +263,7 @@ export default function HalfDonutChart({
           <path
             key={partyArc.party.party_info.party_id}
             d={partyArc.arcPath ?? ''}
-            fill={COLOR[partyArc.party.party_info.party_name as keyof typeof COLOR]}
+            fill={getPartyConstant(PARTY_COLOR, partyArc.party.party_info.party_name, '#797C85')}
             transform={`translate(${centerX}, ${centerY})`}
             aria-label={`${partyArc.party.party_info.party_name}: ${partyArc.party.party_approval_count}`}
             role="graphics-symbol"

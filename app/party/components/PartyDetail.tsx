@@ -5,14 +5,8 @@ import Link from 'next/link';
 import { Card } from '@/app/common/components/ui/card';
 import { Separator } from '@/app/common/components/ui/separator';
 import { IconWeb } from '@/public/svgs';
-import {
-  PARTY_NAME_KO,
-  PARTY_POSITION,
-  PARTY_LEADER,
-  PARTY_FLOOR_LEADER,
-  PARTY_SECRETARY_GENERAL,
-  PARTY_POLISY_COMMITTEE_CHAIRMAN,
-} from '@/app/party/constants';
+import { PARTY_POSITION } from '@/app/party/constants';
+import { getPartyConstant } from '@/app/common/utils';
 import { useGetPartyDetail } from '@/app/party/hooks';
 import FollowBoard from './FollowBoard';
 import PartyLogo from '@/app/common/components/PartyLogo';
@@ -41,7 +35,7 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
 
         <div className="flex flex-col gap-1 items-center">
           <h2 className="text-2xl font-semibold">{party_name}</h2>
-          <h3 className="text-gray-3 dark:text-gray-2">{PARTY_POSITION[party_name as keyof typeof PARTY_NAME_KO]}</h3>
+          <h3 className="text-gray-3 dark:text-gray-2">{getPartyConstant(PARTY_POSITION, party_name)}</h3>
         </div>
 
         <div className="text-sm">
@@ -67,24 +61,23 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
 
       <Separator className="dark:bg-dark-l" />
 
+      {/* TODO: Task 6에서 간부 정보를 API로 전환 예정 */}
       <div className="grid grid-cols-4 justify-items-center w-full">
         <div className="flex flex-col items-center">
           <p className="text-sm text-gray-3 dark:text-gray-2">당대표</p>
-          <p className="font-medium">{PARTY_LEADER[party_name as keyof typeof PARTY_NAME_KO] || '없음'}</p>
+          <p className="font-medium">-</p>
         </div>
         <div className="flex flex-col items-center">
           <p className="text-sm text-gray-3 dark:text-gray-2">원내대표</p>
-          <p className="font-medium">{PARTY_FLOOR_LEADER[party_name as keyof typeof PARTY_NAME_KO] || '없음'}</p>
+          <p className="font-medium">-</p>
         </div>
         <div className="flex flex-col items-center">
           <p className="text-sm text-gray-3 dark:text-gray-2">사무총장</p>
-          <p className="font-medium">{PARTY_SECRETARY_GENERAL[party_name as keyof typeof PARTY_NAME_KO] || '없음'}</p>
+          <p className="font-medium">-</p>
         </div>
         <div className="flex flex-col items-center">
           <p className="text-sm text-gray-3 dark:text-gray-2">정책위의장</p>
-          <p className="font-medium">
-            {PARTY_POLISY_COMMITTEE_CHAIRMAN[party_name as keyof typeof PARTY_NAME_KO] || '없음'}
-          </p>
+          <p className="font-medium">-</p>
         </div>
       </div>
 
