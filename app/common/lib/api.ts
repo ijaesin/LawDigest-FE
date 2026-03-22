@@ -1,8 +1,9 @@
+// app/common/lib/api.ts
 import axios, { type AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
-import { getCookie, deleteCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import qs from 'qs';
 import { ACCESS_TOKEN } from '@/app/common/constants';
-import { authEvents } from '@/app/common/lib/auth-events';
+import { createAuthErrorHandler } from '@/app/auth/lib/token-reissue';
 
 interface ApiResponse<T = unknown> {
   status: number;
@@ -52,28 +53,5 @@ apiClient.interceptors.response.use(
     }
     return payload;
   },
-  async (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      return apiClient
-        .post('/auth/reissue/token')
-        .then(() => {
-          const { response } = error;
-          const newConfig = { ...response!.config, headers: { ...response!.config.headers } };
-          const accessToken = getCookie(ACCESS_TOKEN);
-          if (accessToken) {
-            newConfig.headers.Authorization = `Bearer ${accessToken}`;
-          }
-
-          return axios(newConfig).then(() => {
-            authEvents.emitTokenReissued();
-          });
-        })
-        .catch(() => {
-          deleteCookie(ACCESS_TOKEN);
-          authEvents.emitLogout();
-        });
-    }
-
-    return Promise.reject(error);
-  },
+  createAuthErrorHandler(apiClient),
 );
