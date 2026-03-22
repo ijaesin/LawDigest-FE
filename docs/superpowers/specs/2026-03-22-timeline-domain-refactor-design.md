@@ -2,7 +2,7 @@
 
 **Goal:** Timeline 도메인의 코드 품질, 타입 안전성, 안정성을 프로젝트 표준과 최신 React/Next.js 패턴에 맞게 전면 개선한다.
 
-**Architecture:** 서비스 계층을 프로젝트 표준(apis/queries/query-keys)으로 분리하고, React Query 데이터를 직접 파생 계산하여 불필요한 상태 동기화를 제거한다. 12회 중복되는 정당 로고 렌더링과 4회 중복되는 반응형 페이지네이션을 공유 컴포넌트/훅으로 추출한다. SubmittedList/PromulgationList를 variant 기반 BillOutlineList로 통합한다. Suspense + ErrorBoundary를 추가하고 기존 버그를 수정한다.
+**Architecture:** 서비스 계층을 프로젝트 표준(apis/queries/query-keys)으로 분리하고, React Query 데이터를 직접 파생 계산하여 불필요한 상태 동기화를 제거한다. 9회 중복되는 정당 로고 렌더링과 4회 중복되는 반응형 페이지네이션을 공유 컴포넌트/훅으로 추출한다. SubmittedList/PromulgationList를 variant 기반 BillOutlineList로 통합한다. Suspense + ErrorBoundary를 추가하고 기존 버그를 수정한다.
 
 **Tech Stack:** Next.js 15, React 19, TanStack React Query v5, Zod, TypeScript strict, Tailwind CSS, shadcn/ui
 
@@ -44,7 +44,7 @@ const timeline = useMemo(() => data?.pages.flatMap(p => p.timeline_response_list
 
 **위치:** `app/timeline/components/PartyLogo.tsx`
 
-12회 중복되는 정당 로고 렌더링을 하나의 컴포넌트로 추출.
+9회 중복되는 정당 로고 렌더링을 하나의 컴포넌트로 추출.
 
 ```tsx
 interface PartyLogoProps {
@@ -129,12 +129,19 @@ const VARIANT_CONFIG = {
 
 `PlenaryList`와 `CommitteeAuditList`는 구조가 충분히 다르므로 (투표 결과, 위원회 그룹핑) 별도 컴포넌트로 유지. 공유 훅/컴포넌트를 사용하여 중복을 제거.
 
+**SubmittedList vs PromulgationList 미세 차이 해결:**
+- 카드 로고 위치: SubmittedList는 `index === 0`일 때만 `-left-[39px]`, 나머지는 `left-0`. PromulgationList는 항상 `-left-[39px]`. → PromulgationList 방식(`-left-[39px]` 고정)을 채택. 모바일에서만 보이므로(`md:hidden`) 일관된 위치가 적절.
+- CSS: `md:border` vs `md:border-1` → `md:border`로 통일 (Tailwind 표준).
+
 ---
 
 ## 5. 버그 수정
 
 1. **PromulgationList 링크 버그:** 모달 내 `promulgation_list[currentPage].bill_id` → 루프 변수 `bill_id` 사용 (BillOutlineList 통합 시 자동 수정)
 2. **페이지네이션 dot key 버그:** `key={currentPage}` → `key={i}` (TimelinePagination 추출 시 자동 수정)
+3. **CommitteeAuditList prev 버튼 Math.ceil 누락:** `committee_audit_list.length / itemsPerPage - 1` → `Math.ceil(...) - 1` (useResponsivePagination 훅 추출 시 자동 수정)
+4. **CommitteeAuditList 멀티모달 버그:** `isOpenIndividual` 하나의 상태로 N개 모달이 동시 열림 → 개별 위원회 ID 기반 상태로 수정
+5. **CommitteeAuditList 불필요한 length 검사:** `.map()` 내부의 `committee_audit_list.length !== 0` 가드는 항상 true — 제거
 
 ---
 
@@ -162,7 +169,8 @@ const VARIANT_CONFIG = {
 
 ## 7. TimelineModal 개선
 
-`onOpenChange`에 `onClose`를 직접 전달하면 boolean 인자가 무시됨. `open`/`onOpenChange` 패턴으로 정렬.
+- `onOpenChange`에 `onClose`를 직접 전달하면 boolean 인자가 무시됨. `open`/`onOpenChange` 패턴으로 정렬.
+- **하드코딩된 제목 수정:** 현재 항상 "심사한 법안"으로 표시되지만, 접수/공포 맥락에서는 부적절. `title` prop을 추가하여 호출처에서 지정.
 
 ---
 
@@ -222,7 +230,7 @@ const VARIANT_CONFIG = {
 | 영역 | Before | After |
 |------|--------|-------|
 | 데이터 흐름 | useState + useEffect 동기화 | useMemo 파생 계산 |
-| 정당 로고 | 12회 ~30줄 중복 | PartyLogo 단일 컴포넌트 |
+| 정당 로고 | 9회 ~30줄 중복 | PartyLogo 단일 컴포넌트 |
 | 페이지네이션 로직 | 4곳 ~25줄 중복 | useResponsivePagination 훅 |
 | 페이지네이션 UI | 4곳 ~30줄 중복 | TimelinePagination 컴포넌트 |
 | 컴포넌트 수 | Submitted + Promulgation 별도 | BillOutlineList variant 통합 |
