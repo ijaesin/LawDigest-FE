@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isAxiosError } from 'axios';
 
 // TODO(lawdigest): 임시 완화 — 공통 에러 본문 파싱 시 일부 필드 누락/타입 불일치를 허용
 
@@ -11,8 +12,7 @@ export const ApiErrorSchema = z
 export type ApiErrorBody = z.infer<typeof ApiErrorSchema>;
 
 export function extractApiMessage(error: unknown, fallback = '요청에 실패했습니다.'): string {
-  // AxiosError 형태: error.response?.data
-  const data = (error as any)?.response?.data;
+  const data = isAxiosError(error) ? error.response?.data : undefined;
   const parsed = ApiErrorSchema.safeParse(data);
   return parsed.success ? (parsed.data.message ?? fallback) : fallback;
 }
