@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Separator } from '@/app/common/components/ui/separator';
 import { useGetBillDetail, useMutateViewCount } from '@/app/bill/hooks';
 import Bill from './Bill';
@@ -12,22 +12,19 @@ import ProcessResult from './ProcessResult';
 
 export default function BillDetail({ id }: { id: string }) {
   const { data } = useGetBillDetail(id);
-  const [viewCount, setViewCount] = useState(data.bill_info_dto.view_count ?? 0);
-  const { mutate } = useMutateViewCount(id, {
-    onSuccess: (res) => {
-      setViewCount(res.view_count);
-    },
-  });
+  const { mutate } = useMutateViewCount(id);
+  const hasMutated = useRef(false);
 
   useEffect(() => {
-    const baseViewCount = data.bill_info_dto.view_count ?? 0;
-    setViewCount(baseViewCount);
-    mutate();
-  }, [data.bill_info_dto.view_count, mutate]);
+    if (!hasMutated.current) {
+      hasMutated.current = true;
+      mutate();
+    }
+  }, [mutate]);
 
   return (
     <section>
-      <Bill {...data} detail viewCount={viewCount}>
+      <Bill {...data} detail viewCount={data.bill_info_dto.view_count}>
         <section className="md:w-[300px] lg:w-[490px] md:float-right flex flex-col gap-[34px] mt-[34px]">
           <SectionContainer title="발의자 명단">
             <ProposerList
