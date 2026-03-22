@@ -154,6 +154,7 @@
     --primary: 235 82% 75%;
     --primary-foreground: 0 0% 9%;
     --primary-hover: 235 82% 82%;
+    /* Note: alpha tokens must be consumed as hsl(var(--primary-subtle)) */
     --primary-subtle: 239 84% 67% / 0.15;
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -162,6 +163,7 @@
     --tertiary-foreground: 0 0% 32%;
     --accent: 160 67% 52%;
     --accent-foreground: 0 0% 9%;
+    /* Note: alpha tokens must be consumed as hsl(var(--accent-subtle)) */
     --accent-subtle: 160 84% 39% / 0.15;
     --warning: 45 93% 56%;
     --warning-foreground: 0 0% 9%;
@@ -252,6 +254,7 @@
   }
 }
 
+/* Safari 18+ only — prefers-contrast: more above covers other browsers */
 @media (prefers-reduced-transparency: reduce) {
   .glass-subtle,
   .glass-medium,
