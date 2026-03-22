@@ -22,15 +22,15 @@ export default function TimelineBoard() {
         <Separator className="h-[82px] w-px bg-gray-2 hidden md:block" />
         <div className="flex gap-10">
           <div className="flex flex-col gap-2 items-center">
-            <span className="text-2xl font-semibold">{billState && billState.receipt_count}</span>
+            <span className="text-2xl font-semibold">{billState?.receipt_count}</span>
             <span className="text-sm font-medium text-gray-2">접수법안</span>
           </div>
           <div className="flex flex-col gap-2 items-center">
-            <span className="text-2xl font-semibold">{billState && billState.treatment_count}</span>
+            <span className="text-2xl font-semibold">{billState?.treatment_count}</span>
             <span className="text-sm font-medium text-gray-2">처리법안</span>
           </div>
           <div className="flex flex-col gap-2 items-center">
-            <span className="text-2xl font-semibold">{billState && billState.passed_count}</span>
+            <span className="text-2xl font-semibold">{billState?.passed_count}</span>
             <span className="text-sm font-medium text-gray-2">가결법안</span>
           </div>
         </div>
