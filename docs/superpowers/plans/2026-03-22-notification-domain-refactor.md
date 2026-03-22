@@ -14,28 +14,28 @@
 
 ### 수정 대상 파일
 
-| 파일 | 책임 | 변경 내용 |
-|------|------|-----------|
-| `app/notification/hooks/index.ts` | React Query 훅 re-export | `services/queries.ts` + `services/query-keys.ts`로 분리, re-export 전용으로 변경 |
-| `app/notification/components/NotificationList.tsx` | 알림 목록 UI | 파생 상태 제거, 반복 JSX 추출, useCallback 제거, 콜백 시그니처 변경 |
-| `app/notification/components/NotificationItem.tsx` | 알림 단일 항목 UI | 콜백 Props 시그니처 통일 (`onRead`, `onNavigateRead`, `onDelete`) |
-| `app/notification/components/NotificationTopThree.tsx` | 최근 알림 Top3 UI | 콜백 시그니처 변경, useCallback 제거 |
-| `app/notification/components/index.tsx` | 배럴 export | 내부 컴포넌트 export 제거 |
-| `app/notification/page.tsx` | 페이지 엔트리 | 서버 컴포넌트 auth guard 전환, `notificationKeys` import 경로 변경 |
+| 파일                                                   | 책임                     | 변경 내용                                                                        |
+| ------------------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------- |
+| `app/notification/hooks/index.ts`                      | React Query 훅 re-export | `services/queries.ts` + `services/query-keys.ts`로 분리, re-export 전용으로 변경 |
+| `app/notification/components/NotificationList.tsx`     | 알림 목록 UI             | 파생 상태 제거, 반복 JSX 추출, useCallback 제거, 콜백 시그니처 변경              |
+| `app/notification/components/NotificationItem.tsx`     | 알림 단일 항목 UI        | 콜백 Props 시그니처 통일 (`onRead`, `onNavigateRead`, `onDelete`)                |
+| `app/notification/components/NotificationTopThree.tsx` | 최근 알림 Top3 UI        | 콜백 시그니처 변경, useCallback 제거                                             |
+| `app/notification/components/index.tsx`                | 배럴 export              | 내부 컴포넌트 export 제거                                                        |
+| `app/notification/page.tsx`                            | 페이지 엔트리            | 서버 컴포넌트 auth guard 전환, `notificationKeys` import 경로 변경               |
 
 ### 신규 생성 파일
 
-| 파일 | 책임 |
-|------|------|
-| `app/notification/services/apis.ts` | API 호출 함수 (Zod 검증 포함) |
-| `app/notification/services/queries.ts` | React Query 훅 (query + mutation) |
-| `app/notification/services/query-keys.ts` | 쿼리 키 팩토리 (`'use client'` 없음, 서버 컴포넌트 호환) |
-| `app/notification/components/NotificationContent.tsx` | 클라이언트 사이드 레이아웃 (page.tsx에서 분리) |
+| 파일                                                  | 책임                                                     |
+| ----------------------------------------------------- | -------------------------------------------------------- |
+| `app/notification/services/apis.ts`                   | API 호출 함수 (Zod 검증 포함)                            |
+| `app/notification/services/queries.ts`                | React Query 훅 (query + mutation)                        |
+| `app/notification/services/query-keys.ts`             | 쿼리 키 팩토리 (`'use client'` 없음, 서버 컴포넌트 호환) |
+| `app/notification/components/NotificationContent.tsx` | 클라이언트 사이드 레이아웃 (page.tsx에서 분리)           |
 
 ### 삭제 파일
 
-| 파일 | 사유 |
-|------|------|
+| 파일                                 | 사유                      |
+| ------------------------------------ | ------------------------- |
 | `app/notification/services/index.ts` | `services/apis.ts`로 이동 |
 
 ---
@@ -43,6 +43,7 @@
 ## Task 1: services 구조 분리 (apis.ts + queries.ts + query-keys.ts)
 
 **Files:**
+
 - Create: `app/notification/services/query-keys.ts`
 - Create: `app/notification/services/apis.ts`
 - Create: `app/notification/services/queries.ts`
@@ -373,6 +374,7 @@ git commit -m "refactor: notification services 구조를 프로젝트 표준(api
 ## Task 2: 컴포넌트 리팩토링 (콜백 시그니처 + 파생 상태 + useCallback 일괄 수정)
 
 **Files:**
+
 - Modify: `app/notification/components/NotificationItem.tsx`
 - Modify: `app/notification/components/NotificationList.tsx`
 - Modify: `app/notification/components/NotificationTopThree.tsx`
@@ -763,6 +765,7 @@ export default function NotificationTopThree() {
 ```
 
 핵심 변경 (3파일 일괄):
+
 - **NotificationItem:** `onClickRead(id, isClickByButton)` → `onRead(id)` + `onNavigateRead(id)` 분리, `onClickDelete` → `onDelete`
 - **NotificationList:** `useState`+`useEffect`+`initialData` 66줄 → `useMemo`+`DATE_SECTIONS`, 3개 섹션 복붙→map, `useCallback` 4개 제거, ESLint suppress 제거
 - **NotificationTopThree:** `useCallback` 2개 제거, `React` import 제거, mutation `onSuccess` 스낵바 → 핸들러에서 직접 호출 (UX 통일), mutation에는 `onError`만 전달
@@ -784,6 +787,7 @@ git commit -m "refactor: notification 컴포넌트 콜백 시그니처 통일, �
 ## Task 3: page.tsx 서버 컴포넌트 auth guard + barrel file 정리
 
 **Files:**
+
 - Create: `app/notification/components/NotificationContent.tsx`
 - Modify: `app/notification/page.tsx`
 - Modify: `app/notification/components/index.tsx`
@@ -840,6 +844,7 @@ export default async function NotificationPage() {
 ```
 
 핵심 변경:
+
 - `cookies()` + `redirect('/auth/login')` auth guard 추가
 - `NotificationList` 직접 렌더링 → `NotificationContent` 클라이언트 컴포넌트로 분리
 - `notificationKeys` import: `hooks` → `services/query-keys` (서버 컴포넌트 호환)
@@ -854,6 +859,7 @@ export { default as NotificationTopThree } from './NotificationTopThree';
 ```
 
 변경 사항:
+
 - `NotificationItem` export 제거 — 모듈 내부에서만 사용
 - `NotificationContent`는 배럴에 추가하지 않음 — `page.tsx`에서 직접 import하는 내부 컴포넌트
 
@@ -879,6 +885,7 @@ git commit -m "refactor: notification page 서버 컴포넌트 auth guard 전환
 ## Task 4: ESLint/Prettier 수정
 
 **Files:**
+
 - Modify: 모든 변경된 파일
 
 - [ ] **Step 1: fix 실행**
@@ -901,22 +908,22 @@ git commit -m "style: notification 모듈 ESLint/Prettier 수정"
 
 ## 적용된 규칙 매핑
 
-| Task | 적용 규칙 |
-|------|-----------|
-| Task 1 | 프로젝트 표준 모듈 구조 일관성, mutation `...options` 스프레드 버그 수정 |
+| Task   | 적용 규칙                                                                   |
+| ------ | --------------------------------------------------------------------------- |
+| Task 1 | 프로젝트 표준 모듈 구조 일관성, mutation `...options` 스프레드 버그 수정    |
 | Task 2 | 콜백 시그니처 통일, 파생 상태 안티패턴 제거, DRY, 불필요한 useCallback 제거 |
-| Task 3 | Next.js 서버 컴포넌트 auth guard, 배럴 파일 정리 |
-| Task 4 | 코드 스타일 일관성 |
+| Task 3 | Next.js 서버 컴포넌트 auth guard, 배럴 파일 정리                            |
+| Task 4 | 코드 스타일 일관성                                                          |
 
 ## 요약 — 개선 효과
 
-| 영역 | Before | After |
-|------|--------|-------|
-| **인증 처리** | auth guard 없음 | `cookies()` + `redirect('/auth/login')` |
-| **데이터 흐름** | `useState` + `useEffect` + 66줄 initialData | `useMemo` 직접 계산 |
-| **JSX 구조** | 3개 날짜 섹션 복붙 (~60줄) | `DATE_SECTIONS.map()` (~15줄) |
-| **콜백 타입** | `(id, isClickByButton)` 플래그 | `onRead`, `onNavigateRead`, `onDelete` 분리 |
-| **모듈 구조** | hooks에 키+훅 혼재, services에 API만 | apis.ts + queries.ts + query-keys.ts 표준 분리 |
-| **Mutation 버그** | `...options` 스프레드가 `onSuccess` 덮어씌움 | 스프레드 순서 수정, 콜백 체이닝 |
-| **배럴 파일** | 내부 컴포넌트 포함 3개 export | 공개 컴포넌트 2개만 export |
-| **메모이제이션** | 효과 없는 useCallback 6개 | 불필요한 래핑 제거 |
+| 영역              | Before                                       | After                                          |
+| ----------------- | -------------------------------------------- | ---------------------------------------------- |
+| **인증 처리**     | auth guard 없음                              | `cookies()` + `redirect('/auth/login')`        |
+| **데이터 흐름**   | `useState` + `useEffect` + 66줄 initialData  | `useMemo` 직접 계산                            |
+| **JSX 구조**      | 3개 날짜 섹션 복붙 (~60줄)                   | `DATE_SECTIONS.map()` (~15줄)                  |
+| **콜백 타입**     | `(id, isClickByButton)` 플래그               | `onRead`, `onNavigateRead`, `onDelete` 분리    |
+| **모듈 구조**     | hooks에 키+훅 혼재, services에 API만         | apis.ts + queries.ts + query-keys.ts 표준 분리 |
+| **Mutation 버그** | `...options` 스프레드가 `onSuccess` 덮어씌움 | 스프레드 순서 수정, 콜백 체이닝                |
+| **배럴 파일**     | 내부 컴포넌트 포함 3개 export                | 공개 컴포넌트 2개만 export                     |
+| **메모이제이션**  | 효과 없는 useCallback 6개                    | 불필요한 래핑 제거                             |

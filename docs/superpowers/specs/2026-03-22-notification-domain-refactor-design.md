@@ -11,29 +11,29 @@
 
 ## 수정 대상 파일
 
-| 파일 | 변경 요약 |
-|------|-----------|
-| `app/notification/services/index.ts` | `services/apis.ts`로 이동 후 삭제 |
-| `app/notification/hooks/index.ts` | `services/queries.ts` + `services/query-keys.ts`로 분리, re-export로 변경 |
-| `app/notification/components/NotificationList.tsx` | 파생 상태 안티패턴 제거, 반복 JSX 추출, useCallback 정리 |
-| `app/notification/components/NotificationTopThree.tsx` | `onClickRead` 시그니처 불일치 수정, useCallback 제거 |
-| `app/notification/components/NotificationItem.tsx` | 콜백 Props 시그니처 통일 |
-| `app/notification/components/index.tsx` | 내부 컴포넌트 export 제거 |
-| `app/notification/page.tsx` | 서버 컴포넌트 auth guard 전환 |
+| 파일                                                   | 변경 요약                                                                 |
+| ------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `app/notification/services/index.ts`                   | `services/apis.ts`로 이동 후 삭제                                         |
+| `app/notification/hooks/index.ts`                      | `services/queries.ts` + `services/query-keys.ts`로 분리, re-export로 변경 |
+| `app/notification/components/NotificationList.tsx`     | 파생 상태 안티패턴 제거, 반복 JSX 추출, useCallback 정리                  |
+| `app/notification/components/NotificationTopThree.tsx` | `onClickRead` 시그니처 불일치 수정, useCallback 제거                      |
+| `app/notification/components/NotificationItem.tsx`     | 콜백 Props 시그니처 통일                                                  |
+| `app/notification/components/index.tsx`                | 내부 컴포넌트 export 제거                                                 |
+| `app/notification/page.tsx`                            | 서버 컴포넌트 auth guard 전환                                             |
 
 ## 신규 생성 파일
 
-| 파일 | 책임 |
-|------|------|
-| `app/notification/services/apis.ts` | API 호출 함수 (Zod 검증 포함) |
-| `app/notification/services/queries.ts` | React Query 훅 (query + mutation) |
-| `app/notification/services/query-keys.ts` | 쿼리 키 팩토리 |
+| 파일                                                  | 책임                                           |
+| ----------------------------------------------------- | ---------------------------------------------- |
+| `app/notification/services/apis.ts`                   | API 호출 함수 (Zod 검증 포함)                  |
+| `app/notification/services/queries.ts`                | React Query 훅 (query + mutation)              |
+| `app/notification/services/query-keys.ts`             | 쿼리 키 팩토리                                 |
 | `app/notification/components/NotificationContent.tsx` | 클라이언트 사이드 레이아웃 (page.tsx에서 분리) |
 
 ## 삭제 파일
 
-| 파일 | 사유 |
-|------|------|
+| 파일                                 | 사유                      |
+| ------------------------------------ | ------------------------- |
 | `app/notification/services/index.ts` | `services/apis.ts`로 이동 |
 
 ---
@@ -98,9 +98,7 @@ useEffect(() => {
 const DATE_SECTIONS = ['지난 한 주', '지난 한 달', '지난 알림'] as const;
 
 const groupedNotifications = useMemo(
-  () => DATE_SECTIONS.map((label) =>
-    (notifications ?? []).filter((n) => getDateStatus(n.created_date) === label)
-  ),
+  () => DATE_SECTIONS.map((label) => (notifications ?? []).filter((n) => getDateStatus(n.created_date) === label)),
   [notifications],
 );
 ```
@@ -149,6 +147,7 @@ const groupedNotifications = useMemo(
 ### 현재 문제
 
 `NotificationItem`의 `onClickRead` prop:
+
 ```ts
 onClickRead: (notificationId: number, isClickByButton: boolean) => void;
 ```
@@ -161,6 +160,7 @@ onClickRead: (notificationId: number, isClickByButton: boolean) => void;
 ### 설계
 
 콜백을 두 개로 분리:
+
 - `onRead(notificationId: number)` — 읽음 처리 (스낵바 포함, 드롭다운 메뉴 클릭 시)
 - `onNavigate?(notificationId: number)` — Link 클릭 시 읽음 처리 (스낵바 없음, 선택적)
 
@@ -171,9 +171,9 @@ onClickRead: (notificationId: number, isClickByButton: boolean) => void;
 ```ts
 // NotificationItem props
 type NotificationItemProps = Notification & {
-  onRead: (notificationId: number) => void;       // 드롭다운 "읽음 표시" 클릭
+  onRead: (notificationId: number) => void; // 드롭다운 "읽음 표시" 클릭
   onNavigateRead: (notificationId: number) => void; // Link 클릭 시 무음 읽음 처리
-  onDelete: (notificationId: number) => void;      // 드롭다운 "삭제" 클릭
+  onDelete: (notificationId: number) => void; // 드롭다운 "삭제" 클릭
 };
 ```
 
@@ -267,10 +267,10 @@ const handleRead = (notificationId: number) => {
 return useMutation({
   mutationFn: (notificationId: number) => putNotificationRead(notificationId),
   onSuccess: (data, variables, context) => {
-    invalidateNotificationQueries(qc);          // ← 이 콜백이
+    invalidateNotificationQueries(qc); // ← 이 콜백이
     options?.onSuccess?.(data, variables, context);
   },
-  ...options,  // ← 여기서 덮어씌워짐!
+  ...options, // ← 여기서 덮어씌워짐!
 });
 ```
 
@@ -282,11 +282,11 @@ return useMutation({
 
 ```tsx
 return useMutation({
-  ...options,                                    // 먼저 스프레드
+  ...options, // 먼저 스프레드
   mutationFn: (id: number) => putNotificationRead(id),
   onSuccess: (data, variables, context) => {
     invalidateNotificationQueries(qc);
-    options?.onSuccess?.(data, variables, context);  // 소비자 콜백 체이닝
+    options?.onSuccess?.(data, variables, context); // 소비자 콜백 체이닝
   },
   onError: (error, variables, context) => {
     options?.onError?.(error, variables, context);
@@ -311,38 +311,38 @@ return useMutation({
 
 ## 설계 결정 요약
 
-| 결정 사항 | 채택 | 대안 | 이유 |
-|-----------|------|------|------|
-| auth redirect 경로 | `/auth/login` | `/` (메인) | 사용자 지정 |
-| 콜백 시그니처 | `onRead` + `onNavigateRead` + `onDelete` | 단일 `onClickRead(id, flag)` | 관심사 분리, 타입 안전성 |
-| 날짜 그룹 | `useMemo` + `DATE_SECTIONS` 상수 | 컴포넌트 분리 | 오버엔지니어링 방지 |
-| useCallback | 제거 | `useRef` 패턴 | memo 미사용 시 불필요 |
-| NotificationContent | 신규 클라이언트 컴포넌트 | 기존 NotificationList 유지 | page.tsx를 순수 서버 컴포넌트로 |
+| 결정 사항           | 채택                                     | 대안                         | 이유                            |
+| ------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
+| auth redirect 경로  | `/auth/login`                            | `/` (메인)                   | 사용자 지정                     |
+| 콜백 시그니처       | `onRead` + `onNavigateRead` + `onDelete` | 단일 `onClickRead(id, flag)` | 관심사 분리, 타입 안전성        |
+| 날짜 그룹           | `useMemo` + `DATE_SECTIONS` 상수         | 컴포넌트 분리                | 오버엔지니어링 방지             |
+| useCallback         | 제거                                     | `useRef` 패턴                | memo 미사용 시 불필요           |
+| NotificationContent | 신규 클라이언트 컴포넌트                 | 기존 NotificationList 유지   | page.tsx를 순수 서버 컴포넌트로 |
 
 ---
 
 ## 적용 규칙 매핑
 
-| 영역 | 적용 규칙 |
-|------|-----------|
+| 영역   | 적용 규칙                                                     |
+| ------ | ------------------------------------------------------------- |
 | 영역 1 | 프로젝트 표준 모듈 구조 일관성 (apis/queries/query-keys 분리) |
-| 영역 2 | `rerender-derived-state-no-effect` — 파생 상태 안티패턴 제거 |
-| 영역 3 | DRY 원칙 — 반복 JSX 추출 |
-| 영역 4 | 타입 안전성 — 콜백 시그니처 통일 |
-| 영역 5 | Next.js 서버 컴포넌트 auth guard |
-| 영역 6 | 배럴 파일 public API 정리 |
-| 영역 7 | 불필요한 `useCallback` 제거 |
-| 영역 8 | Mutation `...options` 스프레드 순서 버그 수정 |
+| 영역 2 | `rerender-derived-state-no-effect` — 파생 상태 안티패턴 제거  |
+| 영역 3 | DRY 원칙 — 반복 JSX 추출                                      |
+| 영역 4 | 타입 안전성 — 콜백 시그니처 통일                              |
+| 영역 5 | Next.js 서버 컴포넌트 auth guard                              |
+| 영역 6 | 배럴 파일 public API 정리                                     |
+| 영역 7 | 불필요한 `useCallback` 제거                                   |
+| 영역 8 | Mutation `...options` 스프레드 순서 버그 수정                 |
 
 ## 요약 — 개선 효과
 
-| 영역 | Before | After |
-|------|--------|-------|
-| **인증 처리** | 서버 컴포넌트이지만 auth guard 없음 | `cookies()` + `redirect()` (즉시 이동) |
-| **데이터 흐름** | `useState` + `useEffect` + 66줄 initialData | `useMemo` 직접 계산 |
-| **JSX 구조** | 3개 날짜 섹션 복붙 (~60줄) | `DATE_SECTIONS.map()` (~15줄) |
-| **콜백 타입** | `(id, isClickByButton)` 플래그 패턴 | `onRead`, `onNavigateRead`, `onDelete` 분리 |
-| **모듈 구조** | hooks에 키+훅 혼재, services에 API만 | apis.ts + queries.ts + query-keys.ts 표준 분리 |
-| **배럴 파일** | 내부 컴포넌트 포함 3개 export | 공개 컴포넌트 2개만 export |
-| **메모이제이션** | 효과 없는 `useCallback` 6개 (List 4 + TopThree 2) | 불필요한 래핑 제거 |
-| **Mutation 버그** | `...options` 스프레드가 `onSuccess` 덮어씌움 | 스프레드 순서 수정, 콜백 체이닝 |
+| 영역              | Before                                            | After                                          |
+| ----------------- | ------------------------------------------------- | ---------------------------------------------- |
+| **인증 처리**     | 서버 컴포넌트이지만 auth guard 없음               | `cookies()` + `redirect()` (즉시 이동)         |
+| **데이터 흐름**   | `useState` + `useEffect` + 66줄 initialData       | `useMemo` 직접 계산                            |
+| **JSX 구조**      | 3개 날짜 섹션 복붙 (~60줄)                        | `DATE_SECTIONS.map()` (~15줄)                  |
+| **콜백 타입**     | `(id, isClickByButton)` 플래그 패턴               | `onRead`, `onNavigateRead`, `onDelete` 분리    |
+| **모듈 구조**     | hooks에 키+훅 혼재, services에 API만              | apis.ts + queries.ts + query-keys.ts 표준 분리 |
+| **배럴 파일**     | 내부 컴포넌트 포함 3개 export                     | 공개 컴포넌트 2개만 export                     |
+| **메모이제이션**  | 효과 없는 `useCallback` 6개 (List 4 + TopThree 2) | 불필요한 래핑 제거                             |
+| **Mutation 버그** | `...options` 스프레드가 `onSuccess` 덮어씌움      | 스프레드 순서 수정, 콜백 체이닝                |
