@@ -7,7 +7,7 @@ import { Button } from '@/app/common/components/ui/button';
 import type { CommitteeAudit } from '@/app/timeline/validation';
 import { useResponsivePagination } from '@/app/timeline/hooks';
 import { IconEnter } from '@/public/svgs';
-import PartyLogo from './PartyLogo';
+import PartyLogo from '@/app/common/components/PartyLogo';
 import TimelinePagination from './TimelinePagination';
 import TimelineModal from './TimelineModal';
 
@@ -32,10 +32,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
               <Button variant="ghost" size="icon" className="p-0 w-4 h-4" onClick={() => setIsOpenAll(true)}>
                 <IconEnter />
               </Button>
-              <TimelineModal
-                open={isOpenAll}
-                onOpenChange={setIsOpenAll}
-                title="심사한 법안">
+              <TimelineModal open={isOpenAll} onOpenChange={setIsOpenAll} title="심사한 법안">
                 <div className="flex flex-col gap-4">
                   {committee_audit_list.map(({ committee_name, bill_outline_dto_list }) => (
                     <div key={committee_name} className="flex flex-col gap-2">
@@ -43,7 +40,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                       <div className="flex flex-col gap-3">
                         {bill_outline_dto_list.map(({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                           <div key={bill_id} className="flex gap-[18px] items-center">
-                            <PartyLogo partyInfo={party_info[0]} />
+                            <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
                             <div className="flex flex-col gap-1">
                               <Link href={`/bill/${bill_id}`}>
                                 <p className="text-xs font-bold">{bill_brief_summary}</p>
@@ -89,7 +86,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                         {item.bill_outline_dto_list.map(
                           ({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                             <div key={bill_id} className="flex gap-[18px] items-center">
-                              <PartyLogo partyInfo={party_info[0]} />
+                              <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
                               <div className="flex flex-col gap-1">
                                 <Link href={`/bill/${bill_id}`}>
                                   <p className="text-xs font-bold">{bill_brief_summary}</p>
@@ -107,7 +104,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                       .slice(0, 5)
                       .map(({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                         <div key={bill_id} className="flex gap-[18px] items-center">
-                          <PartyLogo partyInfo={party_info[0]} />
+                          <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
                           <div className="flex flex-col gap-1">
                             <Link href={`/bill/${bill_id}`}>
                               <p className="text-xs font-bold">{bill_brief_summary}</p>

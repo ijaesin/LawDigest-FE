@@ -8,7 +8,7 @@ import { Button } from '@/app/common/components/ui/button';
 import type { BillOutline } from '@/app/timeline/validation';
 import { useResponsivePagination } from '@/app/timeline/hooks';
 import { IconEnter } from '@/public/svgs';
-import PartyLogo from './PartyLogo';
+import PartyLogo from '@/app/common/components/PartyLogo';
 import TimelinePagination from './TimelinePagination';
 import TimelineModal from './TimelineModal';
 
@@ -57,7 +57,7 @@ export default function BillOutlineList({ variant, bills }: BillOutlineListProps
                 <div className="flex flex-col gap-3">
                   {bills.map(({ party_info, bill_id, bill_proposers, bill_brief_summary }) => (
                     <div key={bill_id} className="flex gap-[18px] items-center">
-                      <PartyLogo partyInfo={party_info[0]} />
+                      <PartyLogo partyName={party_info[0].party_name} partyImageUrl={party_info[0].party_image_url} />
                       <div className="flex flex-col gap-1">
                         <Link href={`/bill/${bill_id}`}>
                           <p className="text-xs font-bold">{bill_brief_summary}</p>
@@ -79,7 +79,8 @@ export default function BillOutlineList({ variant, bills }: BillOutlineListProps
               <Card key={item.bill_id} className="overflow-visible z-10 md:shadow-none md:border">
                 <CardContent className="overflow-visible py-3">
                   <PartyLogo
-                    partyInfo={item.party_info[0]}
+                    partyName={item.party_info[0].party_name}
+                    partyImageUrl={item.party_info[0].party_image_url}
                     className="absolute -left-[39px] bg-white dark:bg-dark-b md:hidden"
                   />
                   <div className="flex flex-col gap-2 w-full md:h-full md:justify-between">

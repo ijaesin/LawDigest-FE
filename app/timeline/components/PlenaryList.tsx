@@ -9,7 +9,7 @@ import { ProcessResult } from '@/app/bill/components';
 import type { PlenaryItem } from '@/app/timeline/validation';
 import { useResponsivePagination } from '@/app/timeline/hooks';
 import { IconEnter } from '@/public/svgs';
-import PartyLogo from './PartyLogo';
+import PartyLogo from '@/app/common/components/PartyLogo';
 import TimelinePagination from './TimelinePagination';
 import TimelineModal from './TimelineModal';
 
@@ -37,7 +37,7 @@ export default function PlenaryList({ plenary_list }: { plenary_list: PlenaryIte
                     <div key={bill_info.bill_id} className="flex flex-col gap-2">
                       <p className="text-lg font-bold">{bill_info.bill_name}</p>
                       <div className="flex gap-[18px] items-center">
-                        <PartyLogo partyInfo={bill_info.party_info[0]} />
+                        <PartyLogo partyName={bill_info.party_info[0].party_name} partyImageUrl={bill_info.party_info[0].party_image_url} />
                         <div className="flex flex-col gap-1">
                           <Link href={`/bill/${bill_info.bill_id}`}>
                             <p className="text-xs font-bold">{bill_info.bill_brief_summary}</p>
@@ -61,7 +61,8 @@ export default function PlenaryList({ plenary_list }: { plenary_list: PlenaryIte
             <Card key={item.bill_info.bill_id} className="overflow-visible z-10 md:shadow-none md:border">
               <CardContent className="overflow-visible py-3">
                 <PartyLogo
-                  partyInfo={item.bill_info.party_info[0]}
+                  partyName={item.bill_info.party_info[0].party_name}
+                  partyImageUrl={item.bill_info.party_info[0].party_image_url}
                   className="absolute -left-[39px] bg-white dark:bg-dark-b md:hidden"
                   style={index > 0 ? { top: `${index * 50}px` } : undefined}
                 />

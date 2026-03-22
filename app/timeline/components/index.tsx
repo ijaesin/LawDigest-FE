@@ -8,7 +8,6 @@ import TimelineModal from './TimelineModal';
 import TimelinePagination from './TimelinePagination';
 import TimelineErrorFallback from './TimelineErrorFallback';
 import TimelineSkeleton from './TimelineSkeleton';
-import PartyLogo from './PartyLogo';
 
 export {
   BillOutlineList,
@@ -21,5 +20,4 @@ export {
   TimelinePagination,
   TimelineErrorFallback,
   TimelineSkeleton,
-  PartyLogo,
 };

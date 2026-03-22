@@ -3,8 +3,8 @@ import { SubHeader } from '@/app/common/components/Layout';
 import { getMetadata } from '@/app/common/utils';
 import { Metadata } from 'next';
 import { PARTY_POSITION, PARTY_NAME_KO } from '@/app/party/constants';
-import { getPartyDetail } from '@/app/party/services';
-import { partyKeys } from '@/app/party/hooks';
+import { getPartyDetail } from '@/app/party/services/apis';
+import { partyKeys } from '@/app/party/services/query-keys';
 import { PartyContainer } from '@/app/party/components';
 
 export const dynamic = 'force-dynamic';
