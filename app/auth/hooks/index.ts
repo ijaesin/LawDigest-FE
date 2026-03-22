@@ -1,3 +1,5 @@
+export { useAuthGuard } from './useAuthGuard';
+
 import { deleteWithdraw } from '@/app/auth/services';
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
