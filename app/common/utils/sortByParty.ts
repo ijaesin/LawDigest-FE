@@ -1,41 +1,42 @@
+import type { z } from 'zod';
+import type { PublicProposerSchema } from '@/app/bill/validation';
+
+type PublicProposer = z.infer<typeof PublicProposerSchema>;
+
+interface PartyGroup {
+  party: string;
+  proposers: string[][];
+}
+
 export default function sortByParty({
   publicProposerList,
 }: {
-  publicProposerList: {
-    public_proposer_id: string;
-    public_proposer_name: string;
-    public_proposer_img_url: string;
-    public_proposer_party_id: number;
-    public_proposer_party_image_url: string;
-    public_proposer_party_name: string;
-  }[];
-}) {
-  const map = new Map();
-  const newProposerList: any = [];
+  publicProposerList: PublicProposer[];
+}): PartyGroup[] {
+  const partyMap = new Map<string, string[][]>();
 
   publicProposerList
     .toSorted((a, b) => a.public_proposer_party_id - b.public_proposer_party_id)
     .forEach((proposer) => {
-      const proposerId = proposer.public_proposer_id;
-      const proposerName = proposer.public_proposer_name;
-      const partyName = proposer.public_proposer_party_name;
-      const partyId = proposer.public_proposer_party_id;
-      const partyLogo = proposer.public_proposer_party_image_url;
-      const newProposer = Array.of([proposerId, proposerName]);
+      const { public_proposer_id: id, public_proposer_name: name } = proposer;
+      const { public_proposer_party_name: partyName } = proposer;
+      const { public_proposer_party_id: partyId, public_proposer_party_image_url: partyLogo } = proposer;
 
-      if (map.has(partyName)) {
-        map.set(partyName, map.get(partyName).concat(newProposer));
+      const existing = partyMap.get(partyName);
+      if (existing) {
+        existing.push([id, name]);
       } else {
-        map.set(partyName, [
-          [partyId, partyLogo],
-          [proposerId, proposerName],
+        partyMap.set(partyName, [
+          [String(partyId), partyLogo],
+          [id, name],
         ]);
       }
     });
 
-  map.forEach((key, value) => {
-    newProposerList.push({ party: value, proposers: key });
+  const result: PartyGroup[] = [];
+  partyMap.forEach((proposers, party) => {
+    result.push({ party, proposers });
   });
 
-  return newProposerList;
+  return result;
 }
