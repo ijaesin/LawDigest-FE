@@ -30,7 +30,6 @@ export default function BillDetail({ id }: { id: string }) {
             <ProposerList
               representativeProposerList={data.representative_proposer_dto_list}
               publicProposerList={data.public_proposer_dto_list}
-              variant="default"
             />
           </SectionContainer>
 

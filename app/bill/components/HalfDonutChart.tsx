@@ -261,7 +261,7 @@ export default function HalfDonutChart({
         {partyArcs.map((partyArc) => (
           <path
             key={partyArc.party.party_info.party_id}
-            d={partyArc.arcPath as string}
+            d={partyArc.arcPath ?? ''}
             fill={COLOR[partyArc.party.party_info.party_name as keyof typeof COLOR]}
             transform={`translate(${centerX}, ${centerY})`}
             aria-label={`${partyArc.party.party_info.party_name}: ${partyArc.party.party_approval_count}`}
