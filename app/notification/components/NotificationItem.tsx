@@ -22,11 +22,13 @@ export default function NotificationItem({
   target,
   read,
   notification_id,
-  onClickRead,
-  onClickDelete,
+  onRead,
+  onNavigateRead,
+  onDelete,
 }: Notification & {
-  onClickRead: (notificationId: number, isClickByButton: boolean) => void;
-  onClickDelete: (notificationId: number) => void;
+  onRead: (notificationId: number) => void;
+  onNavigateRead: (notificationId: number) => void;
+  onDelete: (notificationId: number) => void;
 }) {
   const imageUrlList = notification_image_url_list
     .filter((str): str is string => typeof str === 'string' && str.length > 0)
@@ -92,7 +94,7 @@ export default function NotificationItem({
 
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col gap-1 w-full">
-          <Link href={linkUrl} onClick={() => onClickRead(notification_id, false)}>
+          <Link href={linkUrl} onClick={() => onNavigateRead(notification_id)}>
             <p className="text-xs font-bold md:text-base">
               {title} &nbsp;
               <span className="text-[10px] md:text-sm font-medium text-gray-2 dark:text-gray-3">
@@ -110,8 +112,8 @@ export default function NotificationItem({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onClickRead(notification_id, true)}>읽음 표시</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onClickDelete(notification_id)}>삭제</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onRead(notification_id)}>읽음 표시</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(notification_id)}>삭제</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
