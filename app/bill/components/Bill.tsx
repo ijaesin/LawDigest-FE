@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/app/common/components/ui/card';
+import { CardHeader, CardContent, CardTitle, CardDescription } from '@/app/common/components/ui/card';
+import { GlassCard } from '@/app/common/components/ui/glass-card';
 import { Separator } from '@/app/common/components/ui/separator';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Button } from '@/app/common/components/ui/button';
@@ -64,25 +65,23 @@ export default function Bill({
 
   return (
     <section className={`flex flex-col  ${detail ? 'md:flex-row items-start' : 'md:mx-5'}`}>
-      <Card
-        key={bill_id}
-        className={`flex flex-col gap-5 px-5 pt-6 bg-transparent border-none dark:bg-dark-b dark:lg:bg-dark-pb ${!detail ? 'md:flex-row' : ''}`}>
+      <GlassCard key={bill_id} hover={!detail} className={`flex flex-col gap-5 ${!detail ? 'md:flex-row' : ''}`}>
         <CardHeader
           className={`flex  flex-col items-start gap-2 p-0  ${!detail ? 'md:w-[270px] md:flex-shrink-0' : ''}`}>
           {detail && (
             <div className="flex gap-1 items-center">
               <IconClock />
-              <h5 className="text-sm tracking-tight text-gray-2">{getTimeRemaining(propose_date)}</h5>
+              <h5 className="text-sm tracking-tight text-muted-foreground">{getTimeRemaining(propose_date)}</h5>
             </div>
           )}
 
           <CardTitle className={`${detail ? 'text-[26px]' : 'text-xl'} font-semibold`}>{brief_summary}</CardTitle>
 
-          <CardDescription className="text-sm text-gray-2 dark:text-gray-3">{bill_name}</CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">{bill_name}</CardDescription>
 
           {!detail && (
             <div className="flex gap-3 items-center w-full">
-              <h5 className="text-xs tracking-tight text-gray-3">{getTimeRemaining(propose_date)}</h5>
+              <h5 className="text-xs tracking-tight text-muted-foreground">{getTimeRemaining(propose_date)}</h5>
               <Badge variant="outline">{bill_stage}</Badge>
             </div>
           )}
@@ -92,7 +91,7 @@ export default function Bill({
           <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
             <BillSummaryContent gptSummary={gpt_summary} summary={summary} isCollapsed={!detail && !toggleMore} />
             {!detail && !toggleMore && (
-              <Button variant="link" onClick={onClickToggleMore} className="p-0 text-gray-2 dark:text-gray-3">
+              <Button variant="link" onClick={onClickToggleMore} className="p-0 text-muted-foreground">
                 더 보기
               </Button>
             )}
@@ -111,31 +110,31 @@ export default function Bill({
 
         {detail && (
           <div className="flex flex-col gap-[34px]">
-            <Separator className="bg-gray-0.5 dark:bg-dark-l md:hidden" />
+            <Separator className="bg-border dark:bg-border md:hidden" />
             <GPTSummary />
             <div className="flex flex-col gap-3 items-center">
-              <h5 className="text-xs font-semibold text-theme-alert">
+              <h5 className="text-xs font-semibold text-danger">
                 AI 기반의 요약은 내용이 불완전할 수 있습니다. 꼭 원문을 확인해주세요 !
               </h5>
               <Link href={`https://likms.assembly.go.kr/bill/billDetail.do?billId=${bill_id}`}>
                 <Button
                   size="lg"
-                  className="w-[242px] h-[56px] bg-primary-3 dark:bg-gray-0.5 dark:text-black rounded-full">
+                  className="w-[242px] h-[56px] bg-foreground dark:bg-muted dark:text-foreground rounded-full">
                   원문 확인하기
                 </Button>
               </Link>
             </div>
-            <Separator className="bg-gray-0.5 dark:bg-dark-l md:hidden" />
+            <Separator className="bg-border dark:bg-border md:hidden" />
           </div>
         )}
-      </Card>
+      </GlassCard>
       <BillProposerSection
         representativeProposerList={representative_proposer_dto_list}
         publicProposerList={public_proposer_dto_list}
         detail={detail}>
         {children}
       </BillProposerSection>
-      <Separator className={`h-[10px] md:h-[1px] bg-gray-0.5 dark:bg-gray-4 ${detail ? 'hidden' : 'block'}`} />
+      <Separator className={`h-[10px] md:h-[1px] bg-border dark:bg-border ${detail ? 'hidden' : 'block'}`} />
     </section>
   );
 }
