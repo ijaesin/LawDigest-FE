@@ -62,7 +62,7 @@ export default function BillProposerSection({
               <ProposerList
                 representativeProposerList={representativeProposerList}
                 publicProposerList={publicProposerList}
-                popover
+                variant="popover"
               />
             </PopoverContent>
           </Popover>

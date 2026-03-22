@@ -3,36 +3,32 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';
 import { sortByParty } from '@/app/common/utils';
+import type { z } from 'zod';
+import type { RepresentativeProposerSchema, PublicProposerSchema } from '@/app/bill/validation';
+
+type RepresentativeProposer = z.infer<typeof RepresentativeProposerSchema>;
+type PublicProposer = z.infer<typeof PublicProposerSchema>;
+
+interface ProposerListProps {
+  representativeProposerList: RepresentativeProposer[];
+  publicProposerList: PublicProposer[];
+  variant?: 'default' | 'popover';
+}
+
+const compareByName = (a: string[], b: string[]) => a[1].localeCompare(b[1]);
 
 export default function ProposerList({
   representativeProposerList,
   publicProposerList,
-  popover,
-}: {
-  representativeProposerList: {
-    representative_proposer_id: string;
-    representative_proposer_name: string;
-    represent_proposer_img_url: string;
-    party_id: number;
-    party_image_url: string;
-    party_name: string;
-  }[];
-  publicProposerList: {
-    public_proposer_id: string;
-    public_proposer_name: string;
-    public_proposer_img_url: string;
-    public_proposer_party_id: number;
-    public_proposer_party_image_url: string;
-    public_proposer_party_name: string;
-  }[];
-  popover: boolean;
-}) {
+  variant = 'default',
+}: ProposerListProps) {
   const representativeProposerLength = representativeProposerList.length;
   const publicProposerLength = publicProposerList.length;
   const proposerListByParty = sortByParty({ publicProposerList });
 
   return (
-    <Card className={`lg:shadow-none dark:lg:bg-dark-pb ${popover ? 'shadow-none  dark:lg:bg-transparent' : ''}`}>
+    <Card
+      className={`lg:shadow-none dark:lg:bg-dark-pb ${variant === 'popover' ? 'shadow-none dark:lg:bg-transparent' : ''}`}>
       <CardHeader>
         <p className="font-medium">
           {representativeProposerLength === 1
@@ -45,7 +41,6 @@ export default function ProposerList({
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-5 my-[18px]">
-          {/* eslint-disable-next-line react/no-unused-prop-types */}
           {proposerListByParty.map(({ party, proposers }: { party: string; proposers: string[][] }) => (
             <div key={party} className="flex items-center gap-10">
               <div className="relative">
@@ -80,14 +75,13 @@ export default function ProposerList({
               <div className="grid grid-cols-5 text-sm gap-x-[10px] gap-y-1">
                 {proposers
                   .slice(1)
-                  // eslint-disable-next-line no-nested-ternary
-                  .toSorted((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))
+                  .toSorted(compareByName)
                   .map((proposer) => (
                     <Link href={`/congressman/${proposer[0]}`} key={proposer[0]} className="whitespace-nowrap">
                       {proposer[1].length === 2 ? (
                         <div className="flex justify-between">
-                          {proposer[1].split('').map((char) => (
-                            <p key={char}>{char}</p>
+                          {proposer[1].split('').map((char, i) => (
+                            <p key={`${proposer[0]}-${i}`}>{char}</p>
                           ))}
                         </div>
                       ) : (

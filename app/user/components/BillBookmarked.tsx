@@ -55,7 +55,7 @@ export default function BillBookmarked({
               <ProposerList
                 representativeProposerList={representative_proposer_dto_list}
                 publicProposerList={public_proposer_dto_list}
-                popover
+                variant="popover"
               />
             </PopoverContent>
           </Popover>
