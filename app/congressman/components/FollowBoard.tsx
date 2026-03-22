@@ -29,36 +29,55 @@ export default function FollowBoard({
 
   const onClickFollow = useCallback(() => {
     if (!requireLogin()) return;
-    setIsFollowed(!isFollowed);
-    setFollowCount(isFollowed ? followCount - 1 : followCount + 1);
+
+    const prevFollowed = isFollowed;
+    const prevCount = followCount;
+    const nextFollowed = !isFollowed;
+
+    setIsFollowed(nextFollowed);
+    setFollowCount(nextFollowed ? followCount + 1 : followCount - 1);
     setSnackbar({
       show: true,
-      type: isFollowed ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
-      message: isFollowed ? '해당 의원의 팔로우를 취소했습니다.' : '해당 의원을 팔로우했습니다.',
+      type: nextFollowed ? SNACKBAR_TYPE.SUCCESS : SNACKBAR_TYPE.CANCEL,
+      message: nextFollowed ? '해당 의원을 팔로우했습니다.' : '해당 의원의 팔로우를 취소했습니다.',
       duration: 3000,
     });
-    mutationFollow.mutate(!isFollowed);
-  }, [isFollowed, setSnackbar, followCount, requireLogin]);
+
+    mutationFollow.mutate(nextFollowed, {
+      onError: () => {
+        setIsFollowed(prevFollowed);
+        setFollowCount(prevCount);
+        setSnackbar({
+          show: true,
+          type: SNACKBAR_TYPE.ERROR,
+          message: '팔로우 처리에 실패했습니다. 다시 시도해주세요.',
+          duration: 3000,
+        });
+      },
+    });
+  }, [isFollowed, followCount, setSnackbar, requireLogin, mutationFollow]);
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <div className="flex justify-between w-full">
+      <dl className="flex justify-between w-full">
         <div className="flex flex-col items-center basis-1/3">
-          <p className="text-2xl font-semibold">{followCount}</p>
-          <p className="text-sm font-medium text-gray-2">팔로워</p>
+          <dd className="text-2xl font-semibold">{followCount}</dd>
+          <dt className="text-sm font-medium text-gray-2">팔로워</dt>
         </div>
         <div className="flex flex-col items-center basis-1/3">
-          <p className="text-2xl font-semibold">{represent_count}</p>
-          <p className="text-sm font-medium text-gray-2">대표발의법안</p>
+          <dd className="text-2xl font-semibold">{represent_count}</dd>
+          <dt className="text-sm font-medium text-gray-2">대표발의법안</dt>
         </div>
         <div className="flex flex-col items-center basis-1/3">
-          <p className="text-2xl font-semibold">{public_count}</p>
-          <p className="text-sm font-medium text-gray-2">공동발의법안</p>
+          <dd className="text-2xl font-semibold">{public_count}</dd>
+          <dt className="text-sm font-medium text-gray-2">공동발의법안</dt>
         </div>
-      </div>
+      </dl>
 
       <Button
         onClick={onClickFollow}
+        aria-pressed={isFollowed}
+        aria-label={isFollowed ? '팔로우 취소' : '팔로우 하기'}
         className={`w-full h-12 text-lg font-medium flex justify-between px-6 rounded-full ${isFollowed ? 'bg-gray-1 text-gray-3' : 'bg-primary-3 text-white dark:bg-gray-4 dark:text-gray-2'} `}>
         {isFollowed ? '팔로우 중' : '팔로우 하기'}
         {isFollowed ? <IconCheck /> : <IconPlus />}
