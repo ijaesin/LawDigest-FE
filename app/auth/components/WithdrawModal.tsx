@@ -1,11 +1,10 @@
+// app/auth/components/WithdrawModal.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/app/common/components/ui/dialog';
 import { Button } from '@/app/common/components/ui/button';
-import { ACCESS_TOKEN } from '@/app/common/constants';
-import { deleteCookie } from 'cookies-next';
 import { useDeleteWithdraw } from '@/app/auth/hooks';
 
 export default function WithdrawModal({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: () => void }) {
@@ -13,7 +12,6 @@ export default function WithdrawModal({ isOpen, onOpenChange }: { isOpen: boolea
 
   const { mutate: withdraw } = useDeleteWithdraw({
     onSuccess: () => {
-      deleteCookie(ACCESS_TOKEN);
       router.push('/');
     },
     onError: (error) => {
