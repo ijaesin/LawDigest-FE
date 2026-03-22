@@ -6,7 +6,7 @@ import { useIntersect } from '@/app/common/hooks';
 import { Separator } from '@/app/common/components/ui/separator';
 import { SearchBarButton, SearchList } from '@/app/search/components';
 import { BillList } from '@/app/bill/components';
-import { useGetSearchCongressmanParty, useInfiniteSearchBill } from '@/app/search/services';
+import { useGetSearchCongressmanParty, useInfiniteSearchBill } from '@/app/search/services/queries';
 
 export default function SearchResult() {
   const params = useParams<{ id: string }>();
