@@ -34,8 +34,7 @@ app/common/components/
 │   └── RightSidebar/
 │       └── RightSidebar.tsx              # 우측 사이드바
 app/common/hooks/
-├── useScrollDirection.ts                 # 스크롤 방향 감지 훅
-└── useMediaQuery.ts                      # 브레이크포인트 감지 훅
+└── useScrollDirection.ts                 # 스크롤 방향 감지 훅
 stories/
 ├── design-tokens/
 │   ├── Colors.stories.tsx                # 컬러 토큰 문서화
@@ -61,8 +60,7 @@ tests/
 │   ├── empty-state.test.tsx
 │   └── error-state.test.tsx
 ├── hooks/
-│   ├── useScrollDirection.test.ts
-│   └── useMediaQuery.test.ts
+│   └── useScrollDirection.test.ts
 └── layout/
     ├── app-layout.test.tsx
     ├── side-nav.test.tsx
@@ -277,7 +275,11 @@ package.json                              # @use-gesture/react 추가
 }
 ```
 
-- [ ] **Step 4: 레거시 다크 모드 body 클래스 정리**
+- [ ] **Step 4: 타이포/스페이싱 토큰 메모**
+
+> **참고**: 타이포그래피(`--text-display` 등)와 스페이싱(`--space-*`) 토큰은 CSS 변수로 별도 정의하지 않는다. Tailwind의 기존 유틸리티 클래스(`text-[28px]`, `gap-4` 등)를 직접 사용하며, Storybook 문서에서 권장 값을 가이드한다. 이렇게 하면 불필요한 추상화 없이 Tailwind 에코시스템과 자연스럽게 통합된다.
+
+- [ ] **Step 5: 레거시 다크 모드 body 클래스 정리**
 
 `globals.css`의 body 스타일에서 레거시 `dark:bg-dark-b lg:dark:bg-dark-pb` 등을 제거하고 시멘틱 변수 사용으로 통일한다.
 
@@ -426,7 +428,7 @@ describe('GlassCard', () => {
 
   it('supports hover effect', () => {
     const { container } = render(<GlassCard hover>Content</GlassCard>);
-    expect(container.firstChild).toHaveClass('hover:translate-y-[-2px]');
+    expect(container.firstChild).toHaveClass('cursor-pointer');
   });
 
   it('merges custom className', () => {
@@ -474,7 +476,7 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
         glassLevelMap[level],
         'rounded-md p-4 md:p-6 transition-all',
         'duration-[var(--duration-normal)] ease-[var(--easing-default)]',
-        hover && 'hover:translate-y-[-2px] hover:glass-medium cursor-pointer',
+        hover && 'hover:-translate-y-0.5 hover:bg-[var(--glass-bg-medium)] cursor-pointer',
         className,
       )}
       {...props}
@@ -959,7 +961,7 @@ vi.mock('next-themes', () => ({
 describe('SideNav', () => {
   it('renders navigation items', () => {
     render(<SideNav />);
-    expect(screen.getByText('홈')).toBeInTheDocument();
+    expect(screen.getByText('피드')).toBeInTheDocument();
     expect(screen.getByText('타임라인')).toBeInTheDocument();
     expect(screen.getByText('팔로잉')).toBeInTheDocument();
     expect(screen.getByText('마이페이지')).toBeInTheDocument();
@@ -1006,7 +1008,7 @@ import { useTheme } from 'next-themes';
 import { Sun, Moon, Search } from 'lucide-react';
 import { siteConfig } from '@/app/common/config/site';
 import { cn } from '@/app/common/lib/utils';
-import { useSearchModalStore } from '@/app/search/store/searchModalStore';
+import { useSearchModalStore } from '@/app/common/store/search-modal';
 
 interface SideNavProps {
   compact?: boolean;
@@ -1048,7 +1050,7 @@ export function SideNav({ compact = false }: SideNavProps) {
         {/* Nav Items */}
         {siteConfig.navItems.map((item) => {
           const isActive = pathname === item.href;
-          const Icon = item.icon;
+          const Icon = item.IconComponent;
 
           return (
             <Link
@@ -1202,10 +1204,39 @@ export function RightSidebar({ children, className }: RightSidebarProps) {
 Run: `npm test -- tests/layout/right-sidebar.test.tsx`
 Expected: PASS
 
-- [ ] **Step 5: 커밋**
+- [ ] **Step 5: Storybook 스토리 작성**
+
+```tsx
+// stories/patterns/RightSidebar.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { RightSidebar } from '@/app/common/components/Layout/RightSidebar/RightSidebar';
+
+const meta: Meta<typeof RightSidebar> = {
+  title: 'Patterns/RightSidebar',
+  component: RightSidebar,
+  parameters: { layout: 'fullscreen' },
+};
+export default meta;
+
+type Story = StoryObj<typeof RightSidebar>;
+
+export const Default: Story = {
+  args: {
+    children: (
+      <div className="space-y-4">
+        <div className="glass-subtle rounded-md p-4">검색바</div>
+        <div className="glass-subtle rounded-md p-4">인기 법안</div>
+        <div className="glass-subtle rounded-md p-4">트렌딩 키워드</div>
+      </div>
+    ),
+  },
+};
+```
+
+- [ ] **Step 6: 커밋**
 
 ```bash
-git add app/common/components/Layout/RightSidebar/ tests/layout/right-sidebar.test.tsx
+git add app/common/components/Layout/RightSidebar/ tests/layout/right-sidebar.test.tsx stories/patterns/RightSidebar.stories.tsx
 git commit -m "feat(layout): RightSidebar 우측 사이드바 컴포넌트 구현"
 ```
 
@@ -1237,7 +1268,7 @@ describe('AppLayout', () => {
 
   it('renders SideNav', () => {
     render(<AppLayout>Content</AppLayout>);
-    expect(screen.getByText('홈')).toBeInTheDocument();
+    expect(screen.getByText('피드')).toBeInTheDocument();
   });
 
   it('renders right sidebar when provided', () => {
@@ -1470,7 +1501,42 @@ export default meta;
 export const TypeScale: StoryObj = { render: () => <TypographyPage /> };
 ```
 
-- [ ] **Step 4: GlassEffects 스토리 작성**
+- [ ] **Step 4: Spacing 스토리 작성**
+
+```tsx
+// stories/design-tokens/Spacing.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+
+function SpacingPage() {
+  const spaces = [
+    { name: 'space-1', value: '4px', tw: 'gap-1 / p-1' },
+    { name: 'space-2', value: '8px', tw: 'gap-2 / p-2' },
+    { name: 'space-3', value: '12px', tw: 'gap-3 / p-3' },
+    { name: 'space-4', value: '16px', tw: 'gap-4 / p-4' },
+    { name: 'space-6', value: '24px', tw: 'gap-6 / p-6' },
+    { name: 'space-8', value: '32px', tw: 'gap-8 / p-8' },
+    { name: 'space-12', value: '48px', tw: 'gap-12 / p-12' },
+    { name: 'space-16', value: '64px', tw: 'gap-16 / p-16' },
+  ];
+  return (
+    <div className="space-y-3">
+      {spaces.map((s) => (
+        <div key={s.name} className="flex items-center gap-4">
+          <div className="w-24 text-sm font-medium">{s.name}</div>
+          <div className="bg-primary rounded-sm" style={{ width: s.value, height: '16px' }} />
+          <div className="text-sm text-muted-foreground">{s.value} — <code>{s.tw}</code></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const meta: Meta = { title: 'Design Tokens/Spacing' };
+export default meta;
+export const SpacingScale: StoryObj = { render: () => <SpacingPage /> };
+```
+
+- [ ] **Step 5: GlassEffects 스토리 작성**
 
 ```tsx
 // stories/design-tokens/GlassEffects.stories.tsx
@@ -1494,7 +1560,7 @@ export const AllLevels: StoryObj = { render: () => <GlassEffectsPage /> };
 - [ ] **Step 5: Storybook 확인**
 
 Run: `npm run storybook`
-Expected: Design Tokens 카테고리에 Colors, Typography, Glass Effects 스토리 표시
+Expected: Design Tokens 카테고리에 Colors, Typography, Spacing, Glass Effects 스토리 표시
 
 - [ ] **Step 6: 커밋**
 
