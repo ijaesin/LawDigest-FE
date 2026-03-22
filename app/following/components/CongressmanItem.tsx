@@ -1,8 +1,7 @@
+// app/following/components/CongressmanItem.tsx
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
-import { Button } from '@/app/common/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PartyLogoReplacement } from '@/app/party/components';
@@ -16,14 +15,12 @@ export default function CongressmanItem({
   party_name,
   party_image_url,
 }: FollowingCongressman) {
-  const router = useRouter();
-
   return (
     <div className="flex flex-col gap-2 items-center xl:flex-row xl:justify-between">
       <div className="gap-5 xl:flex xl:flex-row">
         <Link href={`/congressman/${congressman_id}`}>
           <Avatar className="w-14 h-14">
-            <AvatarImage src={process.env.NEXT_PUBLIC_IMAGE_URL + congressman_image_url} />
+            <AvatarImage src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${congressman_image_url}`} />
             <AvatarFallback>{congressman_name[0]}</AvatarFallback>
           </Avatar>
         </Link>
@@ -36,37 +33,28 @@ export default function CongressmanItem({
         </div>
       </div>
 
-      <Button
-        variant="ghost"
-        className="hidden xl:block"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (party_image_url !== null) {
-            router.push(`/party/${party_id}`);
-          }
-        }}>
-        {party_image_url !== null ? (
-          <>
-            <Image
-              className="dark:hidden"
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url}`}
-              width={60}
-              height={20}
-              alt={`${party_name} 로고 이미지`}
-            />
-            <Image
-              className="hidden dark:block"
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url.replace('wide', 'dark')}`}
-              width={60}
-              height={20}
-              alt={`${party_name} 로고 이미지`}
-            />
-          </>
-        ) : (
+      {party_image_url !== null ? (
+        <Link href={`/party/${party_id}`} className="hidden xl:block">
+          <Image
+            className="dark:hidden"
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url}`}
+            width={60}
+            height={20}
+            alt={`${party_name} 로고 이미지`}
+          />
+          <Image
+            className="hidden dark:block"
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url.replace('wide', 'dark')}`}
+            width={60}
+            height={20}
+            alt={`${party_name} 로고 이미지`}
+          />
+        </Link>
+      ) : (
+        <div className="hidden xl:block">
           <PartyLogoReplacement partyName={party_name} circle={false} />
-        )}
-      </Button>
+        </div>
+      )}
     </div>
   );
 }
