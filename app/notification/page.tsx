@@ -1,6 +1,6 @@
 import { QueryClient, HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { getNotification, getNotificationCount } from '@/app/notification/services';
-import { notificationKeys } from '@/app/notification/hooks';
+import { getNotification, getNotificationCount } from '@/app/notification/services/apis';
+import { notificationKeys } from '@/app/notification/services/query-keys';
 import { NotificationList } from './components';
 
 export const dynamic = 'force-dynamic';

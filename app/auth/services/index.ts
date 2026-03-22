@@ -13,3 +13,15 @@ export const deleteWithdraw = async (): Promise<void> => {
     throw new Error(extractApiMessage(err));
   }
 };
+
+/**
+ * @description 로그아웃
+ * @see POST /logout
+ */
+export const postLogout = async (): Promise<void> => {
+  try {
+    await apiClient.post('/logout');
+  } catch (err) {
+    throw new Error(extractApiMessage(err));
+  }
+};

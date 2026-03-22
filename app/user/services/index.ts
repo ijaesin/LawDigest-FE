@@ -53,17 +53,7 @@ export const getFollowingCongressman = async (): Promise<FollowingCongressmanLis
   }
 };
 
-/**
- * @description 로그아웃
- * @see POST /logout
- */
-export const postLogout = async (): Promise<void> => {
-  try {
-    await apiClient.post('/logout');
-  } catch (err) {
-    throw new Error(extractApiMessage(err));
-  }
-};
+export { postLogout } from '@/app/auth/services';
 
 /**
  * @description 북마크한 법안 목록(무한스크롤)

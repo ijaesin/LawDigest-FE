@@ -1,7 +1,6 @@
-import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
+import { SNACKBAR_TYPE } from '@/app/common/constants';
 import { Button } from '@/app/common/components/ui/button';
 import { useSnackbarStore } from '@/app/common/store';
 import { usePostLogout } from '@/app/user/hooks';
@@ -11,7 +10,6 @@ export default function LogoutButton() {
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
   const { mutate: postLogout } = usePostLogout({
     onSuccess: () => {
-      deleteCookie(ACCESS_TOKEN);
       setSnackbar({ show: true, type: SNACKBAR_TYPE.SUCCESS, message: '로그아웃을 성공했습니다.', duration: 3000 });
       router.push('/');
     },

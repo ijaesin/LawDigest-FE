@@ -5,9 +5,6 @@ import {
   type UseSuspenseInfiniteQueryOptions,
   type InfiniteData,
   type QueryClient,
-  useMutation,
-  useQueryClient,
-  UseMutationOptions,
 } from '@tanstack/react-query';
 import type {
   FollowingPartyList,
@@ -22,17 +19,12 @@ import {
   getFollowingCongressman,
   getBillBookmarked,
   getBillBookmarkedCount,
-  postLogout,
 } from '@/app/user/services';
 
-export const userKeys = {
-  root: () => ['user'] as const,
-  info: () => [...userKeys.root(), 'info'] as const,
-  followingParty: () => [...userKeys.root(), 'followingParty'] as const,
-  followingCongressman: () => [...userKeys.root(), 'followingCongressman'] as const,
-  billBookmarkFeed: () => [...userKeys.root(), 'billBookmarkFeed'] as const,
-  billBookmarkCount: () => [...userKeys.root(), 'billBookmarkCount'] as const,
-};
+export { userKeys } from '@/app/user/services/query-keys';
+export { usePostLogout } from '@/app/auth/hooks';
+
+import { userKeys } from '@/app/user/services/query-keys';
 
 /**
  * @description SSR/서버 컴포넌트에서 유저 정보 프리패치를 위한 유틸
@@ -123,21 +115,3 @@ export const fetchFollowingParty = (queryClient: QueryClient) =>
     queryKey: userKeys.followingParty(),
     queryFn: () => getFollowingParty(),
   });
-
-export const usePostLogout = (options?: UseMutationOptions<void, Error, void, unknown>) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: () => postLogout(),
-    ...options,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.info() });
-      queryClient.invalidateQueries({ queryKey: userKeys.followingParty() });
-      queryClient.invalidateQueries({ queryKey: userKeys.followingCongressman() });
-      queryClient.invalidateQueries({ queryKey: userKeys.billBookmarkFeed() });
-      queryClient.invalidateQueries({ queryKey: userKeys.billBookmarkCount() });
-    },
-    onError: (error, variables, context) => {
-      options?.onError?.(error, variables, context);
-    },
-  });
-};
