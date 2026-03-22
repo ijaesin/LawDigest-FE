@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { notFound } from 'next/navigation';
 import { SubHeader } from '@/app/common/components/Layout';
 import { getMetadata, getPartyConstant } from '@/app/common/utils';
@@ -6,7 +8,7 @@ import { Metadata } from 'next';
 import { PARTY_POSITION } from '@/app/party/constants';
 import { getPartyDetail } from '@/app/party/services/apis';
 import { partyKeys } from '@/app/party/services/query-keys';
-import { PartyContainer } from '@/app/party/components';
+import { PartyContainer, PartyErrorFallback, PartySkeleton } from '@/app/party/components';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,7 +46,11 @@ export default async function Party({ params }: { params: Promise<{ id: string }
     <HydrationBoundary state={dehydrate(queryClient)}>
       <section className="flex flex-col gap-10">
         <SubHeader title="정당 프로필" />
-        <PartyContainer id={id} />
+        <ErrorBoundary FallbackComponent={PartyErrorFallback}>
+          <Suspense fallback={<PartySkeleton />}>
+            <PartyContainer partyId={partyId} />
+          </Suspense>
+        </ErrorBoundary>
       </section>
     </HydrationBoundary>
   );

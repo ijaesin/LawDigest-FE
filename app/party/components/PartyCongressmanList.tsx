@@ -8,25 +8,25 @@ import { Separator } from '@/app/common/components/ui/separator';
 import { IconArrowDown, IconArrowUp } from '@/public/svgs';
 import PartyCongressmanItem from './PartyCongressmanItem';
 
-export default function PartyCongressmanList({ id }: { id: number }) {
-  const { data, isFetching } = useGetPartyCongressman(id);
+export default function PartyCongressmanList({ partyId }: { partyId: number }) {
+  const { data, isFetching } = useGetPartyCongressman(partyId);
   const [isOpened, setIsOpened] = useState(false);
 
   const onClickButton = useCallback(() => {
-    setIsOpened(!isOpened);
-  }, [isOpened]);
+    setIsOpened((prev) => !prev);
+  }, []);
 
   return (
     <section className="flex flex-col gap-5 mx-5 my-10">
       <div className="grid grid-cols-4 gap-y-3 justify-items-center w-full md:grid-cols-8 lg:grid-cols-4">
         {isOpened
-          ? data?.party_congressman.map((congressman, index) => (
-              <PartyCongressmanItem key={`${congressman.congressman_id + index}`} {...congressman} />
+          ? data?.party_congressman.map((congressman) => (
+              <PartyCongressmanItem key={congressman.congressman_id} {...congressman} />
             ))
           : data?.party_congressman
               .slice(0, 8)
-              .map((congressman, index) => (
-                <PartyCongressmanItem key={`${congressman.congressman_id + index}`} {...congressman} />
+              .map((congressman) => (
+                <PartyCongressmanItem key={congressman.congressman_id} {...congressman} />
               ))}
       </div>
       {isFetching && (

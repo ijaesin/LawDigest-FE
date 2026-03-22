@@ -4,15 +4,15 @@ import PartyDetail from './PartyDetail';
 import PartyCongressmanList from './PartyCongressmanList';
 import BillContainer from './BillContainer';
 
-export default function PartyContainer({ id }: { id: string }) {
+export default function PartyContainer({ partyId }: { partyId: number }) {
   return (
     <div className="xl:flex xl:justify-center xl:gap-10">
       <div>
-        <PartyDetail partyId={Number(id)} />
-        <PartyCongressmanList id={Number(id)} />
+        <PartyDetail partyId={partyId} />
+        <PartyCongressmanList partyId={partyId} />
       </div>
       <div className="">
-        <BillContainer id={Number(id)} />
+        <BillContainer id={partyId} />
       </div>
     </div>
   );
