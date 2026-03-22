@@ -6,7 +6,7 @@ import { SNACKBAR_TYPE } from '@/app/common/constants';
 import { useSnackbarStore } from '@/app/common/store';
 import { useAuthGuard } from '@/app/auth/hooks';
 import { IconCheck, IconPlus } from '@/public/svgs';
-import { useMutateCongressmanFollow } from '@/app/congressman/services';
+import { useMutateCongressmanFollow } from '@/app/congressman/services/queries';
 
 export default function FollowBoard({
   id,

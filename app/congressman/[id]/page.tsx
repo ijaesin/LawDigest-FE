@@ -2,8 +2,8 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { SubHeader } from '@/app/common/components/Layout';
 import { getMetadata } from '@/app/common/utils';
 import { Metadata } from 'next';
-import { getCongressmanDetail } from '@/app/congressman/services';
-import { congressmanKeys } from '@/app/congressman/hooks';
+import { getCongressmanDetail } from '@/app/congressman/services/apis';
+import { congressmanKeys } from '@/app/congressman/services/query-keys';
 import { CongressmanContainer } from '@/app/congressman/components';
 
 export const dynamic = 'force-dynamic';

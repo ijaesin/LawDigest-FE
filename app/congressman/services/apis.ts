@@ -11,6 +11,8 @@ import {
 import { BILL_TAB } from '@/app/bill/constants';
 import type { ValueOf } from '@/app/common/types';
 
+export const BILL_PAGE_SIZE = 3;
+
 /**
  * @description 특정 의원이 발의/참여한 법안 목록(무한스크롤) 조회
  * @param page - 페이지 번호 (0부터 시작)
@@ -26,7 +28,7 @@ export const getBillByCongressman = async (
 ): Promise<CongressmanBillFeed> => {
   try {
     const data = await apiClient.get<CongressmanBillFeed>('/congressman/bill_info', {
-      params: { congressman_id: congressmanId, type, page, size: 3 },
+      params: { congressman_id: congressmanId, type, page, size: BILL_PAGE_SIZE },
     });
     return CongressmanBillFeedSchema.parse(data);
   } catch (err) {

@@ -9,7 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/app/common/components/ui/button';
 import { IconWeb } from '@/public/svgs';
 import PartyLogo from '@/app/common/components/PartyLogo';
-import { useGetCongressmanDetail } from '@/app/congressman/services';
+import { useGetCongressmanDetail } from '@/app/congressman/services/queries';
 import FollowBoard from './FollowBoard';
 
 export default function CongressmanDetail({ congressmanId }: { congressmanId: string }) {
