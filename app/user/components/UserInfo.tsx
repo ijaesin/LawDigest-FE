@@ -17,7 +17,7 @@ export default function UserInfo() {
             height={100}
             alt="프로필 사진 테두리"
             priority
-            loader={({ src }) => `${src}`}
+            unoptimized
             className="absolute z-10"
           />
           <Avatar className="w-[100px] h-[100px] mr-4 lg:mr-0">

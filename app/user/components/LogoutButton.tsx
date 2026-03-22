@@ -1,5 +1,4 @@
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
 import { SNACKBAR_TYPE } from '@/app/common/constants';
 import { Button } from '@/app/common/components/ui/button';
 import { useSnackbarStore } from '@/app/common/store';
@@ -18,13 +17,9 @@ export default function LogoutButton() {
     },
   });
 
-  const onClickLogout = useCallback(async () => {
-    postLogout();
-  }, [postLogout]);
-
   return (
     <Button
-      onClick={onClickLogout}
+      onClick={() => postLogout()}
       size="sm"
       variant="outline"
       className="h-8 rounded-full bg-transparent border-1 border-[#E0E0E0] text-[#999999] dark:border-gray-3 dark:text-gray-2">

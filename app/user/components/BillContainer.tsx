@@ -1,28 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useIntersect } from '@/app/common/hooks';
 import { Card } from '@/app/common/components/ui/card';
 import { useInfiniteBillBookmarked } from '@/app/user/hooks';
 import BillBookmarkedCount from './BillBookmarkedCount';
-import BillBookmarkedList from './BillBookmaredList';
+import BillBookmarkedList from './BillBookmarkedList';
 
 export default function BillContainer() {
   const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteBillBookmarked();
-  const [bills, setBills] = useState(data ? data.pages.flatMap((page) => page.bill_list) : []);
+  const bills = data.pages.flatMap((page) => page.bill_list);
 
   const fetchRef = useIntersect(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
   });
-
-  useEffect(() => {
-    if (data) {
-      setBills(() => [...data.pages.flatMap((page) => page.bill_list)]);
-    }
-  }, [data]);
 
   return (
     <section className="lg:px-[30px] flex flex-col gap-6">
@@ -36,7 +29,7 @@ export default function BillContainer() {
           height={64}
           alt="스크랩 아이콘 이미지"
           priority
-          loader={({ src }) => `${src}`}
+          unoptimized
           className="shrink-0"
         />
         <p className="text-base font-semibold text-white lg:text-lg">이곳에서 스크랩한 법안들을 모아서 확인하세요!</p>
