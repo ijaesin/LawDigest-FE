@@ -13,7 +13,7 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 import { extractApiMessage } from '@/app/common/validation/api.schema';
-import type { PopularFeed, BillDetail, BookmarkResponse, ViewCountResponse, Feed } from '@/app/bill/validation';
+import type { PopularFeed, BillDetail, ViewCountResponse, Feed } from '@/app/bill/validation';
 import { billKeys } from './query-keys';
 import { getBillByStage, getBillDetail, getBillPopular, patchBookmark, patchViewCount } from './apis';
 
@@ -98,29 +98,74 @@ export const useMutateViewCount = <TError = unknown, TContext = unknown>(
   });
 
 /**
- * @description 법안 북마크 토글 뮤테이션 훅
+ * @description 법안 북마크 토글 뮤테이션 훅 (optimistic update)
  * @param billId - 법안 ID
- * @param options - Mutation options (onSuccess/onError 외 콜백 포함)
  * @returns useMutation 결과
  */
-export const useMutateBookmark = <TError = unknown, TContext = unknown>(
-  billId: string,
-  options?: Omit<UseMutationOptions<BookmarkResponse, TError, boolean, TContext>, 'mutationFn'>,
-) => {
+export const useMutateBookmark = (billId: string) => {
   const qc = useQueryClient();
-  return useMutation<BookmarkResponse, TError, boolean, TContext>({
+  return useMutation({
     mutationFn: (likeChecked: boolean) => patchBookmark({ billId, likeChecked }),
-    ...options,
-    onSuccess: (data, variables, context) => {
+    onMutate: async (likeChecked) => {
+      await qc.cancelQueries({ queryKey: billKeys.root() });
+
+      const previousData = qc.getQueriesData<InfiniteData<Feed>>({ queryKey: billKeys.root() });
+
+      qc.setQueriesData<InfiniteData<Feed>>(
+        { queryKey: billKeys.root() },
+        (old) => {
+          if (!old?.pages) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              bill_list: page.bill_list.map((bill) =>
+                bill.bill_info_dto.bill_id === billId
+                  ? {
+                      ...bill,
+                      is_book_mark: likeChecked,
+                      bill_info_dto: {
+                        ...bill.bill_info_dto,
+                        bill_like_count: bill.bill_info_dto.bill_like_count + (likeChecked ? 1 : -1),
+                      },
+                    }
+                  : bill,
+              ),
+            })),
+          };
+        },
+      );
+
+      const previousDetail = qc.getQueryData<BillDetail>(billKeys.detail(billId));
+      qc.setQueryData<BillDetail>(billKeys.detail(billId), (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          is_book_mark: likeChecked,
+          bill_info_dto: {
+            ...old.bill_info_dto,
+            bill_like_count: old.bill_info_dto.bill_like_count + (likeChecked ? 1 : -1),
+          },
+        };
+      });
+
+      return { previousData, previousDetail };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousData) {
+        context.previousData.forEach(([key, data]) => {
+          if (data) qc.setQueryData(key, data);
+        });
+      }
+      if (context?.previousDetail) {
+        qc.setQueryData(billKeys.detail(billId), context.previousDetail);
+      }
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: billKeys.detail(billId) });
       qc.invalidateQueries({ queryKey: billKeys.mainfeed() });
       qc.invalidateQueries({ queryKey: ['user', 'bookmark', 'bill'] });
       qc.invalidateQueries({ queryKey: ['user', 'bookmark', 'bill', 'count'] });
-      options?.onSuccess?.(data, variables, context);
-    },
-    onError: (error, variables, context) => {
-      console.error(extractApiMessage(error));
-      options?.onError?.(error, variables, context);
     },
   });
 };

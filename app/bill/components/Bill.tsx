@@ -37,8 +37,6 @@ export default function Bill({
   viewCount,
   children,
 }: BillProps) {
-  const [isLiked, setIsLiked] = useState(is_book_mark);
-  const [likeCount, setLikeCount] = useState(bill_like_count);
   const mutateBookmark = useMutateBookmark(bill_id);
   const [toggleMore, setToggleMore] = useState(false);
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
@@ -47,24 +45,21 @@ export default function Bill({
     setToggleMore(!toggleMore);
   }, [toggleMore]);
 
-  const onClickScrab = useCallback(() => {
+  const onClickScrap = useCallback(() => {
     const accessToken = getCookie(ACCESS_TOKEN);
 
     if (accessToken) {
-      setIsLiked(!isLiked);
-      setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
       setSnackbar({
         show: true,
-        type: isLiked ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
-        message: isLiked ? '해당 법안의 스크랩을 취소했습니다.' : '해당 법안을 스크랩했습니다.',
+        type: is_book_mark ? SNACKBAR_TYPE.CANCEL : SNACKBAR_TYPE.SUCCESS,
+        message: is_book_mark ? '해당 법안의 스크랩을 취소했습니다.' : '해당 법안을 스크랩했습니다.',
         duration: 3000,
       });
-
-      mutateBookmark.mutate(!isLiked);
+      mutateBookmark.mutate(!is_book_mark);
     } else {
       setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', duration: 3000 });
     }
-  }, [isLiked, likeCount, setSnackbar, mutateBookmark]);
+  }, [is_book_mark, setSnackbar, mutateBookmark]);
 
   const handleCopyClipBoard = useCallback(() => {
     copyClipBoard(`${process.env.NEXT_PUBLIC_DOMAIN}/bill/${bill_id}`);
@@ -113,11 +108,11 @@ export default function Bill({
 
           <BillCardFooter
             billId={bill_id}
-            isLiked={isLiked}
-            likeCount={likeCount}
+            isLiked={is_book_mark}
+            likeCount={bill_like_count}
             viewCount={detail ? (viewCount ?? view_count) : view_count}
             detail={detail}
-            onClickScrap={onClickScrab}
+            onClickScrap={onClickScrap}
             onCopyLink={handleCopyClipBoard}
           />
         </section>
