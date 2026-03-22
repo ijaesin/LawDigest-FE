@@ -9,7 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/app/common/components
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/app/common/components/ui/tooltip';
 import { Button } from '@/app/common/components/ui/button';
 import Link from 'next/link';
-import { PartyLogoReplacement } from '@/app/party/components';
+import PartyLogo from '@/app/common/components/PartyLogo';
 import { ProposerList } from '@/app/bill/components';
 
 export default function BillBookmarked({
@@ -63,39 +63,16 @@ export default function BillBookmarked({
       </CardContent>
       <CardFooter className="flex overflow-visible justify-center pl-0 basis-1/4 md:basis-1/5 shrink-0">
         {isRepresentativeSolo ? (
-          <Link
-            href={
-              representative_proposer_dto_list[0].party_image_url !== null
-                ? `/party/${representative_proposer_dto_list[0].party_id}`
-                : '#'
-            }
-            onClick={(e) => {
-              if (representative_proposer_dto_list[0].party_image_url === null) e.preventDefault();
-            }}>
-            {representative_proposer_dto_list[0].party_image_url !== null ? (
-              <>
-                <Image
-                  className="dark:hidden object-contain w-[60px] h-[30px] md:w-[90px] md:h-[45px]"
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${representative_proposer_dto_list[0].party_image_url}`}
-                  width={60}
-                  height={30}
-                  alt={`${representative_proposer_dto_list[0].party_name} 이미지`}
-                />
-                <Image
-                  className="hidden dark:block object-contain w-[60px] h-[30px] md:w-[90px] md:h-[45px]"
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${representative_proposer_dto_list[0].party_image_url.replace(
-                    'wide',
-                    'dark',
-                  )}`}
-                  width={60}
-                  height={30}
-                  alt={`${representative_proposer_dto_list[0].party_name} 이미지`}
-                />
-              </>
-            ) : (
-              <PartyLogoReplacement partyName={representative_proposer_dto_list[0].party_name} circle={false} />
-            )}
-          </Link>
+          <PartyLogo
+            partyName={representative_proposer_dto_list[0].party_name}
+            partyImageUrl={representative_proposer_dto_list[0].party_image_url}
+            partyId={representative_proposer_dto_list[0].party_id}
+            variant="wide"
+            imageWidth={60}
+            imageHeight={30}
+            linkEnabled
+            className="object-contain w-[60px] h-[30px] md:w-[90px] md:h-[45px]"
+          />
         ) : (
           <div className="flex -space-x-4">
             {representative_proposer_dto_list.map(({ party_image_url, party_id, party_name }) => (

@@ -10,7 +10,7 @@ import { Button } from '@/app/common/components/ui/button';
 import { IconWeb } from '@/public/svgs';
 import { useGetCongressmanDetail } from '@/app/congressman/services';
 import FollowBoard from './FollowBoard';
-import PartyLogo from './PartyLogo';
+import PartyLogo from '@/app/common/components/PartyLogo';
 
 export default function CongressmanDetail({ congressmanId }: { congressmanId: string }) {
   const { data: congressman } = useGetCongressmanDetail(congressmanId);
@@ -39,7 +39,7 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
   return (
     <Card
       className={`mx-5 md:mx-auto xl:mx-0 mt-5 py-4 px-7 border-1.5 flex flex-col items-center gap-5 mb-4 dark:bg-dark-b xl:h-min md:w-[430px] xl:w-[320px] shrink-0 lg:dark:bg-dark-pb ${party_name} shadow-md rounded-md`}>
-      <PartyLogo party_id={party_id} party_name={party_name} party_image_url={party_image_url} />
+      <PartyLogo partyName={party_name} partyImageUrl={party_image_url} partyId={party_id} variant="wide" imageWidth={64} imageHeight={30} linkEnabled />
 
       <div className="flex gap-5 justify-between w-full">
         <Avatar className="w-[100px] h-[100px] border-1.5 shadow-lg shrink-0 rounded-full">

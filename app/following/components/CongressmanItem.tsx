@@ -2,8 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
 import Link from 'next/link';
-import Image from 'next/image';
-import { PartyLogoReplacement } from '@/app/party/components';
+import PartyLogo from '@/app/common/components/PartyLogo';
 import type { FollowingCongressman } from '@/app/following/validation';
 
 export default function CongressmanItem({
@@ -32,28 +31,16 @@ export default function CongressmanItem({
         </div>
       </div>
 
-      {party_image_url !== null ? (
-        <Link href={`/party/${party_id}`} className="hidden xl:block">
-          <Image
-            className="dark:hidden"
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url}`}
-            width={60}
-            height={20}
-            alt={`${party_name} 로고 이미지`}
-          />
-          <Image
-            className="hidden dark:block"
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url.replace('wide', 'dark')}`}
-            width={60}
-            height={20}
-            alt={`${party_name} 로고 이미지`}
-          />
-        </Link>
-      ) : (
-        <div className="hidden xl:block">
-          <PartyLogoReplacement partyName={party_name} circle={false} />
-        </div>
-      )}
+      <PartyLogo
+        partyName={party_name}
+        partyImageUrl={party_image_url}
+        partyId={party_id}
+        variant="wide"
+        imageWidth={60}
+        imageHeight={20}
+        linkEnabled
+        className="hidden xl:flex"
+      />
     </div>
   );
 }

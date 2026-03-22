@@ -4,8 +4,6 @@ import PartyCongressmanItem from './PartyCongressmanItem';
 import PartyCongressmanList from './PartyCongressmanList';
 import PartyContainer from './PartyContainer';
 import PartyDetail from './PartyDetail';
-import PartyLogo from './PartyLogo';
-import PartyLogoReplacement from './PartyLogoReplacement';
 
 export {
   BillContainer,
@@ -14,6 +12,4 @@ export {
   PartyCongressmanList,
   PartyContainer,
   PartyDetail,
-  PartyLogo,
-  PartyLogoReplacement,
 };

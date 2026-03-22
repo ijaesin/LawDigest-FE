@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from '@/app/common/components/ui/card';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
 import Link from 'next/link';
-import { PartyLogoReplacement } from '@/app/party/components';
+import PartyLogo from '@/app/common/components/PartyLogo';
 
 export default function AnotherBill({
   billBriefSummary,
@@ -42,26 +42,16 @@ export default function AnotherBill({
       </CardContent>
       <CardFooter className="flex overflow-visible justify-center pl-0 basis-1/4 shrink-0">
         {isRepresentativeSolo ? (
-          party[0].party_image_url !== null ? (
-            <Link href={`/party/${party[0].party_id}`}>
-              <Image
-                className="dark:hidden object-contain w-[60px] h-[30px] lg:w-[120px] lg:h-[30px]"
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party[0].party_image_url}`}
-                width={60}
-                height={30}
-                alt={`${party[0].party_name} 이미지`}
-              />
-              <Image
-                className="hidden dark:block object-contain w-[60px] h-[30px] lg:w-[120px] lg:h-[30px]"
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party[0].party_image_url.replace('wide', 'dark')}`}
-                width={60}
-                height={30}
-                alt={`${party[0].party_name} 이미지`}
-              />
-            </Link>
-          ) : (
-            <PartyLogoReplacement partyName={party[0].party_name} circle={false} />
-          )
+          <PartyLogo
+            partyName={party[0].party_name}
+            partyImageUrl={party[0].party_image_url}
+            partyId={party[0].party_id}
+            variant="wide"
+            imageWidth={60}
+            imageHeight={30}
+            linkEnabled
+            className="object-contain w-[60px] h-[30px] lg:w-[120px] lg:h-[30px]"
+          />
         ) : (
           <div className="flex -space-x-4">
             {party.map(({ party_image_url, party_id, party_name }) =>

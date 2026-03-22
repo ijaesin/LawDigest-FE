@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/common/components/ui/popover';
 import { Button } from '@/app/common/components/ui/button';
 import { Separator } from '@/app/common/components/ui/separator';
-import { PartyLogoReplacement } from '@/app/party/components';
+import PartyLogo from '@/app/common/components/PartyLogo';
 import type { BillResponse } from '@/app/bill/validation';
 import ProposerList from './ProposerList';
 
@@ -46,7 +46,7 @@ export default function BillProposerSection({
               {firstRepresentative?.representative_proposer_name ?? '대표 발의자 정보 없음'}
             </p>
             <div className="flex gap-1 items-center">
-              <PartyLogoReplacement partyName={partyName} circle={false} />
+              <PartyLogo partyName={partyName} partyImageUrl={null} variant="wide" />
               <p className="text-xs text-gray-2">{partyName}</p>
             </div>
           </div>

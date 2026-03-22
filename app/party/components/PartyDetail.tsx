@@ -15,7 +15,7 @@ import {
 } from '@/app/party/constants';
 import { useGetPartyDetail } from '@/app/party/hooks';
 import FollowBoard from './FollowBoard';
-import PartyLogo from './PartyLogo';
+import PartyLogo from '@/app/common/components/PartyLogo';
 
 export default function PartyDetail({ partyId }: { partyId: number }) {
   const { data: party } = useGetPartyDetail(partyId);
@@ -37,7 +37,7 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
   return (
     <section className="flex flex-col items-center mx-5 xl:mx-0 mt-5 gap-7 xl:w-[320px]">
       <Card className="flex flex-col gap-5 items-center pt-1 w-full bg-transparent border-none dark:bg-dark-b lg:dark:bg-dark-pb">
-        <PartyLogo party_name={party_name} party_img_url={party_img_url} />
+        <PartyLogo partyName={party_name} partyImageUrl={party_img_url} variant="hero" />
 
         <div className="flex flex-col gap-1 items-center">
           <h2 className="text-2xl font-semibold">{party_name}</h2>
