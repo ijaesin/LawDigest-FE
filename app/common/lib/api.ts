@@ -1,9 +1,15 @@
 import axios, { type AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { getCookie, deleteCookie } from 'cookies-next';
 import qs from 'qs';
-import _ from 'lodash';
 import { ACCESS_TOKEN } from '@/app/common/constants';
 import { authEvents } from '@/app/common/lib/auth-events';
+
+interface ApiResponse<T = unknown> {
+  status: number;
+  code: string;
+  message: string;
+  data: T;
+}
 
 // 브라우저에서는 Next.js rewrites를 통해 동일 오리진 경유로 프록시(/v1 → REMOTE/v1)
 // 서버(SSR)에서는 직접 원격 호출을 사용
@@ -23,7 +29,7 @@ axios.defaults.paramsSerializer = (params) => {
 
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const accessToken = getCookie(ACCESS_TOKEN)!;
+    const accessToken = getCookie(ACCESS_TOKEN);
 
     if (!accessToken) {
       return config;
@@ -33,16 +39,16 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
-    Promise.reject(error);
+    return Promise.reject(error);
   },
 );
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    const payload = response.data as any;
+    const payload = response.data;
     // 공통 응답 래퍼({ status, code, message, data })를 사용하는 경우 내부 data만 반환
     if (payload && typeof payload === 'object' && 'data' in payload) {
-      return payload.data;
+      return (payload as ApiResponse).data;
     }
     return payload;
   },
@@ -52,9 +58,11 @@ apiClient.interceptors.response.use(
         .post('/auth/reissue/token')
         .then(() => {
           const { response } = error;
-          const newConfig = _.cloneDeep(response!.config);
-          const accessToken = getCookie(ACCESS_TOKEN)!;
-          newConfig.headers.Authorization = `Bearer ${accessToken}`;
+          const newConfig = { ...response!.config, headers: { ...response!.config.headers } };
+          const accessToken = getCookie(ACCESS_TOKEN);
+          if (accessToken) {
+            newConfig.headers.Authorization = `Bearer ${accessToken}`;
+          }
 
           return axios(newConfig).then(() => {
             authEvents.emitTokenReissued();
