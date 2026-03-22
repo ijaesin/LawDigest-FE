@@ -9,6 +9,7 @@ export interface SnackbarState {
   type: SnackbarType;
   message: string;
   duration?: number | null;
+  action?: { label: string; href: string } | null;
 }
 
 interface SnackbarStore extends SnackbarState {
@@ -21,6 +22,7 @@ const initialState: SnackbarState = {
   type: SNACKBAR_TYPE.DEFAULT,
   message: '',
   duration: 3000,
+  action: null,
 };
 
 export const useSnackbarStore = create<SnackbarStore>((set) => ({
@@ -32,6 +34,7 @@ export const useSnackbarStore = create<SnackbarStore>((set) => ({
       type: next.type ?? state.type,
       message: next.message,
       duration: next.duration ?? state.duration,
+      action: next.action ?? null,
     })),
   resetSnackbar: () => set(() => ({ ...initialState })),
 }));

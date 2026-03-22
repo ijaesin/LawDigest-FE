@@ -57,7 +57,7 @@ export default function Bill({
       });
       mutateBookmark.mutate(!is_book_mark);
     } else {
-      setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', duration: 3000 });
+      setSnackbar({ show: true, type: SNACKBAR_TYPE.ERROR, message: '로그인이 필요한 서비스입니다.', action: { label: '로그인 하기', href: '/auth/login' }, duration: 3000 });
     }
   }, [is_book_mark, setSnackbar, mutateBookmark]);
 
