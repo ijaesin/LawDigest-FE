@@ -1,5 +1,6 @@
 import { QueryClient, HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { requireAuth } from '@/app/auth/lib/require-auth';
+import { AppLayout } from '@/app/common/components/Layout/AppLayout/AppLayout';
 import { getNotification, getNotificationCount } from '@/app/notification/services/apis';
 import { notificationKeys } from '@/app/notification/services/query-keys';
 import NotificationContent from './components/NotificationContent';
@@ -17,7 +18,9 @@ export default async function NotificationPage() {
 
   return (
     <HydrationBoundary state={dehydrate(qc)}>
-      <NotificationContent />
+      <AppLayout>
+        <NotificationContent />
+      </AppLayout>
     </HydrationBoundary>
   );
 }
