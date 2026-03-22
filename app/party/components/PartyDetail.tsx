@@ -19,11 +19,7 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
     total_congressman_count,
     proportional_congressman_count,
     district_congressman_count,
-    representative_bill_count,
-    public_bill_count,
-    follow_count,
     website_url,
-    followed,
   } = party;
   const whole_representative_count = proportional_congressman_count + district_congressman_count;
   const seatRatio = ((100 * whole_representative_count) / total_congressman_count).toFixed(2);
@@ -51,13 +47,7 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
 
       <Separator className="dark:bg-dark-l" />
 
-      <FollowBoard
-        id={partyId}
-        followed={followed}
-        follow_count={follow_count}
-        representative_bill_count={representative_bill_count}
-        public_bill_count={public_bill_count}
-      />
+      <FollowBoard partyId={partyId} />
 
       <Separator className="dark:bg-dark-l" />
 

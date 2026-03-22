@@ -11,7 +11,6 @@ import {
   type UseSuspenseQueryOptions,
   type UseQueryOptions,
 } from '@tanstack/react-query';
-import { extractApiMessage } from '@/app/common/validation/api.schema';
 import type {
   PartyBillFeed,
   PartyDetail,
@@ -96,11 +95,26 @@ export const useMutatePartyFollow = (partyId: number) => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (checked: boolean) => patchPartyFollow(partyId, checked),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: partyKeys.detail(partyId) });
+    onMutate: async (checked) => {
+      await qc.cancelQueries({ queryKey: partyKeys.detail(partyId) });
+      const previous = qc.getQueryData<PartyDetail>(partyKeys.detail(partyId));
+      qc.setQueryData<PartyDetail>(partyKeys.detail(partyId), (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          followed: checked,
+          follow_count: checked ? old.follow_count + 1 : old.follow_count - 1,
+        };
+      });
+      return { previous };
     },
-    onError: (error) => {
-      console.error(extractApiMessage(error));
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        qc.setQueryData(partyKeys.detail(partyId), context.previous);
+      }
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: partyKeys.detail(partyId) });
     },
   });
 };
