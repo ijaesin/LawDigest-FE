@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/app/common/components/ui/button';
 import { IconWeb } from '@/public/svgs';
 import PartyLogo from '@/app/common/components/PartyLogo';
+import { decodeHtmlEntities } from '@/app/common/utils';
 import { useGetCongressmanDetail } from '@/app/congressman/services/queries';
 import FollowBoard from './FollowBoard';
 
@@ -51,7 +52,7 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
 
       <div className="flex gap-5 justify-between w-full">
         <Avatar className="w-[100px] h-[100px] border-1.5 shadow-lg shrink-0 rounded-full">
-          <AvatarImage src={process.env.NEXT_PUBLIC_IMAGE_URL + congressman_image_url} />
+          <AvatarImage src={process.env.NEXT_PUBLIC_IMAGE_URL + congressman_image_url} alt={`${congressman_name} 의원`} />
           <AvatarFallback>{congressman_name[0]}</AvatarFallback>
         </Avatar>
 
@@ -81,30 +82,30 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
           기본정보
         </Badge>
 
-        <div className="ml-3 w-full">
+        <dl className="ml-3 w-full">
           <div className="flex gap-2 justify-between items-center">
-            <p className="font-medium text-gray-2 dark:text-gray-3 shrink-0">나이</p>
-            <p className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">
+            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">나이</dt>
+            <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">
               {age ? `${age} 세` : '-'}
-            </p>
+            </dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <p className="font-medium text-gray-2 dark:text-gray-3 shrink-0">성별</p>
-            <p className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{gender || '-'}</p>
+            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">성별</dt>
+            <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{gender || '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <p className="font-medium text-gray-2 dark:text-gray-3 shrink-0">번호</p>
-            <p className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{telephone || '-'}</p>
+            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">번호</dt>
+            <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{telephone || '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <p className="font-medium text-gray-2 dark:text-gray-3 shrink-0">이메일</p>
-            <p className="w-[80%] text-sm font-medium break-words dark:text-gray-1 text-end">{email || '-'}</p>
+            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">이메일</dt>
+            <dd className="w-[80%] text-sm font-medium break-words dark:text-gray-1 text-end">{email || '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <p className="font-medium text-gray-2 dark:text-gray-3 shrink-0">의원실</p>
-            <p className="text-sm font-medium break-words dark:text-gray-1 w-[80%] text-end">{office || '-'}</p>
+            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">의원실</dt>
+            <dd className="text-sm font-medium break-words dark:text-gray-1 w-[80%] text-end">{office || '-'}</dd>
           </div>
-        </div>
+        </dl>
       </div>
 
       <Accordion type="single" collapsible className="w-full">
@@ -114,19 +115,21 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
             <div className="flex flex-col gap-5 pt-4 h-full">
               <p className="text-sm font-medium whitespace-pre-line text-gray-3 dark:text-gray-2">
                 {brief_history
-                  ? brief_history.replaceAll('&middot;', '·').replaceAll('&nbsp;', '').replaceAll('&#39;', `'`)
+                  ? decodeHtmlEntities(brief_history)
                   : '해당 의원의 약력이 존재하지 않습니다.'}
               </p>
 
-              <Button
-                asChild
-                variant="outline"
-                className="w-[135px] h-8 text-gray-2 mx-auto border-gray-1 dark:border-gray-2 dark:text-gray-3 rounded-full">
-                <Link href={homepage}>
-                  홈페이지 방문
-                  <IconWeb />
-                </Link>
-              </Button>
+              {homepage ? (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-[135px] h-8 text-gray-2 mx-auto border-gray-1 dark:border-gray-2 dark:text-gray-3 rounded-full">
+                  <Link href={homepage} target="_blank" rel="noopener noreferrer" aria-label="홈페이지 방문 (새 창에서 열림)">
+                    홈페이지 방문
+                    <IconWeb />
+                  </Link>
+                </Button>
+              ) : null}
             </div>
           </AccordionContent>
         </AccordionItem>
