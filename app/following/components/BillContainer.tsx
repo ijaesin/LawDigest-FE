@@ -1,4 +1,3 @@
-// app/following/components/BillContainer.tsx
 'use client';
 
 import { useMemo } from 'react';

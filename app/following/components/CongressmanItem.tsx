@@ -1,4 +1,3 @@
-// app/following/components/CongressmanItem.tsx
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
