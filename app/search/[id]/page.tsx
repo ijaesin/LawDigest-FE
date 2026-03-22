@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useIntersect } from '@/app/common/hooks';
 import { Separator } from '@/app/common/components/ui/separator';
@@ -11,17 +11,17 @@ import { useGetSearchCongressmanParty, useInfiniteSearchBill } from '@/app/searc
 export default function SearchResult() {
   const params = useParams<{ id: string }>();
   const id = decodeURI(params.id);
-  const { data: dataCP, refetch: refetchCP } = useGetSearchCongressmanParty(id);
+  const { data: dataCP } = useGetSearchCongressmanParty(id);
   const {
     data: dataBill,
     hasNextPage: hasNextPageBill,
     isFetching: isFetchingBill,
     fetchNextPage: fetchNextPageBill,
-    refetch: refetchBill,
   } = useInfiniteSearchBill(id);
-  const [searchResultsCP, setSearchResultsCP] = useState(dataCP ? dataCP.search_response : []);
-  const [searchResultsBill, setSearchResultsBill] = useState(
-    dataBill ? dataBill.pages.flatMap(({ search_response: responses }) => responses) : [],
+  const searchResultsCP = dataCP?.search_response ?? [];
+  const searchResultsBill = useMemo(
+    () => dataBill?.pages.flatMap(({ search_response }) => search_response) ?? [],
+    [dataBill],
   );
 
   const fetchRefBill = useIntersect(() => {
@@ -29,20 +29,6 @@ export default function SearchResult() {
       fetchNextPageBill();
     }
   });
-
-  useEffect(() => {
-    if (dataCP) {
-      setSearchResultsCP(() => [...dataCP.search_response]);
-    }
-    if (dataBill) {
-      setSearchResultsBill(() => [...dataBill.pages.flatMap(({ search_response: responses }) => responses)]);
-    }
-  }, [dataCP, dataBill]);
-
-  useEffect(() => {
-    refetchCP();
-    refetchBill();
-  }, [dataCP, dataBill]);
 
   return (
     <>
