@@ -1,20 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { COLOR } from '@/app/common/constants/theme';
 
-// 툴팁 인터페이스 정의
-interface TooltipData {
-  visible: boolean;
-  x: number;
-  y: number;
-  partyName: string;
-  partyId: number;
-  value: number;
-  color: string;
-  percentage: number;
-}
+// TODO: 툴팁 UI 수정 후 다시 활성화 — 관련 코드 제거됨, git history 참조
 
 // 정당 투표 정보 인터페이스
 interface PartyVote {
@@ -69,51 +59,30 @@ export default function HalfDonutChart({
   const [animatedValue, setAnimatedValue] = useState(0);
   const prevTotalValueRef = useRef(0);
 
-  // 툴팁을 위한 상태
-  const [tooltip, setTooltip] = useState<TooltipData>({
-    visible: false,
-    x: 0,
-    y: 0,
-    partyName: '',
-    partyId: 0,
-    value: 0,
-    color: '',
-    percentage: 0,
-  });
-
-  // SVG 컨테이너 ref
-  const svgRef = useRef<SVGSVGElement>(null);
-
   // 애니메이션 효과
   useEffect(() => {
-    // 기존 값에서 목표 값까지 애니메이션 설정
-    const startValue = prevTotalValueRef.current; // 이전 값부터 시작
-    const duration = 1000; // 애니메이션 지속 시간 (밀리초)
+    const startValue = prevTotalValueRef.current;
+    const duration = 1000;
     const startTime = Date.now();
+    let rafId: number;
 
     const animateValue = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // 이지 아웃 애니메이션 (점점 느려지는 효과)
       const easeOutProgress = 1 - (1 - progress) ** 3;
-
       const currentValue = startValue + (approvalPercentage - startValue) * easeOutProgress;
       setAnimatedValue(currentValue);
 
       if (progress < 1) {
-        requestAnimationFrame(animateValue);
+        rafId = requestAnimationFrame(animateValue);
       } else {
         setAnimatedValue(approvalPercentage);
         prevTotalValueRef.current = approvalPercentage;
       }
     };
 
-    requestAnimationFrame(animateValue);
-
-    return () => {
-      // 애니메이션 정리 작업이 필요한 경우
-    };
+    rafId = requestAnimationFrame(animateValue);
+    return () => cancelAnimationFrame(rafId);
   }, [approvalPercentage]);
 
   // SVG 크기와 반지름 정의
@@ -132,23 +101,34 @@ export default function HalfDonutChart({
   const centerX = width / 2;
   const centerY = height;
 
-  // 각도 계산을 위한 함수 (D3 arc 사용)
-  const arc = d3
-    .arc()
-    .innerRadius(innerRadius)
-    .outerRadius(outerRadius)
-    .startAngle(-Math.PI / 2) // 반원의 시작점 (왼쪽)
-    .endAngle(Math.PI / 2) // 반원의 끝점 (오른쪽)
-    .cornerRadius(cornerRadius); // 끝을 둥글게 처리
-
-  // 진행 상태를 보여주는 아크 생성 (애니메이션 값 사용)
-  const progressArc = d3
+  // 배경 아크 경로
+  const backgroundArcPath = d3
     .arc()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius)
     .startAngle(-Math.PI / 2)
-    .endAngle((animatedValue / 100) * Math.PI - Math.PI / 2) // 애니메이션 값에 따른 각도
-    .cornerRadius(cornerRadius); // 끝을 둥글게 처리
+    .endAngle(Math.PI / 2)
+    .cornerRadius(cornerRadius)({
+    innerRadius,
+    outerRadius,
+    startAngle: -Math.PI / 2,
+    endAngle: Math.PI / 2,
+  });
+
+  // 진행 상태 아크 경로 (애니메이션 값 사용)
+  const progressEndAngle = (animatedValue / 100) * Math.PI - Math.PI / 2;
+  const progressArcPath = d3
+    .arc()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadius)
+    .startAngle(-Math.PI / 2)
+    .endAngle(progressEndAngle)
+    .cornerRadius(cornerRadius)({
+    innerRadius,
+    outerRadius,
+    startAngle: -Math.PI / 2,
+    endAngle: progressEndAngle,
+  });
 
   // ----- 임계값(50%) 관련 계산 -----
   const thresholdValue = totalVoteCount * 0.5; // totalVoteCount의 50%
@@ -237,77 +217,33 @@ export default function HalfDonutChart({
         .outerRadius(subOuterRadius)
         .startAngle(adjustedStartAngle)
         .endAngle(finalEndAngle)
-        .cornerRadius(cornerRadius / 2)(null as any);
+        .cornerRadius(cornerRadius / 2)({
+        innerRadius: subInnerRadius,
+        outerRadius: subOuterRadius,
+        startAngle: adjustedStartAngle,
+        endAngle: finalEndAngle,
+      });
 
       return {
         party: item.party,
-        percentage: item.percentage, // 실제 백분율 (툴팁 등에 사용)
+        percentage: item.percentage,
         startPercentage,
         endPercentage: cumulativePercentage,
         color: getChartColor(index),
         arcPath,
       };
     });
-  }, [partyVoteList, totalVoteCount, animatedValue]);
-
-  // 툴팁 표시/숨김 핸들러
-  const handleMouseEnter = (
-    e: React.MouseEvent<SVGPathElement>,
-    party: PartyVote,
-    color: string,
-    percentage: number,
-  ) => {
-    // 마우스 위치 계산 (SVG 좌표계에서 페이지 좌표계로 변환)
-    const svgRect = svgRef.current?.getBoundingClientRect();
-    if (!svgRect) return;
-
-    // 페이지 내에서의 마우스 위치
-    const x = e.clientX - svgRect.left;
-    const y = e.clientY - svgRect.top;
-
-    setTooltip({
-      visible: false, // TODO: 툴팁 UI 수정 후 다시 활성화
-      x,
-      y,
-      partyName: party.party_info.party_name,
-      partyId: party.party_info.party_id,
-      value: party.party_approval_count,
-      color,
-      percentage,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTooltip((prev) => ({ ...prev, visible: false }));
-  };
-
-  // 마우스 이동 시 툴팁 위치 업데이트
-  const handleMouseMove = (e: React.MouseEvent<SVGPathElement>) => {
-    if (!tooltip.visible) return;
-
-    const svgRect = svgRef.current?.getBoundingClientRect();
-    if (!svgRect) return;
-
-    // 페이지 내에서의 마우스 위치
-    const x = e.clientX - svgRect.left;
-    const y = e.clientY - svgRect.top;
-
-    setTooltip((prev) => ({ ...prev, x, y }));
-  };
+  }, [partyVoteList, animatedValue]);
 
   return (
     <div className="flex relative flex-col items-center">
       {/* SVG 차트 */}
-      <svg width={width} height={height} ref={svgRef}>
+      <svg width={width} height={height}>
         {/* 배경 반원 */}
-        <path d={arc(null as any) as string} fill="#e6e6e6" transform={`translate(${centerX}, ${centerY})`} />
+        <path d={backgroundArcPath ?? ''} fill="#e6e6e6" transform={`translate(${centerX}, ${centerY})`} />
 
         {/* 진행 상태를 표시하는 반원 */}
-        <path
-          d={progressArc(null as any) as string}
-          fill={progressColor}
-          transform={`translate(${centerX}, ${centerY})`}
-        />
+        <path d={progressArcPath ?? ''} fill={progressColor} transform={`translate(${centerX}, ${centerY})`} />
 
         {/* 임계값(50%) 점선 */}
         <line
@@ -328,10 +264,6 @@ export default function HalfDonutChart({
             d={partyArc.arcPath as string}
             fill={COLOR[partyArc.party.party_info.party_name as keyof typeof COLOR]}
             transform={`translate(${centerX}, ${centerY})`}
-            onMouseEnter={(e) => handleMouseEnter(e, partyArc.party, partyArc.color, partyArc.percentage)}
-            onMouseLeave={handleMouseLeave}
-            onMouseMove={handleMouseMove}
-            // style={{ cursor: 'pointer' }} // TODO: 툴팁 UI 수정 후 다시 활성화
             aria-label={`${partyArc.party.party_info.party_name}: ${partyArc.party.party_approval_count}`}
             role="graphics-symbol"
           />
@@ -358,44 +290,6 @@ export default function HalfDonutChart({
           <tspan className="text-sm font-normal"> / {MAX_COUNT}</tspan>
         </text>
       </svg>
-
-      {/* 툴팁 - 정당별 투표 결과 */}
-      {tooltip.visible && (
-        <div
-          className="absolute z-10 p-3 rounded-md border shadow-lg pointer-events-none bg-popover min-w-32 text-popover-foreground"
-          style={{
-            left: `${tooltip.x + 15}px`,
-            top: `${tooltip.y + 15}px`,
-            transform: 'translate(-50%, -100%)',
-          }}>
-          <div className="flex items-center mb-2">
-            <div className="mr-2 w-3 h-3 rounded-full" style={{ backgroundColor: tooltip.color }} />
-            <span className="font-medium">{tooltip.partyName}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>득표수:</span>
-            <span className="font-semibold">{tooltip.value}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>비율:</span>
-            <span className="font-semibold">{tooltip.percentage.toFixed(1)}%</span>
-          </div>
-          <div className="flex justify-between">
-            <span>총합 대비:</span>
-            <span className="font-semibold">{((tooltip.value / approvalCount) * 100).toFixed(1)}%</span>
-          </div>
-
-          {/* 툴팁 삼각형 화살표 */}
-          <div
-            className="absolute w-0 h-0 border-t-8 border-r-8 border-l-8 border-l-transparent border-r-transparent border-t-popover"
-            style={{
-              bottom: '-8px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 }
