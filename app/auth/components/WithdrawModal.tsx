@@ -1,4 +1,3 @@
-// app/auth/components/WithdrawModal.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';

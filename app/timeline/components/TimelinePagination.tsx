@@ -28,6 +28,7 @@ export default function TimelinePagination({
         {Array.from({ length: totalPages }).map((_, i) => (
           <button
             type="button"
+            // eslint-disable-next-line react/no-array-index-key
             key={i}
             className={`w-1.5 h-1.5 rounded-full ${currentPage === i ? 'bg-gray-3' : 'bg-gray-1'}`}
             onClick={() => onPageChange(i)}
