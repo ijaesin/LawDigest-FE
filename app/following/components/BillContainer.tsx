@@ -1,25 +1,25 @@
+// app/following/components/BillContainer.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useIntersect } from '@/app/common/hooks';
 import { useInfiniteFollowingBill } from '@/app/following/hooks';
+import type { BillResponse } from '@/app/bill/validation';
 import BillFollowedList from './BillFollowedList';
+
+const EMPTY_BILLS: BillResponse[] = [];
 
 export default function BillContainer() {
   const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteFollowingBill();
-  const [bills, setBills] = useState(data ? data.pages.flatMap(({ bill_list }) => bill_list) : []);
 
-  const fetchRef = useIntersect(() => {
+  const bills = useMemo(() => data?.pages.flatMap((p) => p.bill_list) ?? EMPTY_BILLS, [data]);
+
+  const fetchRef = useIntersect((entry, observer) => {
+    observer.unobserve(entry.target);
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
   });
-
-  useEffect(() => {
-    if (data) {
-      setBills(() => [...data.pages.flatMap(({ bill_list }) => bill_list)]);
-    }
-  }, [data]);
 
   return (
     <section className="flex flex-col gap-6">
