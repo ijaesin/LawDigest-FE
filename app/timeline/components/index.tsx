@@ -1,5 +1,3 @@
-'use client';
-
 import BillOutlineList from './BillOutlineList';
 import CommitteeAuditList from './CommitteeAuditList';
 import PlenaryList from './PlenaryList';

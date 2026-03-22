@@ -56,36 +56,32 @@ export default function PlenaryList({ plenary_list }: { plenary_list: PlenaryIte
         </div>
       </div>
       <div>
-        {plenary_list.length > 0 ? (
-          <div className="grid grid-cols-1 gap-5 md:gap-2 md:grid-cols-2 lg:grid-cols-3">
-            {currentItems.map((item, index) => (
-              <Card key={item.bill_info.bill_id} className="overflow-visible z-10 md:shadow-none md:border">
-                <CardContent className="overflow-visible py-3">
-                  <PartyLogo
-                    partyInfo={item.bill_info.party_info[0]}
-                    className="absolute -left-[39px] bg-white dark:bg-dark-b md:hidden"
-                    style={index > 0 ? { top: `${index * 50}px` } : undefined}
-                  />
-                  <div className="flex flex-col gap-2 w-full md:h-full md:justify-between">
-                    <Link href={`/bill/${item.bill_info.bill_id}`}>
-                      <p className="text-sm font-bold">{item.bill_info.bill_brief_summary}</p>
-                    </Link>
-                    <div className="flex items-center gap-[6px]">
-                      <Badge variant="outline" className="text-xs">
-                        {item.bill_info.bill_stage}
-                      </Badge>
-                      <p className="text-xs font-semibold text-gray-2 dark:text-gray-3">
-                        {item.bill_info.bill_proposers}
-                      </p>
-                    </div>
+        <div className="grid grid-cols-1 gap-5 md:gap-2 md:grid-cols-2 lg:grid-cols-3">
+          {currentItems.map((item, index) => (
+            <Card key={item.bill_info.bill_id} className="overflow-visible z-10 md:shadow-none md:border">
+              <CardContent className="overflow-visible py-3">
+                <PartyLogo
+                  partyInfo={item.bill_info.party_info[0]}
+                  className="absolute -left-[39px] bg-white dark:bg-dark-b md:hidden"
+                  style={index > 0 ? { top: `${index * 50}px` } : undefined}
+                />
+                <div className="flex flex-col gap-2 w-full md:h-full md:justify-between">
+                  <Link href={`/bill/${item.bill_info.bill_id}`}>
+                    <p className="text-sm font-bold">{item.bill_info.bill_brief_summary}</p>
+                  </Link>
+                  <div className="flex items-center gap-[6px]">
+                    <Badge variant="outline" className="text-xs">
+                      {item.bill_info.bill_stage}
+                    </Badge>
+                    <p className="text-xs font-semibold text-gray-2 dark:text-gray-3">
+                      {item.bill_info.bill_proposers}
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm font-bold text-center">심사한 법안이 없습니다.</p>
-        )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
         <Card className="w-[calc(100%-20px)] mx-auto -top-[14px] z-[5] md:hidden">
           <CardContent />
         </Card>
