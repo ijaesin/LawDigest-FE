@@ -25,9 +25,9 @@ export default function CongressmanItem({
 
         <div className="flex flex-col items-center shrink-0 xl:items-start">
           <Link href={`/congressman/${congressman_id}`} className="text-xs font-semibold xl:text-xl">
-            {congressman_name} <span className="font-normal xl:text-lg xl:dark:text-gray-1">의원</span>
+            {congressman_name} <span className="font-normal xl:text-lg">의원</span>
           </Link>
-          <p className="text-gray-2 text-[10px] font-medium xl:text-sm">{party_name}</p>
+          <p className="text-muted-foreground text-[10px] font-medium xl:text-sm">{party_name}</p>
         </div>
       </div>
 
