@@ -1,25 +1,22 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from '@/app/common/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/app/common/components/ui/card';
 import { Separator } from '@/app/common/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/app/common/components/ui/tooltip';
-import { Popover, PopoverContent, PopoverTrigger } from '@/app/common/components/ui/popover';
 import { Badge } from '@/app/common/components/ui/badge';
 import { Button } from '@/app/common/components/ui/button';
 import Link from 'next/link';
-import { IconClock, IconExport, IconScrabSmall } from '@/public/svgs';
+import { IconClock } from '@/public/svgs';
 import { useMutateBookmark } from '@/app/bill/hooks';
 import { getTimeRemaining, copyClipBoard } from '@/app/common/utils';
 import { getCookie } from 'cookies-next';
 import { useSnackbarStore } from '@/app/common/store';
 import { ACCESS_TOKEN, SNACKBAR_TYPE } from '@/app/common/constants';
-import { PartyLogoReplacement } from '@/app/party/components';
 import type { BillProps } from '@/app/bill/types';
-import ProposerList from './ProposerList';
 import GPTSummary from './GPTSummary';
 import BillSummaryContent from './BillSummaryContent';
+import BillCardFooter from './BillCardFooter';
+import BillProposerSection from './BillProposerSection';
 
 export default function Bill({
   bill_info_dto: {
@@ -44,14 +41,6 @@ export default function Bill({
   const [likeCount, setLikeCount] = useState(bill_like_count);
   const mutateBookmark = useMutateBookmark(bill_id);
   const [toggleMore, setToggleMore] = useState(false);
-  const hasRepresentative = representative_proposer_dto_list.length > 0;
-  const isRepresentativeSolo = representative_proposer_dto_list.length === 1;
-  const firstRepresentative = hasRepresentative ? representative_proposer_dto_list[0] : undefined;
-  const partyName = hasRepresentative
-    ? isRepresentativeSolo
-      ? (firstRepresentative?.party_name ?? '무소속')
-      : '다수'
-    : '정보 없음';
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
 
   const onClickToggleMore = useCallback(() => {
@@ -122,77 +111,18 @@ export default function Bill({
             )}
           </CardContent>
 
-            {!detail && (
-              <CardFooter className="flex justify-between items-center p-0 mt-5 -ml-1">
-                <div className="flex gap-2">
-                  <div className="flex items-center text-sm text-gray-3">
-                    <Button variant="ghost" size="icon" className="p-0" onClick={onClickScrab}>
-                      <IconScrabSmall isActive={isLiked} />
-                    </Button>
-                    <h4 className="mr-2">스크랩</h4>
-                    <h4>{likeCount}</h4>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-3">
-                    <h4 className="mr-2">조회수</h4>
-                    <h4>{view_count}</h4>
-                  </div>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" aria-label="Export Button" onClick={handleCopyClipBoard}>
-                          <IconExport />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>링크 복사하기</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
+          <BillCardFooter
+            billId={bill_id}
+            isLiked={isLiked}
+            likeCount={likeCount}
+            viewCount={detail ? (viewCount ?? view_count) : view_count}
+            detail={detail}
+            onClickScrap={onClickScrab}
+            onCopyLink={handleCopyClipBoard}
+          />
+        </section>
 
-                <Link href={`/bill/${bill_id}`}>
-                  <Button
-                    className="text-sm font-medium bg-gray-1 dark:bg-gray-3 text-gray-3 dark:text-gray-2 w-[88px] h-8"
-                    size="sm"
-                    variant="secondary">
-                    자세히 보기
-                  </Button>
-                </Link>
-              </CardFooter>
-            )}
-
-            {detail && (
-              <CardFooter className="flex justify-between items-center p-0 mt-10">
-                <div className="flex gap-4">
-                  <div className="flex items-center text-sm text-gray-2">
-                    <Button variant="ghost" size="icon" className="p-0" onClick={onClickScrab}>
-                      <IconScrabSmall isActive={isLiked} />
-                    </Button>
-                    <h4 className="mr-2">스크랩</h4>
-                    <h4>{likeCount}</h4>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-2">
-                    <h4 className="mr-2">조회수</h4>
-                    <h4>{viewCount}</h4>
-                  </div>
-                </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" onClick={handleCopyClipBoard}>
-                        <IconExport />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>링크 복사하기</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </CardFooter>
-            )}
-          </section>
-
-          {detail && (
+        {detail && (
           <div className="flex flex-col gap-[34px]">
             <Separator className="bg-gray-0.5 dark:bg-dark-l md:hidden" />
             <GPTSummary />
@@ -212,47 +142,13 @@ export default function Bill({
           </div>
         )}
       </Card>
-      <div className={`relative ${detail ? 'w-[320px] shrink-0' : 'hidden md:block'}`}>
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex gap-3 items-center">
-            <div className="flex -space-x-4 rtl:space-x-reverse">
-              {representative_proposer_dto_list.map(({ representative_proposer_id, represent_proposer_img_url }) => (
-                <Avatar key={representative_proposer_id} className="border-2 border-white dark:border-dark-l">
-                  <AvatarImage src={process.env.NEXT_PUBLIC_IMAGE_URL + represent_proposer_img_url} />
-                  <AvatarFallback>{representative_proposer_id}</AvatarFallback>
-                </Avatar>
-              ))}
-            </div>
-            <div className="flex flex-col">
-              <p className="text-sm font-semibold">
-                {firstRepresentative?.representative_proposer_name ?? '대표 발의자 정보 없음'}
-              </p>
-              <div className="flex gap-1 items-center">
-                <PartyLogoReplacement partyName={partyName} circle={false} />
-                <p className="text-xs text-gray-2">{partyName}</p>
-              </div>
-            </div>
-          </div>
-          {hasRepresentative ? (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button size="sm" variant="outline" className="h-7">
-                  {representative_proposer_dto_list.length}인
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <ProposerList
-                  representativeProposerList={representative_proposer_dto_list}
-                  publicProposerList={public_proposer_dto_list}
-                  popover
-                />
-              </PopoverContent>
-            </Popover>
-          ) : null}
-        </div>
-        <Separator className="dark:bg-dark-l" />
+      <BillProposerSection
+        representativeProposerList={representative_proposer_dto_list}
+        publicProposerList={public_proposer_dto_list}
+        detail={detail}
+      >
         {children}
-      </div>
+      </BillProposerSection>
       <Separator className={`h-[10px] md:h-[1px] bg-gray-0.5 dark:bg-gray-4 ${detail ? 'hidden' : 'block'}`} />
     </section>
   );
