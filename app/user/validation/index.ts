@@ -78,3 +78,14 @@ export const BillBookmarkedCountSchema = z
   .strict();
 
 export type BillBookmarkedCount = z.infer<typeof BillBookmarkedCountSchema>;
+
+/**
+ * 팔로우한 의원 수 스키마
+ */
+export const CongressmanLikeCountSchema = z
+  .object({
+    count: z.coerce.number().int().min(0),
+  })
+  .strict();
+
+export type CongressmanLikeCount = z.infer<typeof CongressmanLikeCountSchema>;

@@ -63,9 +63,8 @@ export const patchCongressmanFollow = async (
   likeChecked: boolean,
 ): Promise<CongressmanFollowResponse> => {
   try {
-    const data = await apiClient.patch<CongressmanFollowResponse>('/congressman/user/like', {
-      congressman_id: congressmanId,
-      like_checked: likeChecked,
+    const data = await apiClient.patch<CongressmanFollowResponse>('/congressman/user/like', null, {
+      params: { congressman_id: congressmanId, like_checked: likeChecked },
     });
     return CongressmanFollowResponseSchema.parse(data);
   } catch (err) {

@@ -33,6 +33,17 @@ export const SearchBillResponseSchema = z
   })
   .strict();
 
+/* --------------------------- Recent keyword ----------------------------- */
+export const SearchKeywordResponseSchema = z
+  .object({
+    search_word: z.string(),
+  })
+  .strict();
+
+export const SearchKeywordListSchema = z.array(SearchKeywordResponseSchema);
+
 export type SearchCongressmanParty = z.infer<typeof SearchCongressmanPartySchema>;
 export type SearchCongressmanPartyResponse = z.infer<typeof SearchCongressmanPartyResponseSchema>;
 export type SearchBillResponse = z.infer<typeof SearchBillResponseSchema>;
+export type SearchKeywordResponse = z.infer<typeof SearchKeywordResponseSchema>;
+export type SearchKeywordList = z.infer<typeof SearchKeywordListSchema>;

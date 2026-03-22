@@ -1,5 +1,4 @@
 import { apiClient } from '@/app/common/lib';
-import { z } from 'zod';
 import { extractApiMessage } from '@/app/common/validation/api.schema';
 import {
   FeedSchema,
@@ -68,7 +67,7 @@ export const getBillDetail = async (billId: string): Promise<BillDetail> => {
  */
 export const patchViewCount = async (billId: string): Promise<ViewCountResponse> => {
   try {
-    const data = await apiClient.patch<ViewCountResponse>('/bill/view_count', { params: { bill_id: billId } });
+    const data = await apiClient.patch<ViewCountResponse>('/bill/view_count', null, { params: { bill_id: billId } });
     return ViewCountResponseSchema.parse(data);
   } catch (err) {
     throw new Error(extractApiMessage(err));
@@ -83,15 +82,11 @@ export const patchViewCount = async (billId: string): Promise<ViewCountResponse>
  * @remarks 서버 규약에 따라 body에 { params: { bill_id, likeChecked } } 형태로 전달합니다.
  * @see PATCH /bill/user/bookmark
  */
-const PatchBookmarkInputSchema = z
-  .object({ billId: z.string(), likeChecked: z.boolean() })
-  .strict()
-  .transform((v) => ({ params: { bill_id: v.billId, likeChecked: v.likeChecked } }));
-
 export const patchBookmark = async (input: { billId: string; likeChecked: boolean }): Promise<BookmarkResponse> => {
   try {
-    const body = PatchBookmarkInputSchema.parse(input);
-    const data = await apiClient.patch<BookmarkResponse>('/bill/user/bookmark', body);
+    const data = await apiClient.patch<BookmarkResponse>('/bill/user/bookmark', null, {
+      params: { bill_id: input.billId, likeChecked: input.likeChecked },
+    });
     return BookmarkResponseSchema.parse(data);
   } catch (err) {
     throw new Error(extractApiMessage(err));

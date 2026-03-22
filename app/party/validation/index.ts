@@ -58,9 +58,38 @@ export const PartyFollowResponseSchema = z
 /* ------------------------------- Bill feed ------------------------------- */
 export const PartyBillFeedSchema = FeedSchema;
 
+/* ---------------------------- Parliamentary ----------------------------- */
+export const ParliamentaryPartySchema = z
+  .object({
+    party_id: z.coerce.number(),
+    party_name: z.string().optional().default(''),
+    party_image_url: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((v) => v ?? ''),
+    congressman_count: z.coerce.number().nullable().optional().default(0),
+  })
+  .strict();
+
+export const ParliamentaryPartyListSchema = z.array(ParliamentaryPartySchema);
+
+/* ------------------------------ Executive ------------------------------- */
+export const PartyExecutiveSchema = z
+  .object({
+    party_leader: z.string().nullable().optional().default(''),
+    parliamentary_leader: z.string().nullable().optional().default(''),
+    policy_committee_chairman: z.string().nullable().optional().default(''),
+    secretary_general: z.string().nullable().optional().default(''),
+  })
+  .strict();
+
 /* --------------------------------- Types -------------------------------- */
 export type PartyDetail = z.infer<typeof PartyDetailSchema>;
 export type PartyCongressman = z.infer<typeof PartyCongressmanSchema>;
 export type PartyCongressmanResponse = z.infer<typeof PartyCongressmanResponseSchema>;
 export type PartyFollowResponse = z.infer<typeof PartyFollowResponseSchema>;
 export type PartyBillFeed = z.infer<typeof PartyBillFeedSchema>;
+export type ParliamentaryParty = z.infer<typeof ParliamentaryPartySchema>;
+export type ParliamentaryPartyList = z.infer<typeof ParliamentaryPartyListSchema>;
+export type PartyExecutive = z.infer<typeof PartyExecutiveSchema>;

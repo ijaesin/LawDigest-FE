@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from '@/app/common/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/common/components/ui/avatar';
 import { Separator } from '@/app/common/components/ui/separator';
@@ -41,7 +41,6 @@ export default function Bill({
 }: BillProps) {
   const [isLiked, setIsLiked] = useState(is_book_mark);
   const [likeCount, setLikeCount] = useState(bill_like_count);
-  const [isLoaded, setIsLoaded] = useState(false);
   const mutateBookmark = useMutateBookmark(bill_id);
   const [toggleMore, setToggleMore] = useState(false);
   const hasRepresentative = representative_proposer_dto_list.length > 0;
@@ -53,6 +52,13 @@ export default function Bill({
       : '다수'
     : '정보 없음';
   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
+
+  const formattedGptSummary = gpt_summary
+    ? gpt_summary
+        .split('**')
+        .map((value, index) => (index % 2 === 0 ? value : `<strong>${value}</strong>`))
+        .join('')
+    : '';
 
   const onClickToggleMore = useCallback(() => {
     setToggleMore(!toggleMore);
@@ -82,23 +88,6 @@ export default function Bill({
     setSnackbar({ show: true, type: SNACKBAR_TYPE.SUCCESS, message: '링크를 복사했습니다.', duration: 3000 });
   }, [bill_id, setSnackbar]);
 
-  useEffect(() => {
-    setIsLoaded(true);
-
-    if (isLoaded) {
-      const summaryElement = document.getElementById(bill_id);
-
-      if (summaryElement !== null && summaryElement?.innerHTML !== null && gpt_summary) {
-        const markedGptSummary = gpt_summary
-          .split('**')
-          .map((value, index) => (index % 2 === 0 ? value : `<strong>${value}</strong>`))
-          .join('');
-
-        summaryElement.innerHTML = markedGptSummary;
-      }
-    }
-  }, [isLoaded, bill_id, gpt_summary]);
-
   return (
     <section className={`flex flex-col  ${detail ? 'md:flex-row items-start' : 'md:mx-5'}`}>
       <Card
@@ -127,10 +116,14 @@ export default function Bill({
 
         <section className={!detail ? 'md:flex-1' : ''}>
           <CardContent className={`p-0 leading-normal whitespace-pre-wrap ${detail ? '' : 'text-sm md:text-base'}`}>
-              <p className={!detail && !toggleMore ? 'line-clamp-[8]' : ''} id={bill_id}>
-                {gpt_summary && gpt_summary}
-                {!gpt_summary && summary}
-              </p>
+              {gpt_summary ? (
+                <p
+                  className={!detail && !toggleMore ? 'line-clamp-[8]' : ''}
+                  dangerouslySetInnerHTML={{ __html: formattedGptSummary }}
+                />
+              ) : (
+                <p className={!detail && !toggleMore ? 'line-clamp-[8]' : ''}>{summary}</p>
+              )}
               {!detail && !toggleMore && (
                 <Button variant="link" onClick={onClickToggleMore} className="p-0 text-gray-2 dark:text-gray-3">
                   더 보기

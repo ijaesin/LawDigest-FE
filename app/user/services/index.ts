@@ -5,10 +5,12 @@ import {
   FollowingPartyListSchema,
   FollowingCongressmanListSchema,
   BillBookmarkedCountSchema,
+  CongressmanLikeCountSchema,
   type UserInfo,
   type FollowingPartyList,
   type FollowingCongressmanList,
   type BillBookmarkedCount,
+  type CongressmanLikeCount,
 } from '@/app/user/validation';
 import { FeedSchema, type Feed } from '@/app/bill/validation';
 
@@ -85,6 +87,19 @@ export const getBillBookmarkedCount = async (): Promise<BillBookmarkedCount> => 
   try {
     const data = await apiClient.get<BillBookmarkedCount>('/user/bookmarking/bill/count');
     return BillBookmarkedCountSchema.parse(data);
+  } catch (err) {
+    throw new Error(extractApiMessage(err));
+  }
+};
+
+/**
+ * @description 팔로우한 의원 수 조회
+ * @see GET /user/liking/congressman/count
+ */
+export const getLikingCongressmanCount = async (): Promise<CongressmanLikeCount> => {
+  try {
+    const data = await apiClient.get<CongressmanLikeCount>('/user/liking/congressman/count');
+    return CongressmanLikeCountSchema.parse(data);
   } catch (err) {
     throw new Error(extractApiMessage(err));
   }

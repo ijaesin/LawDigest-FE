@@ -10,7 +10,7 @@ import { useSearchModalStore } from '@/app/common/store';
 export default function SearchBar({
   setRecentKeywords,
 }: {
-  setRecentKeywords: Dispatch<SetStateAction<string[] | undefined>>;
+  setRecentKeywords: Dispatch<SetStateAction<string[]>>;
 }) {
   const router = useRouter();
   const [value, setValue] = useState('');

@@ -12,9 +12,7 @@ export default function SearchModal() {
   const router = useRouter();
   const show = useSearchModalStore((s) => s.show);
   const close = useSearchModalStore((s) => s.close);
-  const [recentKeywords, setRecentKeywords] = useState(
-    typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('recentkeywords') || '[]') : [],
-  );
+  const [recentKeywords, setRecentKeywords] = useState<string[]>([]);
 
   const closeModal = useCallback(() => {
     close();
