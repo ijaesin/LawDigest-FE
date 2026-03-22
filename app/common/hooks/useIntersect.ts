@@ -1,35 +1,38 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import type { IntersectHandler } from '@/app/common/types';
 
 export const useIntersect = (onIntersect: IntersectHandler, options?: IntersectionObserverInit) => {
   const ref = useRef<HTMLDivElement>(null);
-  const onIntersectRef = useRef(onIntersect);
-  const optionsRef = useRef(options);
 
-  useEffect(() => {
-    onIntersectRef.current = onIntersect;
-    optionsRef.current = options;
-  });
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const observer = new IntersectionObserver((entries, obs) => {
+  const callback = useCallback(
+    (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          onIntersectRef.current(entry, obs);
+          onIntersect(entry, observer);
         }
       });
-    }, optionsRef.current);
+    },
+    [onIntersect],
+  );
 
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(callback, {
+      // 뷰포트 하단 200px 확장하여 sentinel이 height:0이어도 감지 가능.
+      // 사용자가 맨 아래 도달 전 미리 fetch하여 UX도 개선.
+      rootMargin: '0px 0px 200px 0px',
+      ...options,
+    });
     observer.observe(ref.current);
+
+    // eslint-disable-next-line
     return () => observer.disconnect();
-    // Observer는 마운트 시 1회 생성. options 변경 후 재생성이 필요하면
-    // 컴포넌트를 key prop으로 리마운트한다.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ref, options, callback]);
 
   return ref;
 };

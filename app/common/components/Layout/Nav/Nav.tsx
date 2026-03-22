@@ -21,8 +21,6 @@ function Nav() {
     pathname === '/' ? pathname?.endsWith(href) : href !== '/' && pathname?.startsWith(href),
   );
 
-  console.log('Active Index:', activeIndex, 'Pathname:', pathname);
-
   return (
     <section className="fixed bottom-0 left-0 z-50 px-2 pb-2 w-full pointer-events-none md:hidden">
       <div className="flex gap-2 items-end mx-auto w-full max-w-md pointer-events-auto">
