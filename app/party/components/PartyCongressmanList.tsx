@@ -25,9 +25,7 @@ export default function PartyCongressmanList({ partyId }: { partyId: number }) {
             ))
           : data?.party_congressman
               .slice(0, 8)
-              .map((congressman) => (
-                <PartyCongressmanItem key={congressman.congressman_id} {...congressman} />
-              ))}
+              .map((congressman) => <PartyCongressmanItem key={congressman.congressman_id} {...congressman} />)}
       </div>
       {isFetching && (
         <div className="flex justify-center my-4 w-full">

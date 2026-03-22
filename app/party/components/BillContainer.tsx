@@ -1,4 +1,3 @@
-// app/party/components/BillContainer.tsx
 'use client';
 
 import { useMemo } from 'react';
@@ -15,10 +14,7 @@ export default function BillContainer({ id }: { id: number }) {
     billType as ValueOf<typeof BILL_TAB>,
   );
 
-  const bills = useMemo(
-    () => data?.pages.flatMap(({ bill_list }) => bill_list) ?? [],
-    [data],
-  );
+  const bills = useMemo(() => data?.pages.flatMap(({ bill_list }) => bill_list) ?? [], [data]);
 
   const fetchRef = useIntersect(() => {
     if (hasNextPage && !isFetching) {

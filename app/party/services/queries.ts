@@ -11,13 +11,7 @@ import {
   type UseSuspenseQueryOptions,
   type UseQueryOptions,
 } from '@tanstack/react-query';
-import type {
-  PartyBillFeed,
-  PartyDetail,
-  PartyCongressmanResponse,
-  PartyFollowResponse,
-  PartyExecutive,
-} from '@/app/party/validation';
+import type { PartyBillFeed, PartyDetail, PartyCongressmanResponse, PartyExecutive } from '@/app/party/validation';
 import type { ValueOf } from '@/app/common/types';
 import { BILL_TAB } from '@/app/bill/constants';
 import {

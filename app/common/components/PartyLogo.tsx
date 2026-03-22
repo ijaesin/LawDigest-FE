@@ -17,23 +17,24 @@ interface PartyLogoProps {
   style?: React.CSSProperties;
 }
 
-const VARIANT_DEFAULTS: Record<PartyLogoVariant, { containerClass: string; imageWidth: number; imageHeight: number }> = {
-  badge: {
-    containerClass: 'flex items-center justify-center w-7 h-7 rounded-full shadow-lg shrink-0 border-1.5',
-    imageWidth: 22,
-    imageHeight: 22,
-  },
-  wide: {
-    containerClass: 'flex items-center',
-    imageWidth: 60,
-    imageHeight: 30,
-  },
-  hero: {
-    containerClass: 'flex items-center justify-center shadow-lg rounded-full w-[130px] h-[130px] border',
-    imageWidth: 100,
-    imageHeight: 45,
-  },
-};
+const VARIANT_DEFAULTS: Record<PartyLogoVariant, { containerClass: string; imageWidth: number; imageHeight: number }> =
+  {
+    badge: {
+      containerClass: 'flex items-center justify-center w-7 h-7 rounded-full shadow-lg shrink-0 border-1.5',
+      imageWidth: 22,
+      imageHeight: 22,
+    },
+    wide: {
+      containerClass: 'flex items-center',
+      imageWidth: 60,
+      imageHeight: 30,
+    },
+    hero: {
+      containerClass: 'flex items-center justify-center shadow-lg rounded-full w-[130px] h-[130px] border',
+      imageWidth: 100,
+      imageHeight: 45,
+    },
+  };
 
 export default function PartyLogo({
   partyName,

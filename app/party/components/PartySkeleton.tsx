@@ -8,8 +8,8 @@ export default function PartySkeleton() {
       </div>
       <div className="w-full h-px bg-gray-200 dark:bg-dark-l" />
       <div className="grid grid-cols-3 gap-10 w-full">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex flex-col items-center gap-2">
+        {['follower', 'representative', 'public'].map((label) => (
+          <div key={label} className="flex flex-col items-center gap-2">
             <div className="w-12 h-6 bg-gray-200 dark:bg-dark-l rounded" />
             <div className="w-16 h-4 bg-gray-200 dark:bg-dark-l rounded" />
           </div>
