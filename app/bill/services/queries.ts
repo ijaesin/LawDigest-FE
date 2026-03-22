@@ -81,21 +81,30 @@ export const useGetBillDetail = <TData = BillDetail, TError = unknown>(
  * @param options - Mutation options (onSuccess/onError 외 콜백 포함)
  * @returns useMutation 결과
  */
-export const useMutateViewCount = <TError = unknown, TContext = unknown>(
+export const useMutateViewCount = (
   billId: string,
-  options?: Omit<UseMutationOptions<ViewCountResponse, TError, void, TContext>, 'mutationFn'>,
-) =>
-  useMutation({
+  options?: Omit<UseMutationOptions<ViewCountResponse, Error, void, unknown>, 'mutationFn'>,
+) => {
+  const qc = useQueryClient();
+  return useMutation<ViewCountResponse, Error, void, unknown>({
     mutationFn: () => patchViewCount(billId),
     ...options,
     onSuccess: (data, variables, context) => {
-      options?.onSuccess?.(data, variables, context as any);
+      qc.setQueryData(billKeys.detail(billId), (old: BillDetail | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          bill_info_dto: { ...old.bill_info_dto, view_count: data.view_count },
+        };
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
       console.error(extractApiMessage(error));
-      options?.onError?.(error as any, variables as any, context as any);
+      options?.onError?.(error, variables, context);
     },
   });
+};
 
 /**
  * @description 법안 북마크 토글 뮤테이션 훅 (optimistic update)
