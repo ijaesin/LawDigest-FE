@@ -88,7 +88,7 @@ module.exports = {
           foreground: 'hsl(var(--danger-foreground))',
         },
         'tertiary-foreground': 'hsl(var(--tertiary-foreground))',
-        // Glass tokens
+        // Glass tokens — raw rgba() values, not HSL channels (no hsl() wrapper)
         glass: {
           subtle: 'var(--glass-bg-subtle)',
           medium: 'var(--glass-bg-medium)',
