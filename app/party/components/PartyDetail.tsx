@@ -7,9 +7,9 @@ import { Separator } from '@/app/common/components/ui/separator';
 import { IconWeb } from '@/public/svgs';
 import { PARTY_POSITION } from '@/app/party/constants';
 import { getPartyConstant } from '@/app/common/utils';
-import { useGetPartyDetail, useGetPartyExecutive } from '@/app/party/hooks';
-import FollowBoard from './FollowBoard';
 import PartyLogo from '@/app/common/components/PartyLogo';
+import FollowBoard from './FollowBoard';
+import { useGetPartyDetail, useGetPartyExecutive } from '@/app/party/hooks';
 
 export default function PartyDetail({ partyId }: { partyId: number }) {
   const { data: party } = useGetPartyDetail(partyId);
