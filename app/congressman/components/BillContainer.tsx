@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Key } from 'react';
+import { useState, useEffect } from 'react';
 import { BillList, BillTab } from '@/app/bill/components';
 import { useIntersect, useTabType } from '@/app/common/hooks';
 import { useInfiniteCongressmanBills } from '@/app/congressman/hooks';
@@ -34,7 +34,7 @@ export default function BillContainer({ id }: { id: string }) {
 
   return (
     <section>
-      <BillTab type={billType as ValueOf<typeof BILL_TAB>} clickHandler={setBillType as (key: Key) => void} />
+      <BillTab type={billType as ValueOf<typeof BILL_TAB>} clickHandler={setBillType as (value: string) => void} />
       <BillList bills={bills} isFetching={isFetching} fetchRef={fetchRef} />
       {bills.length === 0 && !isFetching && (
         <p className="flex justify-center my-8 text-sm text-gray-2 dark:text-gray-3">

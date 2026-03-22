@@ -34,7 +34,7 @@ export default function BillContainer({ id }: { id: number }) {
 
   return (
     <section>
-      <BillTab type={billType as any} clickHandler={setBillType as any} />
+      <BillTab type={billType as ValueOf<typeof BILL_TAB>} clickHandler={setBillType as (value: string) => void} />
       <BillList bills={bills} isFetching={isFetching} fetchRef={fetchRef} />
       {bills.length === 0 && !isFetching && (
         <p className="flex justify-center my-8 text-sm text-gray-2 dark:text-gray-3">
