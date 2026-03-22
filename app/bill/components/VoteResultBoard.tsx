@@ -44,7 +44,7 @@ export default function VoteResultBoard({ party_vote_list }: VoteResultBoardProp
               )}
             </Link>
             <Link href={`/party/${party_id}`}>
-              <p className="text-xs font-semibold text-gray-2 dark:text-gray-1">{party_name}</p>
+              <p className="text-xs font-semibold text-muted-foreground">{party_name}</p>
             </Link>
             <p className="text-xs font-medium w-[32px]">
               {party_approval_count}

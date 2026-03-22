@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { SubHeader } from '@/app/common/components/Layout';
+import { AppLayout } from '@/app/common/components/Layout/AppLayout/AppLayout';
 import { getMetadata } from '@/app/common/utils';
 import { getBillDetail } from '@/app/bill/services/apis';
 import { BillContainer } from '@/app/bill/components';
@@ -28,9 +28,8 @@ export default async function BillDetail({ params }: { params: Promise<{ id: str
   const { id } = await params;
 
   return (
-    <section className="flex flex-col">
-      <SubHeader title="의안 자세히 보기" />
+    <AppLayout>
       <BillContainer id={id} />
-    </section>
+    </AppLayout>
   );
 }
