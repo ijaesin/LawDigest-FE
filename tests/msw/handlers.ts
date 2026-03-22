@@ -1,5 +1,3 @@
-import { http } from 'msw';
+import { congressmanHandlers } from './congressman-handlers';
 
-export const handlers = [
-  // 예: http.get('/api/example', () => HttpResponse.json({ ok: true })),
-];
+export const handlers = [...congressmanHandlers];
