@@ -25,9 +25,9 @@ export default function ListContainer() {
   });
 
   return (
-    <section className="px-5 my-6 md:w-[640px] lg:w-[840px] xl:w-[1200px] mx-auto">
+    <section className="px-5 my-6 mx-auto">
       <div className="flex flex-col">
-        <div className="absolute w-[2px] h-5 bg-white dark:bg-dark-b dark:lg:bg-dark-pb" />
+        <div className="absolute w-[2px] h-5 bg-background" />
         {timeline.map(({ date, plenary_list, promulgation_list, committee_audit_list, submitted_list }) => {
           const [month, day, dayName] = convertDateFormat(date);
           return (
@@ -35,7 +35,7 @@ export default function ListContainer() {
               <Separator orientation="vertical" className="w-[2px] h-auto" />
               <div className="pb-10 w-full">
                 <div className="relative">
-                  <div className="w-[25px] h-[25px] bg-gray-1 dark:bg-gray-3 absolute rounded-full border-black border top-5 -left-[38px]" />
+                  <div className="w-[25px] h-[25px] bg-muted absolute rounded-full border-foreground border top-5 -left-[38px]" />
                   <h2 className="flex gap-2 items-baseline">
                     <span className="text-[42px]">
                       {month}.{day}
