@@ -6,6 +6,7 @@ import {
   type FollowingCongressmanList,
   type FollowingBillFeed,
 } from '@/app/following/validation';
+import { FOLLOWING_BILL_PAGE_SIZE } from '@/app/following/constants';
 
 /**
  * @description 팔로우한 의원 목록 조회
@@ -29,7 +30,9 @@ export const getFollowingCongressman = async (): Promise<FollowingCongressmanLis
  */
 export const getFollowingBill = async (page: number): Promise<FollowingBillFeed> => {
   try {
-    const data = await apiClient.get<FollowingBillFeed>('/following-tab/bill', { params: { page, size: 3 } });
+    const data = await apiClient.get<FollowingBillFeed>('/following-tab/bill', {
+      params: { page, size: FOLLOWING_BILL_PAGE_SIZE },
+    });
     return FollowingBillFeedSchema.parse(data);
   } catch (err) {
     throw new Error(extractApiMessage(err));
