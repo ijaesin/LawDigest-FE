@@ -81,8 +81,10 @@ export function useAuthGuard() {
 - `app/bill/components/Bill.tsx`: `getCookie` + 스낵바 → `useAuthGuard().requireLogin()`
 - `app/party/components/FollowBoard.tsx`: 동일 패턴 교체
 - `app/congressman/components/FollowBoard.tsx`: 동일 패턴 교체
-- `app/common/components/Button/NotificationButton.tsx`: `getCookie` → `useAuthGuard().isAuthenticated`
+- `app/common/components/Button/NotifcationButton.tsx`: `getCookie` → `useAuthGuard().isAuthenticated` (파일명 오타는 별도 이슈)
 - `app/user/mypage/MyPageContent.tsx`: `useEffect` 내 `getCookie` + 스낵바 → `useAuthGuard()`
+
+**제한 사항:** `getCookie`는 렌더 시점의 쿠키 값을 읽으므로, 같은 페이지에서 로그인/로그아웃 후 리렌더 없이는 stale할 수 있다. 현재와 동일한 동작이며, `authEvents`를 통한 리다이렉트/리프레시가 이를 보완한다.
 
 ### 3. 로그아웃 Mutation을 auth 도메인으로 이동
 
@@ -95,6 +97,8 @@ export function useAuthGuard() {
 - `app/user/services/index.ts`에서 `postLogout` re-export (하위 호환)
 - `app/user/hooks/index.ts`에서 `usePostLogout` re-export (하위 호환)
 
+**동작 변경 사항:** 기존 `usePostLogout`은 caller의 `onSuccess`를 무시하고 내부 로직만 실행했다. 개선 후에는 내부 cleanup 후 caller의 `onSuccess`를 정상 호출한다.
+
 **`usePostLogout` 개선 후:**
 ```tsx
 export const usePostLogout = (options?: UseMutationOptions<void, Error, void, unknown>) => {
@@ -104,7 +108,8 @@ export const usePostLogout = (options?: UseMutationOptions<void, Error, void, un
     ...options,
     onSuccess: (data, variables, context) => {
       deleteCookie(ACCESS_TOKEN);
-      queryClient.removeQueries();
+      // 사용자 관련 캐시만 타겟 제거 — bill, congressman 등 공개 데이터는 유지
+      queryClient.removeQueries({ queryKey: userKeys.root() });
       options?.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
@@ -114,7 +119,7 @@ export const usePostLogout = (options?: UseMutationOptions<void, Error, void, un
 };
 ```
 
-**`LogoutButton` 변경:** `deleteCookie` 호출 제거, mutation의 `onSuccess`에서 스낵바 + 라우터만 담당.
+**`LogoutButton` 변경:** `deleteCookie` 호출 제거, mutation의 `onSuccess`에서 스낵바 + 라우터만 담당. `userKeys`는 `app/user/hooks`에서 import (cross-domain 의존).
 
 ### 4. 회원 탈퇴 Mutation 패턴 정상화
 
@@ -133,6 +138,7 @@ export const useDeleteWithdraw = (options?: UseMutationOptions<void, Error, void
     ...options,
     onSuccess: (data, variables, context) => {
       deleteCookie(ACCESS_TOKEN);
+      // 회원 탈퇴 시 모든 캐시 제거 — 사용자가 플랫폼을 떠나므로 전체 초기화
       queryClient.removeQueries();
       options?.onSuccess?.(data, variables, context);
     },
@@ -168,6 +174,8 @@ export function createAuthErrorHandler(client: AxiosInstance) {
       if (accessToken) {
         newConfig.headers.Authorization = `Bearer ${accessToken}`;
       }
+      // NOTE: raw axios를 사용하여 401 무한 루프 방지. apiClient 사용 시 재실패 시 무한 재발급 시도.
+      // 응답은 공통 래퍼 unwrap 없이 반환되나, 기존 동작과 동일.
       const retryResponse = await axios(newConfig);
       authEvents.emitTokenReissued();
       return retryResponse;
@@ -195,7 +203,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { authEvents } from '@/app/common/lib/auth-events';
 
-export function AuthEventListener({ children }: { children: React.ReactNode }) {
+export function AuthEventListener() {
   const router = useRouter();
 
   useEffect(() => {
@@ -207,11 +215,11 @@ export function AuthEventListener({ children }: { children: React.ReactNode }) {
     };
   }, [router]);
 
-  return <>{children}</>;
+  return null;
 }
 ```
 
-**`providers.tsx` 변경:** auth 이벤트 `useEffect` 제거, `<AuthEventListener>` 래핑 추가.
+**`providers.tsx` 변경:** auth 이벤트 `useEffect` 제거, `<AuthEventListener />` 추가 (children 없는 side-effect 전용 컴포넌트).
 
 ---
 
@@ -243,7 +251,7 @@ export function AuthEventListener({ children }: { children: React.ReactNode }) {
 | `app/bill/components/Bill.tsx` | `getCookie` + 스낵바 → `useAuthGuard()` |
 | `app/party/components/FollowBoard.tsx` | `getCookie` + 스낵바 → `useAuthGuard()` |
 | `app/congressman/components/FollowBoard.tsx` | `getCookie` + 스낵바 → `useAuthGuard()` |
-| `app/common/components/Button/NotificationButton.tsx` | `getCookie` → `useAuthGuard()` |
+| `app/common/components/Button/NotifcationButton.tsx` | `getCookie` → `useAuthGuard()` |
 | `app/user/mypage/MyPageContent.tsx` | `useEffect` 인증 체크 → `useAuthGuard()` |
 
 ---
