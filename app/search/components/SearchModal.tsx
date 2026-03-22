@@ -61,7 +61,7 @@ export default function SearchModal() {
 
   return (
     <Dialog open={show} onOpenChange={(open) => !open && close()}>
-      <DialogContent className="max-w-[640px] top-[10%] translate-y-0 sm:top-[10%] sm:translate-y-0">
+      <DialogContent className="max-w-[640px] top-[10%] translate-y-0 sm:top-[10%] sm:translate-y-0 glass-heavy">
         <DialogHeader>
           <DialogTitle className="sr-only">검색</DialogTitle>
         </DialogHeader>
@@ -70,14 +70,18 @@ export default function SearchModal() {
         <section className="flex flex-col gap-7">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold md:text-xl">최근 검색어</h2>
-            <Button variant="link" size="sm" className="text-gray-2" onClick={removeAll}>
+            <Button variant="link" size="sm" className="text-muted-foreground" onClick={removeAll}>
               모두 지우기
             </Button>
           </div>
           <div className="flex gap-[10px] flex-wrap">
             {keywords.length > 0 ? (
               keywords.map((keyword) => (
-                <Badge key={keyword} variant="outline" className="cursor-pointer" onClick={() => onClickChip(keyword)}>
+                <Badge
+                  key={keyword}
+                  variant="outline"
+                  className="cursor-pointer glass-subtle"
+                  onClick={() => onClickChip(keyword)}>
                   <span className="max-w-[240px] truncate">{keyword}</span>
                   <button
                     type="button"
@@ -92,7 +96,7 @@ export default function SearchModal() {
                 </Badge>
               ))
             ) : (
-              <p className="text-sm text-gray-3 dark:text-gray-2">최근 검색어가 존재하지 않습니다.</p>
+              <p className="text-sm text-muted-foreground">최근 검색어가 존재하지 않습니다.</p>
             )}
           </div>
         </section>
