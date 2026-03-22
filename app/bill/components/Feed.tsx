@@ -1,60 +1,50 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useIntersect, useTabType } from '@/app/common/hooks';
 import { useInfiniteBillMainfeed, useGetBillPopular } from '@/app/bill/hooks';
 import { FEED_TAB } from '@/app/bill/constants';
 import type { BillResponse } from '@/app/bill/validation';
+import type { ValueOf } from '@/app/common/types';
 import BillList from './BillList';
 import StageDropdown from './StageDropdown';
 import FeedTab from './FeedTab';
 
+const EMPTY_BILLS: BillResponse[] = [];
+
 export default function Feed() {
   const [feedType, setFeedType] = useTabType<typeof FEED_TAB>('sorted_by_latest');
-  const [stageType, setStageType] = useState(new Set(['전체']));
-  const selectedStageType = useMemo(() => Array.from(stageType).join(', ').replaceAll('_', ' '), [stageType]);
-  const { data, hasNextPage, isFetching, fetchNextPage, refetch } = useInfiniteBillMainfeed(
-    selectedStageType === '전체' ? '' : selectedStageType,
-  );
-  const [bills, setBills] = useState<BillResponse[]>(
-    data ? (data.pages.flatMap((p) => p.bill_list) as unknown as BillResponse[]) : [],
-  );
-  const { data: popularFeed } = useGetBillPopular();
-  const [popularBills, setPopularBills] = useState<BillResponse[]>((popularFeed as unknown as BillResponse[]) ?? []);
+  const handleFeedTypeChange = useCallback((v: string) => setFeedType(v as ValueOf<typeof FEED_TAB>), [setFeedType]);
+  const [selectedStage, setSelectedStage] = useState('전체');
 
-  const fetchRef = useIntersect(async (entry: any, observer: any) => {
+  const stageParam = selectedStage === '전체' ? '' : selectedStage;
+  const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteBillMainfeed(stageParam);
+  const { data: popularFeed } = useGetBillPopular();
+
+  const bills = useMemo(() => data?.pages.flatMap((p) => p.bill_list) ?? EMPTY_BILLS, [data]);
+  const popularBills = popularFeed ?? EMPTY_BILLS;
+
+  const isLatest = feedType === FEED_TAB.sortedByLatest;
+  const displayBills = isLatest ? bills : popularBills;
+
+  const fetchRef = useIntersect((entry, observer) => {
     observer.unobserve(entry.target);
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
   });
 
-  useEffect(() => {
-    if (data) setBills(() => [...(data.pages.flatMap((p) => p.bill_list) as unknown as BillResponse[])]);
-  }, [data]);
-
-  useEffect(() => {
-    if (popularFeed) setPopularBills(() => [...(popularFeed as unknown as BillResponse[])]);
-  }, [popularFeed]);
-
-  useEffect(() => {
-    setBills([]);
-    refetch();
-  }, [selectedStageType]);
-
   return (
     <section>
       <section className="flex justify-between items-center mx-5 mt-5">
-        <FeedTab type={feedType as any} clickHandler={setFeedType as any} />
-        {feedType === 'sorted_by_latest' && (
-          <StageDropdown type={selectedStageType as any} clickHandler={setStageType as any} />
-        )}
+        <FeedTab value={feedType} onValueChange={handleFeedTypeChange} />
+        {isLatest && <StageDropdown selectedStage={selectedStage} onStageChange={setSelectedStage} />}
       </section>
       <BillList
-        bills={feedType === 'sorted_by_latest' ? bills : popularBills}
+        bills={displayBills}
         isFetching={isFetching}
         fetchRef={fetchRef}
-        feedType={feedType as any}
+        feedType={feedType}
       />
     </section>
   );

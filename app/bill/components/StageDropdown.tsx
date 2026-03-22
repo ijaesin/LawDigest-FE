@@ -11,14 +11,13 @@ import { Button } from '@/app/common/components/ui/button';
 import { IconControl } from '@/public/svgs';
 import { siteConfig } from '@/app/common/config/site';
 import { STAGE_TAB, STAGE_TAB_KO } from '@/app/bill/constants';
-import type { ValueOf } from '@/app/common/types';
 
 export default function StageDropdown({
-  type,
-  clickHandler,
+  selectedStage,
+  onStageChange,
 }: {
-  type: ValueOf<typeof STAGE_TAB_KO>;
-  clickHandler: (value: string) => void;
+  selectedStage: string;
+  onStageChange: (value: string) => void;
 }) {
   const stageArray = [{ label: '전체', value: 'all' }];
   const categoryValues = siteConfig.stageTabs;
@@ -27,12 +26,12 @@ export default function StageDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="text-sm font-medium">
-          {type}
+          {selectedStage}
           <IconControl />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuRadioGroup value={type} onValueChange={clickHandler}>
+        <DropdownMenuRadioGroup value={selectedStage} onValueChange={onStageChange}>
           {stageArray.concat(categoryValues).map(({ label, value }) => (
             <DropdownMenuRadioItem key={label} value={label}>
               {STAGE_TAB_KO[value as keyof typeof STAGE_TAB] || '전체'}
