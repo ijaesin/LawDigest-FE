@@ -8,9 +8,8 @@ import { Separator } from '@/app/common/components/ui/separator';
 import type { TimelineResponseList } from '@/app/timeline/validation';
 import { useInfiniteTimelineFeed } from '@/app/timeline/hooks';
 import PlenaryList from './PlenaryList';
-import PromulgationList from './PromulgationList';
+import BillOutlineList from './BillOutlineList';
 import CommitteeAuditList from './CommitteeAuditList';
-import SubmittedList from './SubmittedList';
 
 export default function ListContainer() {
   const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteTimelineFeed();
@@ -49,11 +48,11 @@ export default function ListContainer() {
               </div>
               <div className="flex flex-col gap-5">
                 {plenary_list.length !== 0 && <PlenaryList plenary_list={plenary_list} />}
-                {promulgation_list.length !== 0 && <PromulgationList promulgation_list={promulgation_list} />}
+                {promulgation_list.length !== 0 && <BillOutlineList variant="promulgation" bills={promulgation_list} />}
                 {committee_audit_list.length !== 0 && (
                   <CommitteeAuditList committee_audit_list={committee_audit_list} />
                 )}
-                {submitted_list.length !== 0 && <SubmittedList submitted_list={submitted_list} />}
+                {submitted_list.length !== 0 && <BillOutlineList variant="submitted" bills={submitted_list} />}
               </div>
             </div>
           </div>
