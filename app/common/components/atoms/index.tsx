@@ -4,3 +4,7 @@ export { GlassButton, type GlassButtonProps } from './GlassButton';
 export { GlassCard, type GlassCardProps } from './GlassCard';
 export { GlassInput, type GlassInputProps } from './GlassInput';
 export { GlassSkeleton } from './GlassSkeleton';
+export { Icon, type IconProps } from './Icon';
+export { Logo, type LogoProps } from './Logo';
+export { GlassSeparator } from './Separator';
+export { StatusDot, type StatusDotProps } from './StatusDot';
