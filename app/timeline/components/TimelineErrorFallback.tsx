@@ -7,7 +7,7 @@ export default function TimelineErrorFallback({ error, resetErrorBoundary }: Fal
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-20 px-5">
       <p className="text-lg font-semibold">타임라인을 불러올 수 없습니다</p>
-      <p className="text-sm text-gray-2 dark:text-gray-3 text-center">
+      <p className="text-sm text-muted-foreground text-center">
         {error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다'}
       </p>
       <Button variant="outline" onClick={resetErrorBoundary}>

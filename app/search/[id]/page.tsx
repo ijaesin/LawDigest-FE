@@ -34,29 +34,33 @@ export default function SearchResult() {
     <>
       <SearchBarButton />
       <section className="lg:w-[840px] mx-auto">
-        <p className="mx-5 my-4 text-sm font-medium text-center md:text-base text-gray-2">{`'${id}'에 대한 검색 결과입니다.`}</p>
+        <p className="mx-5 my-4 text-sm font-medium text-center md:text-base text-muted-foreground">{`'${id}'에 대한 검색 결과입니다.`}</p>
         <div className="mb-10">
           <div>
             <h2 className="mx-5 text-lg font-semibold md:text-xl">의원 · 정당</h2>
             <div className="flex justify-center mx-5">
-              <Separator className="my-2 bg-gray-1 dark:bg-dark-l" />
+              <Separator className="my-2 bg-muted dark:bg-border" />
             </div>
             {searchResultsCP.length ? (
               <SearchList searchResults={searchResultsCP} />
             ) : (
-              <p className="my-8 text-sm text-center md:text-base text-gray-2">검색 결과가 존재하지 않습니다.</p>
+              <p className="my-8 text-sm text-center md:text-base text-muted-foreground">
+                검색 결과가 존재하지 않습니다.
+              </p>
             )}
           </div>
 
           <div>
             <h2 className="mx-5 text-lg font-semibold md:text-xl">법안</h2>
             <div className="flex justify-center mx-5">
-              <Separator className="mx-5 mt-2 bg-gray-1 dark:bg-dark-l" />
+              <Separator className="mx-5 mt-2 bg-muted dark:bg-border" />
             </div>
             {searchResultsBill.length ? (
               <BillList bills={searchResultsBill} isFetching={isFetchingBill} fetchRef={fetchRefBill} detail={false} />
             ) : (
-              <p className="my-8 text-sm text-center md:text-base text-gray-2">검색 결과가 존재하지 않습니다.</p>
+              <p className="my-8 text-sm text-center md:text-base text-muted-foreground">
+                검색 결과가 존재하지 않습니다.
+              </p>
             )}
           </div>
         </div>

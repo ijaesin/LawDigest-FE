@@ -26,7 +26,7 @@ export default function ProcessResult({
   switch (bill_result) {
     case '대안반영폐기':
       return (
-        <Card className="px-6 py-10 md:shadow-none md:border dark:lg:bg-dark-pb">
+        <Card className="px-6 py-10 md:shadow-none md:border">
           <CardHeader className="flex justify-center">
             <p className="text-lg font-semibold lg:text-xl">{bill_result}</p>
           </CardHeader>
@@ -35,7 +35,7 @@ export default function ProcessResult({
       );
     case '임기만료폐기':
       return (
-        <Card className="px-6 py-10 md:shadow-none md:border dark:lg:bg-dark-pb">
+        <Card className="px-6 py-10 md:shadow-none md:border">
           <CardHeader className="flex justify-center">
             <p className="text-lg font-semibold lg:text-xl">{bill_result}</p>
           </CardHeader>
@@ -44,7 +44,7 @@ export default function ProcessResult({
       );
     case '철회':
       return (
-        <Card className="px-6 py-10 md:shadow-none md:border dark:lg:bg-dark-pb">
+        <Card className="px-6 py-10 md:shadow-none md:border">
           <CardHeader className="flex justify-center">
             <p className="text-lg font-semibold lg:text-xl">{bill_result}</p>
           </CardHeader>
@@ -55,7 +55,7 @@ export default function ProcessResult({
     case '수정가결':
     case '부결':
       return (
-        <Card className="flex overflow-visible flex-col items-center p-4 md:shadow-none md:border dark:lg:bg-dark-pb">
+        <Card className="flex overflow-visible flex-col items-center p-4 md:shadow-none md:border">
           <HalfDonutChart
             billResult={bill_result}
             approvalCount={approval_count}
@@ -68,7 +68,7 @@ export default function ProcessResult({
       );
     default:
       return (
-        <p className="text-sm text-gray-2 md:h-[200px] lg:h-auto lg:text-base dark:text-gray-3 text-center">
+        <p className="text-sm text-muted-foreground md:h-[200px] lg:h-auto lg:text-base text-center">
           투표 정보가 없습니다.
         </p>
       );

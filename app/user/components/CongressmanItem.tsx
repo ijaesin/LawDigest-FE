@@ -15,7 +15,7 @@ export default function CongressmanItem({
         <AvatarFallback>{congressman_name[0]}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col items-center">
-        <p className="text-xs font-medium text-gray-2 dark:text-[#999999]">{party_name}</p>
+        <p className="text-xs font-medium text-muted-foreground">{party_name}</p>
         <p className="text-sm font-medium">{congressman_name}</p>
       </div>
     </Link>

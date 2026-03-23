@@ -117,9 +117,7 @@ export default function Bill({
                 AI 기반의 요약은 내용이 불완전할 수 있습니다. 꼭 원문을 확인해주세요 !
               </h5>
               <Link href={`https://likms.assembly.go.kr/bill/billDetail.do?billId=${bill_id}`}>
-                <Button
-                  size="lg"
-                  className="w-[242px] h-[56px] bg-foreground dark:bg-muted dark:text-foreground rounded-full">
+                <Button size="lg" className="w-[242px] h-[56px] bg-foreground dark:bg-muted rounded-full">
                   원문 확인하기
                 </Button>
               </Link>

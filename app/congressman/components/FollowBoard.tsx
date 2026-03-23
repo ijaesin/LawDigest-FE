@@ -62,15 +62,15 @@ export default function FollowBoard({
       <dl className="flex justify-between w-full">
         <div className="flex flex-col items-center basis-1/3">
           <dd className="text-2xl font-semibold">{followCount}</dd>
-          <dt className="text-sm font-medium text-gray-2">팔로워</dt>
+          <dt className="text-sm font-medium text-muted-foreground">팔로워</dt>
         </div>
         <div className="flex flex-col items-center basis-1/3">
           <dd className="text-2xl font-semibold">{represent_count}</dd>
-          <dt className="text-sm font-medium text-gray-2">대표발의법안</dt>
+          <dt className="text-sm font-medium text-muted-foreground">대표발의법안</dt>
         </div>
         <div className="flex flex-col items-center basis-1/3">
           <dd className="text-2xl font-semibold">{public_count}</dd>
-          <dt className="text-sm font-medium text-gray-2">공동발의법안</dt>
+          <dt className="text-sm font-medium text-muted-foreground">공동발의법안</dt>
         </div>
       </dl>
 
@@ -78,7 +78,7 @@ export default function FollowBoard({
         onClick={onClickFollow}
         aria-pressed={isFollowed}
         aria-label={isFollowed ? '팔로우 취소' : '팔로우 하기'}
-        className={`w-full h-12 text-lg font-medium flex justify-between px-6 rounded-full ${isFollowed ? 'bg-gray-1 text-gray-3' : 'bg-primary-3 text-white dark:bg-gray-4 dark:text-gray-2'} `}>
+        className={`w-full h-12 text-lg font-medium flex justify-between px-6 rounded-full ${isFollowed ? 'bg-muted text-muted-foreground' : 'bg-foreground text-white'} `}>
         {isFollowed ? '팔로우 중' : '팔로우 하기'}
         {isFollowed ? <IconCheck /> : <IconPlus />}
       </Button>

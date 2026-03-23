@@ -57,11 +57,9 @@ export default function PartyLogo({
   const isFallback = !partyImageUrl || partyName === '무소속';
 
   const fallbackContent = isCircular ? (
-    <span className="text-xs font-bold text-black dark:text-white">
-      {partyName === '무소속' ? '무' : partyName.slice(0, 2)}
-    </span>
+    <span className="text-xs font-bold text-foreground">{partyName === '무소속' ? '무' : partyName.slice(0, 2)}</span>
   ) : (
-    <span className="text-lg font-semibold text-center text-gray-3">{partyName}</span>
+    <span className="text-lg font-semibold text-center text-muted-foreground">{partyName}</span>
   );
 
   const content = isFallback ? (

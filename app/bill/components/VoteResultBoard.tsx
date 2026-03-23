@@ -23,7 +23,7 @@ export default function VoteResultBoard({ party_vote_list }: VoteResultBoardProp
               href={`/party/${party_id}`}
               className={`flex items-center justify-center w-7 h-7 rounded-full shadow-lg shrink-0 border-1.5 ${party_name}`}>
               {party_name === '무소속' ? (
-                <div className="text-xs font-medium text-black">무</div>
+                <div className="text-xs font-medium text-foreground">무</div>
               ) : (
                 <>
                   <Image

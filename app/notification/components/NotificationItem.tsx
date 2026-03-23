@@ -49,7 +49,7 @@ export default function NotificationItem({
         {isRepresentativeSolo ? (
           <Avatar
             className={`w-[50px] h-[50px] border ${imageUrlList[0].party} ${
-              type === 'bill_stage_update' || type === 'bill_result_update' ? 'bg-white dark:bg-dark-pb p-1' : ''
+              type === 'bill_stage_update' || type === 'bill_result_update' ? 'bg-white p-1' : ''
             }`}>
             {imageUrlList[0].url ? (
               <>
@@ -72,7 +72,7 @@ export default function NotificationItem({
         ) : (
           <div className={`flex -space-x-4 w-[50px] ${imageUrlList.length >= 3 ? 'gap-0' : ''}`}>
             {imageUrlList.slice(0, 3).map(({ party, url }) => (
-              <Avatar key={`${party}-${url}`} className="p-1 bg-white border shrink-0 dark:bg-dark-pb">
+              <Avatar key={`${party}-${url}`} className="p-1 bg-white border shrink-0">
                 {url ? (
                   <>
                     <AvatarImage
@@ -97,12 +97,12 @@ export default function NotificationItem({
           <Link href={linkUrl} onClick={() => onNavigateRead(notification_id)}>
             <p className="text-xs font-bold md:text-base">
               {title} &nbsp;
-              <span className="text-[10px] md:text-sm font-medium text-gray-2 dark:text-gray-3">
+              <span className="text-[10px] md:text-sm font-medium text-muted-foreground">
                 {getTimeRemaining(created_date)}
               </span>
             </p>
           </Link>
-          <p className="text-gray-3 dark:text-gray-2 text-[10px] md:text-sm">{content}</p>
+          <p className="text-muted-foreground text-[10px] md:text-sm">{content}</p>
         </div>
 
         <DropdownMenu>

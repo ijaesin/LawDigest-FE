@@ -26,14 +26,14 @@ function FeedFooter({
   return (
     <div className="flex justify-between items-center p-0 mt-5 -ml-1">
       <div className="flex gap-2">
-        <div className="flex items-center text-sm text-gray-3">
+        <div className="flex items-center text-sm text-muted-foreground">
           <Button variant="ghost" size="icon" className="p-0" onClick={onClickScrap}>
             <IconScrabSmall isActive={isLiked} />
           </Button>
           <h4 className="mr-2">스크랩</h4>
           <h4>{likeCount}</h4>
         </div>
-        <div className="flex items-center text-sm text-gray-3">
+        <div className="flex items-center text-sm text-muted-foreground">
           <h4 className="mr-2">조회수</h4>
           <h4>{viewCount}</h4>
         </div>
@@ -52,7 +52,7 @@ function FeedFooter({
       </div>
       <Link href={`/bill/${billId}`}>
         <Button
-          className="text-sm font-medium bg-gray-1 dark:bg-gray-3 text-gray-3 dark:text-gray-2 w-[88px] h-8"
+          className="text-sm font-medium bg-muted text-muted-foreground w-[88px] h-8"
           size="sm"
           variant="secondary">
           자세히 보기
@@ -72,14 +72,14 @@ function DetailFooter({
   return (
     <div className="flex justify-between items-center p-0 mt-10">
       <div className="flex gap-4">
-        <div className="flex items-center text-sm text-gray-2">
+        <div className="flex items-center text-sm text-muted-foreground">
           <Button variant="ghost" size="icon" className="p-0" onClick={onClickScrap}>
             <IconScrabSmall isActive={isLiked} />
           </Button>
           <h4 className="mr-2">스크랩</h4>
           <h4>{likeCount}</h4>
         </div>
-        <div className="flex items-center text-sm text-gray-2">
+        <div className="flex items-center text-sm text-muted-foreground">
           <h4 className="mr-2">조회수</h4>
           <h4>{viewCount}</h4>
         </div>

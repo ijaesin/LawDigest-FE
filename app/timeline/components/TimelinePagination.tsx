@@ -30,7 +30,7 @@ export default function TimelinePagination({
             type="button"
             // eslint-disable-next-line react/no-array-index-key
             key={i}
-            className={`w-1.5 h-1.5 rounded-full ${currentPage === i ? 'bg-gray-3' : 'bg-gray-1'}`}
+            className={`w-1.5 h-1.5 rounded-full ${currentPage === i ? 'bg-muted-foreground' : 'bg-muted'}`}
             onClick={() => onPageChange(i)}
             aria-label={`${i + 1}페이지로 이동`}
           />

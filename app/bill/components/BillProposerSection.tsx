@@ -35,7 +35,7 @@ export default function BillProposerSection({
         <div className="flex gap-3 items-center">
           <div className="flex -space-x-4 rtl:space-x-reverse">
             {representativeProposerList.map(({ representative_proposer_id, represent_proposer_img_url }) => (
-              <Avatar key={representative_proposer_id} className="border-2 border-white dark:border-dark-l">
+              <Avatar key={representative_proposer_id} className="border-2 border-white">
                 <AvatarImage src={process.env.NEXT_PUBLIC_IMAGE_URL + represent_proposer_img_url} />
                 <AvatarFallback>{representative_proposer_id}</AvatarFallback>
               </Avatar>
@@ -47,7 +47,7 @@ export default function BillProposerSection({
             </p>
             <div className="flex gap-1 items-center">
               <PartyLogo partyName={partyName} partyImageUrl={null} variant="wide" />
-              <p className="text-xs text-gray-2">{partyName}</p>
+              <p className="text-xs text-muted-foreground">{partyName}</p>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function BillProposerSection({
           </Popover>
         ) : null}
       </div>
-      <Separator className="dark:bg-dark-l" />
+      <Separator className="dark:bg-border" />
       {children}
     </div>
   );
