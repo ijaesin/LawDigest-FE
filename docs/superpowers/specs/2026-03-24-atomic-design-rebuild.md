@@ -30,6 +30,12 @@
 - **훅**: `useScrollDirection`, `useSwipeNavigation`, `usePullToRefresh`, `useIntersect`, `useTabType`
 - **shadcn/ui 원본**: `app/common/components/ui/` — 수정하지 않고 래핑
 
+### Props 네이밍 컨벤션
+
+- **Organisms/Containers**: Zod 추론 타입을 그대로 사용 (snake_case 필드). 불필요한 camelCase 변환 없음.
+- **Molecules/Atoms**: camelCase props. Container/Organism에서 데이터 추출 시 변환.
+- 예: `BillCard`는 `bill: BillResponse`를 받고 내부에서 `bill.bill_info_dto.bill_id` 접근. `BillMeta`는 `stage: string`, `proposeDate: string`을 받음 (BillCard가 추출해서 전달).
+
 ### 기술 스택
 
 - Next.js 15 (App Router) / React 19
@@ -223,15 +229,17 @@ interface GlassSkeletonProps {
 
 ### 2.7 Icon
 
-lucide-react 래퍼. 통일된 사이즈/컬러.
+lucide-react 래퍼. 통일된 사이즈/컬러. 타입 안전성을 위해 컴포넌트 레퍼런스를 받는다.
 
 ```typescript
 interface IconProps {
-  name: string;            // lucide 아이콘명
+  icon: LucideIcon;        // lucide 컴포넌트 레퍼런스 (e.g., Home, Search)
   size?: 'sm' | 'md' | 'lg';  // 16px | 20px | 24px
   className?: string;
 }
 ```
+
+> **참고**: `name: string`이 아닌 `icon: LucideIcon`을 사용하여 NavItem과 동일한 패턴 유지. 동적 아이콘이 필요한 경우는 별도 lookup map으로 처리.
 
 ### 2.8 Logo
 
@@ -416,7 +424,7 @@ interface KeywordChipProps {
 interface FollowButtonProps {
   isFollowing: boolean;
   onToggle: () => void;
-  count?: number;
+  count?: number;           // 팔로워 수 — 버튼 옆에 "N명" 표시
   size?: 'sm' | 'md';
 }
 ```
@@ -470,8 +478,11 @@ interface BillCardProps {
   bill: BillResponse;
   onBookmark: (billId: string) => void;
   onShare: (billId: string) => void;
+  variant?: 'default' | 'compact';  // compact: 사이드바용 작은 카드
 }
 ```
+
+> **참고**: `BillResponse`와 `BillDetail`은 현재 동일한 타입 (`BillDetailSchema = BillResponseSchema`). bill 내부의 `bill_info_dto.bill_id`를 추출하여 콜백에 전달. `compact` 변형은 우측 사이드바의 관련 법안 표시용 — 제목 + 배지만 표시.
 
 **조합**: GlassCard(hover) > BillMeta + 제목(heading-sm) + 요약(body, 2줄 clamp) + ProposerAvatar + ActionBar
 
@@ -491,12 +502,13 @@ GlassCard(hover)
 
 ```typescript
 interface BillDetailHeroProps {
-  bill: BillDetail;
-  viewCount: number;
+  bill: BillResponse;      // BillDetail === BillResponse (동일 타입)
   onBookmark: () => void;
   onShare: () => void;
 }
 ```
+
+> **참고**: `viewCount`는 `bill.bill_info_dto.view_count`에서 직접 읽음 — 별도 prop 불필요.
 
 **조합**: GlassCard(medium) > GlassBadge(stage + 대수) + 제목(display) + 법안명(caption) + 메타(발의일, 조회수, 좋아요) + ActionBar
 
@@ -617,7 +629,7 @@ interface NotificationListProps {
 ```typescript
 interface CongressmanCardProps {
   congressman: CongressmanDetail;
-  onFollow: () => void;
+  onFollow: (congressmanId: string) => void;
   variant?: 'full' | 'compact';  // full: 상세 페이지, compact: 리스트용
 }
 ```
@@ -632,7 +644,7 @@ interface CongressmanCardProps {
 ```typescript
 interface PartyCardProps {
   party: PartyDetail;
-  onFollow: () => void;
+  onFollow: (partyId: number) => void;
   variant?: 'full' | 'compact';
 }
 ```
@@ -646,13 +658,11 @@ interface PartyCardProps {
 
 ```typescript
 interface TimelineEntryProps {
-  date: string;
-  plenaryList: PlenaryItem[];
-  promulgationList: BillOutline[];
-  committeeAuditList: CommitteeAudit[];
-  submittedList: BillOutline[];
+  entry: TimelineResponseList;  // Zod 추론 타입 직접 사용 (snake_case 필드)
 }
 ```
+
+> **참고**: Container에서 `TimelineResponseList` 타입을 그대로 전달. Organism 내부에서 `entry.plenary_list`, `entry.committee_audit_list` 등 snake_case 필드에 직접 접근. 불필요한 camelCase 변환 없음.
 
 **디자인**: 날짜 헤더(대형 타이포 M.DD + 요일) + 수직 타임라인 라인 + 각 섹션(본회의/위원회/접수)
 
@@ -666,7 +676,10 @@ interface FeedListProps {
   onLoadMore: () => void;
   hasMore: boolean;
   isLoading: boolean;
+  isError?: boolean;
+  onRetry?: () => void;
   onRefresh?: () => Promise<void>;  // 풀투리프레시
+  emptyMessage?: string;
 }
 ```
 
@@ -675,7 +688,8 @@ interface FeedListProps {
 - `usePullToRefresh` → 상단 당기기 시 `onRefresh`
 - 스태거 페이드인: `animate-fade-in-up` + `animation-delay`
 - 로딩: GlassSkeleton(card) 표시
-- 빈 상태: EmptyState 표시
+- 에러: ErrorState 표시 (`isError` + `onRetry`)
+- 빈 상태: EmptyState 표시 (`emptyMessage`)
 
 ### 4.15 Snackbar
 
