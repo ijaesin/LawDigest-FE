@@ -7,3 +7,6 @@ export { SearchBar, type SearchBarProps } from './SearchBar';
 export { StatCard, type StatCardProps } from './StatCard';
 export { TabBar, type TabBarProps } from './TabBar';
 export { VoteBar, type VoteBarProps } from './VoteBar';
+export { FollowButton, type FollowButtonProps } from './FollowButton';
+export { KeywordChip, type KeywordChipProps } from './KeywordChip';
+export { NotificationBadge, type NotificationBadgeProps } from './NotificationBadge';
