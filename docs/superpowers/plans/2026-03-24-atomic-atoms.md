@@ -108,15 +108,29 @@ export { GlassCard, type GlassCardProps } from '@/app/common/components/atoms/Gl
 export { GlassSkeleton } from '@/app/common/components/atoms/GlassSkeleton';
 ```
 
-- [ ] **Step 4: 테스트 통과 확인**
+- [ ] **Step 4: Storybook 스토리 이동**
+
+기존 `stories/components/GlassCard.stories.tsx`와 `stories/components/GlassSkeleton.stories.tsx`의 import 경로를 `@/app/common/components/atoms`로 변경하고, `stories/atoms/`로 복사:
+
+```bash
+mkdir -p stories/atoms
+cp stories/components/GlassCard.stories.tsx stories/atoms/GlassCard.stories.tsx
+cp stories/components/GlassSkeleton.stories.tsx stories/atoms/GlassSkeleton.stories.tsx
+```
+
+각 파일에서 import 경로와 title 변경:
+- import: `from '@/app/common/components/atoms'`
+- title: `'Atoms/GlassCard'`, `'Atoms/GlassSkeleton'`
+
+- [ ] **Step 5: 테스트 통과 확인**
 
 Run: `npm test`
 Expected: 기존 39개 테스트 모두 PASS
 
-- [ ] **Step 5: 커밋**
+- [ ] **Step 6: 커밋**
 
 ```bash
-git add app/common/components/atoms/ app/common/components/ui/glass-card.tsx app/common/components/GlassSkeleton/
+git add app/common/components/atoms/ app/common/components/ui/glass-card.tsx app/common/components/GlassSkeleton/ stories/atoms/
 git commit -m "refactor(atoms): GlassCard, GlassSkeleton을 atoms/ 디렉토리로 이동"
 ```
 
@@ -675,24 +689,29 @@ export interface GlassAvatarProps {
   className?: string;
 }
 
-export function GlassAvatar({ size = 'md', partyName, src, fallback, className }: GlassAvatarProps) {
-  const sizeConfig = sizeMap[size];
-  const partyColor = partyName ? PARTY_COLOR[partyName as keyof typeof PARTY_COLOR] : undefined;
+const GlassAvatar = React.forwardRef<HTMLSpanElement, GlassAvatarProps>(
+  ({ size = 'md', partyName, src, fallback, className }, ref) => {
+    const sizeConfig = sizeMap[size];
+    const partyColor = partyName ? PARTY_COLOR[partyName as keyof typeof PARTY_COLOR] : undefined;
 
-  return (
-    <Avatar
-      className={cn(sizeConfig.container, className)}
-      style={{
-        borderWidth: partyColor ? sizeConfig.border : undefined,
-        borderColor: partyColor,
-        borderStyle: partyColor ? 'solid' : undefined,
-      }}
-    >
-      {src && <AvatarImage src={src} alt={fallback ?? ''} />}
-      <AvatarFallback className={cn(sizeConfig.text, 'font-semibold')}>{fallback}</AvatarFallback>
-    </Avatar>
-  );
-}
+    return (
+      <Avatar
+        ref={ref}
+        className={cn(sizeConfig.container, className)}
+        style={{
+          borderWidth: partyColor ? sizeConfig.border : undefined,
+          borderColor: partyColor,
+          borderStyle: partyColor ? 'solid' : undefined,
+        }}
+      >
+        {src && <AvatarImage src={src} alt={fallback ?? ''} />}
+        <AvatarFallback className={cn(sizeConfig.text, 'font-semibold')}>{fallback}</AvatarFallback>
+      </Avatar>
+    );
+  },
+);
+
+GlassAvatar.displayName = 'GlassAvatar';
 ```
 
 - [ ] **Step 4: barrel export 업데이트 + 테스트 통과 확인**
@@ -812,6 +831,8 @@ export interface IconProps {
 export function Icon({ icon: LucideIcon, size = 'md', className }: IconProps) {
   return <LucideIcon className={cn(sizeMap[size], className)} />;
 }
+
+Icon.displayName = 'Icon';
 ```
 
 - [ ] **Step 4: barrel export + 테스트 통과 확인**
@@ -895,6 +916,12 @@ describe('Logo', () => {
     const { container } = render(<Logo size="sm" />);
     const img = container.querySelector('img');
     expect(img).toHaveAttribute('width', '32');
+  });
+
+  it('renders lg size', () => {
+    const { container } = render(<Logo size="lg" />);
+    const img = container.querySelector('img');
+    expect(img).toHaveAttribute('width', '222');
   });
 });
 ```
@@ -982,33 +1009,11 @@ describe('GlassSeparator', () => {
 
 ```tsx
 // app/common/components/atoms/Separator.tsx
-'use client';
-
-import * as React from 'react';
-import * as SeparatorPrimitive from '@radix-ui/react-separator';
-import { cn } from '@/app/common/lib/utils';
-
-const GlassSeparator = React.forwardRef<
-  React.ElementRef<typeof SeparatorPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
->(({ className, orientation = 'horizontal', decorative = true, ...props }, ref) => (
-  <SeparatorPrimitive.Root
-    ref={ref}
-    decorative={decorative}
-    orientation={orientation}
-    className={cn(
-      'shrink-0 bg-border',
-      orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
-      className,
-    )}
-    {...props}
-  />
-));
-
-GlassSeparator.displayName = 'GlassSeparator';
-
-export { GlassSeparator };
+// shadcn Separator를 디자인 토큰 스타일로 re-export
+export { Separator as GlassSeparator } from '@/app/common/components/ui/separator';
 ```
+
+> **참고**: shadcn Separator는 이미 `bg-border` 스타일을 사용. 별도 래핑 불필요, re-export로 일관된 import 경로 제공.
 
 - [ ] **Step 4: barrel export + 테스트 + Storybook + 커밋**
 
@@ -1088,6 +1093,8 @@ export function StatusDot({ active = false, size = 'sm', className }: StatusDotP
     />
   );
 }
+
+StatusDot.displayName = 'StatusDot';
 ```
 
 - [ ] **Step 4: barrel export + 테스트 + Storybook + 커밋**
