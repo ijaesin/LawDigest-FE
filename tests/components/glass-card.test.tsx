@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { GlassCard } from '@/app/common/components/ui/glass-card';
@@ -35,7 +36,7 @@ describe('GlassCard', () => {
   });
 
   it('forwards ref', () => {
-    const ref = { current: null } as React.RefObject<HTMLDivElement>;
+    const ref = React.createRef<HTMLDivElement>();
     render(<GlassCard ref={ref}>Content</GlassCard>);
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
