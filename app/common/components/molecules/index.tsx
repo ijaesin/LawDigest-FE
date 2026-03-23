@@ -1,3 +1,4 @@
+export { ActionBar, type ActionBarProps } from './ActionBar';
 export { BillMeta, type BillMetaProps } from './BillMeta';
 export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
