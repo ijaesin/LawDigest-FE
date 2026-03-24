@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Heart, Search, Bell, Settings, User, Star } from 'lucide-react';
 import { Icon } from '@/app/common/components/atoms/Icon';
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { GlassCard } from '@/app/common/components/ui/glass-card';
 
 const meta: Meta<typeof GlassCard> = {
@@ -19,5 +19,9 @@ export const Heavy: Story = { args: { level: 'heavy', children: 'Heavy glass car
 export const Hoverable: Story = { args: { level: 'subtle', hover: true, children: 'Hover me' } };
 export const DarkMode: Story = {
   args: { level: 'subtle', children: 'Dark mode glass card' },
-  parameters: { backgrounds: { default: 'dark' } },
+  globals: {
+    backgrounds: {
+      value: "dark"
+    }
+  },
 };

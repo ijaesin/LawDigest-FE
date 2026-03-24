@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Mail } from 'lucide-react';
 import { NotificationBadge } from '@/app/common/components/molecules/NotificationBadge';
 

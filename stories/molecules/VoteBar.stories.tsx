@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { VoteBar } from '@/app/common/components/molecules/VoteBar';
 
 const meta: Meta<typeof VoteBar> = {

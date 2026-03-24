@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { fn } from 'storybook/test';
 import { BillDetailHero } from '@/app/common/components/organisms';
 import type { BillResponse } from '@/app/bill/validation/bill.schema';
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { GlassAvatar } from '@/app/common/components/atoms';
 
 const meta: Meta<typeof GlassAvatar> = {
@@ -19,7 +19,7 @@ export const WithParty: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-3">
+    <div className="flex gap-3 items-center">
       <GlassAvatar size="sm" fallback="SM" partyName="더불어민주당" />
       <GlassAvatar size="md" fallback="MD" partyName="국민의힘" />
       <GlassAvatar size="lg" fallback="LG" partyName="조국혁신당" />

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { fn } from 'storybook/test';
 import { FollowButton } from '@/app/common/components/molecules/FollowButton';
 
 const meta: Meta<typeof FollowButton> = {

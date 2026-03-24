@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { fn } from 'storybook/test';
 import { ActionBar } from '@/app/common/components/molecules/ActionBar';
 
 const meta: Meta<typeof ActionBar> = {
