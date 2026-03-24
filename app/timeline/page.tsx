@@ -1,14 +1,16 @@
-import { AppLayout } from '@/app/common/components/Layout/AppLayout/AppLayout';
-import { TimelineContent } from './components';
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import Loading from '@/app/common/components/Loading/Loading';
+import NewTimelineContainer from './components/NewTimelineContainer';
 
-// 타임라인 페이지는 런타임 데이터(외부 API)에 의존하므로
-// 정적 프리렌더를 강제하지 않고 요청마다 동적으로 렌더링합니다.
 export const dynamic = 'force-dynamic';
 
 export default function Timeline() {
   return (
-    <AppLayout>
-      <TimelineContent />
-    </AppLayout>
+    <ErrorBoundary fallback={<p className="text-center py-10 text-muted-foreground">타임라인을 불러올 수 없습니다.</p>}>
+      <Suspense fallback={<Loading />}>
+        <NewTimelineContainer />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
