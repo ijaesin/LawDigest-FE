@@ -16,9 +16,9 @@ export function Logo({ size = 'md', className }: LogoProps) {
   const { width, height } = sizeMap[size];
   return (
     <span className={cn('inline-flex', className)}>
-      <Image src="/svgs/logo.svg" alt="모두의입법" width={width} height={height} className="dark:hidden" priority />
+      <Image src="/images/logo.svg" alt="모두의입법" width={width} height={height} className="dark:hidden" priority />
       <Image
-        src="/svgs/logo-dark.svg"
+        src="/images/logoDark.svg"
         alt="모두의입법"
         width={width}
         height={height}
