@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { Layout } from '@/app/common/components/Layout';
 
 export const metadata: Metadata = {
   title: '회원가입 페이지',
@@ -7,9 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <Layout nav theme goBack>
-      {children}
-    </Layout>
-  );
+  return <>{children}</>;
 }

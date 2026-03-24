@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Logo } from '@/app/common/components/Layout';
+import { Logo } from '@/app/common/components/atoms';
 
 export default function KaKaoLogin() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { Logo } from '@/app/common/components/Layout';
+import { Logo } from '@/app/common/components/atoms';
 import { Loader2 } from 'lucide-react';
 
 export default function Loading() {
