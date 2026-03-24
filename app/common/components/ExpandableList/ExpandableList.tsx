@@ -25,14 +25,14 @@ export default function ExpandableList({ items, initialCount }: ExpandableListPr
             <button
               type="button"
               onClick={() => setVisibleCount(items.length)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-gray-100 rounded-lg shadow dark:bg-gray-800">
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold glass-subtle rounded-lg">
               더 보기 <IconArrowDown />
             </button>
           ) : (
             <button
               type="button"
               onClick={() => setVisibleCount(initialCount)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-gray-100 rounded-lg shadow dark:bg-gray-800">
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold glass-subtle rounded-lg">
               줄이기 <IconArrowUp />
             </button>
           )}

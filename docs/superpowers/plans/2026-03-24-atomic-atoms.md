@@ -73,6 +73,7 @@ styles/globals.css                     # 디자인 토큰, 글래스 유틸리�
 ### Task 1: atoms 디렉토리 생성 + GlassCard/GlassSkeleton 이동
 
 **Files:**
+
 - Create: `app/common/components/atoms/index.tsx`
 - Move: `app/common/components/ui/glass-card.tsx` → `app/common/components/atoms/GlassCard.tsx`
 - Move: `app/common/components/GlassSkeleton/GlassSkeleton.tsx` → `app/common/components/atoms/GlassSkeleton.tsx`
@@ -119,6 +120,7 @@ cp stories/components/GlassSkeleton.stories.tsx stories/atoms/GlassSkeleton.stor
 ```
 
 각 파일에서 import 경로와 title 변경:
+
 - import: `from '@/app/common/components/atoms'`
 - title: `'Atoms/GlassCard'`, `'Atoms/GlassSkeleton'`
 
@@ -139,6 +141,7 @@ git commit -m "refactor(atoms): GlassCard, GlassSkeleton을 atoms/ 디렉토리�
 ### Task 2: GlassButton
 
 **Files:**
+
 - Create: `app/common/components/atoms/GlassButton.tsx`
 - Test: `tests/atoms/glass-button.test.tsx`
 - Story: `stories/atoms/GlassButton.stories.tsx`
@@ -335,6 +338,7 @@ git commit -m "feat(atoms): GlassButton 컴포넌트 구현"
 ### Task 3: GlassBadge
 
 **Files:**
+
 - Create: `app/common/components/atoms/GlassBadge.tsx`
 - Test: `tests/atoms/glass-badge.test.tsx`
 - Story: `stories/atoms/GlassBadge.stories.tsx`
@@ -416,11 +420,9 @@ export interface GlassBadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof glassBadgeVariants> {}
 
-const GlassBadge = React.forwardRef<HTMLSpanElement, GlassBadgeProps>(
-  ({ className, variant, ...props }, ref) => (
-    <span ref={ref} className={cn(glassBadgeVariants({ variant, className }))} {...props} />
-  ),
-);
+const GlassBadge = React.forwardRef<HTMLSpanElement, GlassBadgeProps>(({ className, variant, ...props }, ref) => (
+  <span ref={ref} className={cn(glassBadgeVariants({ variant, className }))} {...props} />
+));
 
 GlassBadge.displayName = 'GlassBadge';
 
@@ -489,6 +491,7 @@ git commit -m "feat(atoms): GlassBadge 컴포넌트 구현"
 ### Task 4: GlassInput
 
 **Files:**
+
 - Create: `app/common/components/atoms/GlassInput.tsx`
 - Test: `tests/atoms/glass-input.test.tsx`
 - Story: `stories/atoms/GlassInput.stories.tsx`
@@ -550,18 +553,16 @@ export interface GlassInputProps extends React.InputHTMLAttributes<HTMLInputElem
   icon?: React.ReactNode;
 }
 
-const GlassInput = React.forwardRef<HTMLInputElement, GlassInputProps>(
-  ({ className, icon, ...props }, ref) => (
-    <div className={cn('glass-subtle flex items-center gap-2 rounded-md px-3 py-2', className)}>
-      {icon && <span className="shrink-0 text-muted-foreground">{icon}</span>}
-      <input
-        ref={ref}
-        className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        {...props}
-      />
-    </div>
-  ),
-);
+const GlassInput = React.forwardRef<HTMLInputElement, GlassInputProps>(({ className, icon, ...props }, ref) => (
+  <div className={cn('glass-subtle flex items-center gap-2 rounded-md px-3 py-2', className)}>
+    {icon && <span className="shrink-0 text-muted-foreground">{icon}</span>}
+    <input
+      ref={ref}
+      className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+      {...props}
+    />
+  </div>
+));
 
 GlassInput.displayName = 'GlassInput';
 
@@ -608,6 +609,7 @@ git commit -m "feat(atoms): GlassInput 컴포넌트 구현"
 ### Task 5: GlassAvatar
 
 **Files:**
+
 - Create: `app/common/components/atoms/GlassAvatar.tsx`
 - Test: `tests/atoms/glass-avatar.test.tsx`
 - Story: `stories/atoms/GlassAvatar.stories.tsx`
@@ -702,8 +704,7 @@ const GlassAvatar = React.forwardRef<HTMLSpanElement, GlassAvatarProps>(
           borderWidth: partyColor ? sizeConfig.border : undefined,
           borderColor: partyColor,
           borderStyle: partyColor ? 'solid' : undefined,
-        }}
-      >
+        }}>
         {src && <AvatarImage src={src} alt={fallback ?? ''} />}
         <AvatarFallback className={cn(sizeConfig.text, 'font-semibold')}>{fallback}</AvatarFallback>
       </Avatar>
@@ -764,6 +765,7 @@ git commit -m "feat(atoms): GlassAvatar 컴포넌트 구현 (정당 컬러 보�
 ### Task 6: Icon
 
 **Files:**
+
 - Create: `app/common/components/atoms/Icon.tsx`
 - Test: `tests/atoms/icon.test.tsx`
 - Story: `stories/atoms/Icon.stories.tsx`
@@ -888,6 +890,7 @@ git commit -m "feat(atoms): Icon 컴포넌트 구현 (lucide 래퍼)"
 ### Task 7: Logo
 
 **Files:**
+
 - Create: `app/common/components/atoms/Logo.tsx`
 - Test: `tests/atoms/logo.test.tsx`
 - Story: `stories/atoms/Logo.stories.tsx`
@@ -975,6 +978,7 @@ git commit -m "feat(atoms): Logo 컴포넌트 구현 (라이트/다크)"
 ### Task 8: Separator
 
 **Files:**
+
 - Create: `app/common/components/atoms/Separator.tsx`
 - Test: `tests/atoms/separator.test.tsx`
 - Story: `stories/atoms/Separator.stories.tsx`
@@ -1027,6 +1031,7 @@ git commit -m "feat(atoms): GlassSeparator 컴포넌트 구현"
 ### Task 9: StatusDot
 
 **Files:**
+
 - Create: `app/common/components/atoms/StatusDot.tsx`
 - Test: `tests/atoms/status-dot.test.tsx`
 - Story: `stories/atoms/StatusDot.stories.tsx`

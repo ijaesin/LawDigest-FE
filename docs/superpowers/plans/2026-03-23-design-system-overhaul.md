@@ -91,6 +91,7 @@ package.json                              # @use-gesture/react 추가
 ### Task 1: 디자인 토큰 정의 — CSS 변수
 
 **Files:**
+
 - Modify: `styles/globals.css`
 - Test: Storybook 시각 확인
 
@@ -167,42 +168,42 @@ package.json                              # @use-gesture/react 추가
 `.dark` 블록의 변수를 스펙에 맞게 교체한다.
 
 ```css
-  .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 235 82% 75%;
-    --primary-foreground: 0 0% 9%;
-    --primary-hover: 235 82% 82%;
-    --primary-subtle: 239 84% 67% / 0.15;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 64%;
-    --tertiary-foreground: 0 0% 32%;
-    --accent: 160 67% 52%;
-    --accent-foreground: 0 0% 9%;
-    --accent-subtle: 160 84% 39% / 0.15;
-    --warning: 45 93% 56%;
-    --warning-foreground: 0 0% 9%;
-    --danger: 0 91% 71%;
-    --danger-foreground: 0 0% 9%;
-    --destructive: 0 91% 71%;
-    --destructive-foreground: 0 0% 9%;
-    --surface: 0 0% 9%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 235 82% 75%;
+.dark {
+  --background: 0 0% 4%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 235 82% 75%;
+  --primary-foreground: 0 0% 9%;
+  --primary-hover: 235 82% 82%;
+  --primary-subtle: 239 84% 67% / 0.15;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 64%;
+  --tertiary-foreground: 0 0% 32%;
+  --accent: 160 67% 52%;
+  --accent-foreground: 0 0% 9%;
+  --accent-subtle: 160 84% 39% / 0.15;
+  --warning: 45 93% 56%;
+  --warning-foreground: 0 0% 9%;
+  --danger: 0 91% 71%;
+  --danger-foreground: 0 0% 9%;
+  --destructive: 0 91% 71%;
+  --destructive-foreground: 0 0% 9%;
+  --surface: 0 0% 9%;
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --ring: 235 82% 75%;
 
-    /* Glass tokens (dark) */
-    --glass-bg-subtle: rgba(23, 23, 23, 0.4);
-    --glass-bg-medium: rgba(23, 23, 23, 0.6);
-    --glass-bg-heavy: rgba(23, 23, 23, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.1);
-  }
+  /* Glass tokens (dark) */
+  --glass-bg-subtle: rgba(23, 23, 23, 0.4);
+  --glass-bg-medium: rgba(23, 23, 23, 0.6);
+  --glass-bg-heavy: rgba(23, 23, 23, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
 ```
 
 - [ ] **Step 3: 글래스/애니메이션/접근성 유틸리티 CSS 추가**
@@ -239,13 +240,20 @@ package.json                              # @use-gesture/react 추가
 
 /* Skeleton animation */
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* Accessibility: reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -254,7 +262,9 @@ package.json                              # @use-gesture/react 추가
 
 /* Accessibility: high contrast — disable glass */
 @media (prefers-contrast: more) {
-  .glass-subtle, .glass-medium, .glass-heavy {
+  .glass-subtle,
+  .glass-medium,
+  .glass-heavy {
     background: hsl(var(--surface));
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -267,7 +277,9 @@ package.json                              # @use-gesture/react 추가
 
 /* Accessibility: reduced transparency */
 @media (prefers-reduced-transparency: reduce) {
-  .glass-subtle, .glass-medium, .glass-heavy {
+  .glass-subtle,
+  .glass-medium,
+  .glass-heavy {
     background: hsl(var(--surface));
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -300,6 +312,7 @@ git commit -m "feat(design-tokens): CSS 변수 기반 디자인 토큰 전면 �
 ### Task 2: Tailwind 설정 업데이트
 
 **Files:**
+
 - Modify: `tailwind.config.js`
 
 - [ ] **Step 1: 시멘틱 컬러 확장 추가**
@@ -393,6 +406,7 @@ git commit -m "feat(tailwind): 시멘틱 컬러, 글래스, z-index 토큰 추�
 ### Task 3: GlassCard 컴포넌트
 
 **Files:**
+
 - Create: `app/common/components/ui/glass-card.tsx`
 - Test: `tests/components/glass-card.test.tsx`
 - Story: `stories/components/GlassCard.stories.tsx`
@@ -479,8 +493,7 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
         hover && 'hover:-translate-y-0.5 hover:bg-[var(--glass-bg-medium)] cursor-pointer',
         className,
       )}
-      {...props}
-    >
+      {...props}>
       {children}
     </div>
   ),
@@ -542,6 +555,7 @@ git commit -m "feat(ui): GlassCard 컴포넌트 구현 (subtle/medium/heavy)"
 ### Task 4: GlassSkeleton 로딩 컴포넌트
 
 **Files:**
+
 - Create: `app/common/components/GlassSkeleton/GlassSkeleton.tsx`
 - Test: `tests/components/glass-skeleton.test.tsx`
 - Story: `stories/components/GlassSkeleton.stories.tsx`
@@ -599,10 +613,7 @@ function SkeletonLine({ className }: { className?: string }) {
   return (
     <div
       data-skeleton
-      className={cn(
-        'glass-subtle rounded-sm h-4 animate-[skeleton-pulse_1.5s_ease-in-out_infinite]',
-        className,
-      )}
+      className={cn('glass-subtle rounded-sm h-4 animate-[skeleton-pulse_1.5s_ease-in-out_infinite]', className)}
     />
   );
 }
@@ -679,6 +690,7 @@ git commit -m "feat(ui): GlassSkeleton 로딩 컴포넌트 구현"
 ### Task 5: EmptyState & ErrorState 컴포넌트
 
 **Files:**
+
 - Create: `app/common/components/EmptyState/EmptyState.tsx`
 - Create: `app/common/components/ErrorState/ErrorState.tsx`
 - Test: `tests/components/empty-state.test.tsx`
@@ -764,8 +776,7 @@ export function EmptyState({ message, ctaText, ctaHref, icon, className }: Empty
       {ctaText && ctaHref && (
         <Link
           href={ctaHref}
-          className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
-        >
+          className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover">
           {ctaText}
         </Link>
       )}
@@ -797,8 +808,7 @@ export function ErrorState({ message, onRetry, className }: ErrorStateProps) {
         <button
           type="button"
           onClick={onRetry}
-          className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
-        >
+          className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover">
           다시 시도
         </button>
       )}
@@ -824,6 +834,7 @@ git commit -m "feat(ui): EmptyState, ErrorState 공통 컴포넌트 구현"
 ### Task 6: useScrollDirection 훅
 
 **Files:**
+
 - Create: `app/common/hooks/useScrollDirection.ts`
 - Test: `tests/hooks/useScrollDirection.test.ts`
 
@@ -936,6 +947,7 @@ git commit -m "feat(hooks): useScrollDirection 스크롤 방향 감지 훅 구�
 ### Task 7: SideNav 좌측 사이드바 컴포넌트
 
 **Files:**
+
 - Create: `app/common/components/Layout/SideNav/SideNav.tsx`
 - Test: `tests/layout/side-nav.test.tsx`
 - Story: `stories/patterns/SideNav.stories.tsx`
@@ -1026,8 +1038,7 @@ export function SideNav({ compact = false }: SideNavProps) {
         'glass-medium sticky top-0 flex h-screen flex-col justify-between py-6',
         compact ? 'w-[72px] items-center px-2' : 'w-[240px] px-4',
       )}
-      style={{ zIndex: 'var(--z-nav)' }}
-    >
+      style={{ zIndex: 'var(--z-nav)' }}>
       <div className="flex flex-col gap-2">
         {/* Logo */}
         <Link href="/" className={cn('mb-6', compact ? 'px-0' : 'px-3')}>
@@ -1065,8 +1076,7 @@ export function SideNav({ compact = false }: SideNavProps) {
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-primary-subtle hover:text-foreground',
                 compact && 'justify-center px-0',
-              )}
-            >
+              )}>
               <Icon className="h-5 w-5 shrink-0" />
               {!compact && <span>{item.label}</span>}
             </Link>
@@ -1081,8 +1091,7 @@ export function SideNav({ compact = false }: SideNavProps) {
             'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium',
             'text-muted-foreground transition-colors hover:bg-primary-subtle hover:text-foreground',
             compact && 'justify-center px-0',
-          )}
-        >
+          )}>
           <Search className="h-5 w-5 shrink-0" />
           {!compact && <span>검색</span>}
         </button>
@@ -1097,8 +1106,7 @@ export function SideNav({ compact = false }: SideNavProps) {
           'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium',
           'text-muted-foreground transition-colors hover:bg-primary-subtle hover:text-foreground',
           compact && 'justify-center px-0',
-        )}
-      >
+        )}>
         <Sun className="h-5 w-5 dark:hidden" />
         <Moon className="hidden h-5 w-5 dark:block" />
         {!compact && <span>테마</span>}
@@ -1145,6 +1153,7 @@ git commit -m "feat(layout): SideNav 좌측 사이드바 네비게이션 구현"
 ### Task 8: RightSidebar 우측 사이드바 컴포넌트
 
 **Files:**
+
 - Create: `app/common/components/Layout/RightSidebar/RightSidebar.tsx`
 - Test: `tests/layout/right-sidebar.test.tsx`
 
@@ -1188,11 +1197,7 @@ interface RightSidebarProps {
 export function RightSidebar({ children, className }: RightSidebarProps) {
   return (
     <aside
-      className={cn(
-        'sticky top-0 hidden h-screen w-[300px] shrink-0 overflow-y-auto py-6 pl-4 lg:block',
-        className,
-      )}
-    >
+      className={cn('sticky top-0 hidden h-screen w-[300px] shrink-0 overflow-y-auto py-6 pl-4 lg:block', className)}>
       <div className="flex flex-col gap-4">{children}</div>
     </aside>
   );
@@ -1245,6 +1250,7 @@ git commit -m "feat(layout): RightSidebar 우측 사이드바 컴포넌트 구�
 ### Task 9: AppLayout 3단 반응형 레이아웃
 
 **Files:**
+
 - Create: `app/common/components/Layout/AppLayout/AppLayout.tsx`
 - Test: `tests/layout/app-layout.test.tsx`
 - Story: `stories/patterns/AppLayout.stories.tsx`
@@ -1320,9 +1326,7 @@ export function AppLayout({ children, rightSidebar }: AppLayoutProps) {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 min-w-0 max-w-[640px] px-4 pb-20 md:pb-0">
-        {children}
-      </main>
+      <main className="flex-1 min-w-0 max-w-[640px] px-4 pb-20 md:pb-0">{children}</main>
 
       {/* Right Sidebar — desktop only */}
       {rightSidebar && <RightSidebar>{rightSidebar}</RightSidebar>}
@@ -1334,8 +1338,7 @@ export function AppLayout({ children, rightSidebar }: AppLayoutProps) {
           'duration-[var(--duration-normal)] ease-[var(--easing-default)]',
           scrollDirection === 'down' ? 'translate-y-full' : 'translate-y-0',
         )}
-        style={{ zIndex: 'var(--z-nav)' }}
-      >
+        style={{ zIndex: 'var(--z-nav)' }}>
         <Nav />
       </div>
 
@@ -1369,8 +1372,21 @@ type Story = StoryObj<typeof AppLayout>;
 
 export const WithRightSidebar: Story = {
   args: {
-    children: <div className="space-y-4 p-4">{Array.from({ length: 10 }, (_, i) => <div key={i} className="glass-subtle rounded-md p-6">Card {i + 1}</div>)}</div>,
-    rightSidebar: <div className="space-y-4"><div className="glass-subtle rounded-md p-4">검색바</div><div className="glass-subtle rounded-md p-4">인기 법안</div></div>,
+    children: (
+      <div className="space-y-4 p-4">
+        {Array.from({ length: 10 }, (_, i) => (
+          <div key={i} className="glass-subtle rounded-md p-6">
+            Card {i + 1}
+          </div>
+        ))}
+      </div>
+    ),
+    rightSidebar: (
+      <div className="space-y-4">
+        <div className="glass-subtle rounded-md p-4">검색바</div>
+        <div className="glass-subtle rounded-md p-4">인기 법안</div>
+      </div>
+    ),
   },
 };
 
@@ -1393,6 +1409,7 @@ git commit -m "feat(layout): AppLayout 3단 반응형 레이아웃 구현"
 ### Task 10: Storybook 디자인 토큰 문서화
 
 **Files:**
+
 - Create: `stories/design-tokens/Colors.stories.tsx`
 - Create: `stories/design-tokens/Typography.stories.tsx`
 - Create: `stories/design-tokens/GlassEffects.stories.tsx`
@@ -1467,7 +1484,9 @@ function ColorsPage() {
   ];
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-      {colors.map((c) => <ColorSwatch key={c.cssVar} {...c} />)}
+      {colors.map((c) => (
+        <ColorSwatch key={c.cssVar} {...c} />
+      ))}
     </div>
   );
 }
@@ -1486,12 +1505,32 @@ import type { Meta, StoryObj } from '@storybook/react';
 function TypographyPage() {
   return (
     <div className="space-y-6">
-      <div><p className="text-xs text-muted-foreground">display (28/32px, 700)</p><h1 className="text-[28px] md:text-[32px] font-bold leading-[1.2]">페이지 타이틀</h1></div>
-      <div><p className="text-xs text-muted-foreground">heading-lg (22/24px, 600)</p><h2 className="text-[22px] md:text-[24px] font-semibold leading-[1.3]">섹션 제목</h2></div>
-      <div><p className="text-xs text-muted-foreground">heading-sm (18/20px, 600)</p><h3 className="text-[18px] md:text-[20px] font-semibold leading-[1.3]">카드 제목, 법안명</h3></div>
-      <div><p className="text-xs text-muted-foreground">body (15/16px, 400)</p><p className="text-[15px] md:text-base leading-[1.6]">본문 텍스트입니다. AI가 요약한 법안 내용이 여기에 표시됩니다.</p></div>
-      <div><p className="text-xs text-muted-foreground">caption (13px, 400)</p><p className="text-[13px] leading-[1.4] text-muted-foreground">메타데이터, 2025.03.23</p></div>
-      <div><p className="text-xs text-muted-foreground">micro (11px, 500)</p><p className="text-[11px] leading-[1.3] font-medium">배지 텍스트</p></div>
+      <div>
+        <p className="text-xs text-muted-foreground">display (28/32px, 700)</p>
+        <h1 className="text-[28px] md:text-[32px] font-bold leading-[1.2]">페이지 타이틀</h1>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">heading-lg (22/24px, 600)</p>
+        <h2 className="text-[22px] md:text-[24px] font-semibold leading-[1.3]">섹션 제목</h2>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">heading-sm (18/20px, 600)</p>
+        <h3 className="text-[18px] md:text-[20px] font-semibold leading-[1.3]">카드 제목, 법안명</h3>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">body (15/16px, 400)</p>
+        <p className="text-[15px] md:text-base leading-[1.6]">
+          본문 텍스트입니다. AI가 요약한 법안 내용이 여기에 표시됩니다.
+        </p>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">caption (13px, 400)</p>
+        <p className="text-[13px] leading-[1.4] text-muted-foreground">메타데이터, 2025.03.23</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">micro (11px, 500)</p>
+        <p className="text-[11px] leading-[1.3] font-medium">배지 텍스트</p>
+      </div>
     </div>
   );
 }
@@ -1524,7 +1563,9 @@ function SpacingPage() {
         <div key={s.name} className="flex items-center gap-4">
           <div className="w-24 text-sm font-medium">{s.name}</div>
           <div className="bg-primary rounded-sm" style={{ width: s.value, height: '16px' }} />
-          <div className="text-sm text-muted-foreground">{s.value} — <code>{s.tw}</code></div>
+          <div className="text-sm text-muted-foreground">
+            {s.value} — <code>{s.tw}</code>
+          </div>
         </div>
       ))}
     </div>
@@ -1544,10 +1585,25 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 function GlassEffectsPage() {
   return (
-    <div className="space-y-8" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))', padding: '2rem', borderRadius: '1rem' }}>
-      <div className="glass-subtle rounded-md p-6"><h3 className="font-semibold glass-text-safe">Glass Subtle</h3><p className="text-sm glass-text-safe">40% opacity, 8px blur</p></div>
-      <div className="glass-medium rounded-md p-6"><h3 className="font-semibold glass-text-safe">Glass Medium</h3><p className="text-sm glass-text-safe">60% opacity, 16px blur</p></div>
-      <div className="glass-heavy rounded-md p-6"><h3 className="font-semibold glass-text-safe">Glass Heavy</h3><p className="text-sm glass-text-safe">80% opacity, 24px blur</p></div>
+    <div
+      className="space-y-8"
+      style={{
+        background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
+        padding: '2rem',
+        borderRadius: '1rem',
+      }}>
+      <div className="glass-subtle rounded-md p-6">
+        <h3 className="font-semibold glass-text-safe">Glass Subtle</h3>
+        <p className="text-sm glass-text-safe">40% opacity, 8px blur</p>
+      </div>
+      <div className="glass-medium rounded-md p-6">
+        <h3 className="font-semibold glass-text-safe">Glass Medium</h3>
+        <p className="text-sm glass-text-safe">60% opacity, 16px blur</p>
+      </div>
+      <div className="glass-heavy rounded-md p-6">
+        <h3 className="font-semibold glass-text-safe">Glass Heavy</h3>
+        <p className="text-sm glass-text-safe">80% opacity, 24px blur</p>
+      </div>
     </div>
   );
 }
@@ -1574,6 +1630,7 @@ git commit -m "feat(storybook): 디자인 토큰 문서화 (Colors, Typography, 
 ### Task 11: @use-gesture/react 설치
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: 패키지 설치**
@@ -1599,6 +1656,7 @@ git commit -m "chore: @use-gesture/react 설치"
 ### Task 12: 홈 피드 — AppLayout 적용 + 우측 사이드바
 
 **Files:**
+
 - Modify: `app/page.tsx` — AppLayout으로 감싸고, NotificationTopThree를 rightSidebar로 이동
 - Modify: `app/layout.tsx` — 기존 Layout 대신 AppLayout 사용 가능하도록 구조 조정
 
@@ -1613,6 +1671,7 @@ git commit -m "chore: @use-gesture/react 설치"
 ### Task 13: 홈 피드 — 법안 카드 글래스 리디자인
 
 **Files:**
+
 - Modify: `app/bill/components/Bill.tsx` — GlassCard 적용, 새 컬러/타이포 토큰 사용
 
 - [ ] **Step 1: Bill 컴포넌트에서 기존 bg/border 클래스를 GlassCard로 교체**
@@ -1627,6 +1686,7 @@ git commit -m "chore: @use-gesture/react 설치"
 ### Task 14: 홈 피드 — 피드 탭 리디자인
 
 **Files:**
+
 - Modify: 피드 탭 컴포넌트 (FeedTab) — 프라이머리 컬러 활성 상태, 슬라이드 애니메이션
 
 - [ ] **Step 1: 탭 활성 상태를 프라이머리 컬러로 변경**
@@ -1639,6 +1699,7 @@ git commit -m "chore: @use-gesture/react 설치"
 ### Task 15: 하단 네비게이션 글래스 개선 + 스크롤 반응
 
 **Files:**
+
 - Modify: `app/common/components/Layout/Nav/Nav.tsx` — 글래스 토큰 적용, 스크롤 반응은 AppLayout에서 처리
 
 - [ ] **Step 1: Nav 컴포넌트의 기존 인라인 글래스 스타일을 `glass-medium` 클래스로 교체**
@@ -1651,6 +1712,7 @@ git commit -m "chore: @use-gesture/react 설치"
 ### Task 16: 법안 상세 리디자인
 
 **Files:**
+
 - Modify: `app/bill/[id]/page.tsx`
 - Modify: `app/bill/components/BillDetail.tsx` (또는 관련 컴포넌트들)
 

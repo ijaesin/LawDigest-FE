@@ -141,13 +141,13 @@ interface GlassButtonProps extends ButtonProps {
 }
 ```
 
-| Variant | 라이트 모드 | 다크 모드 |
-|---------|-----------|----------|
-| `primary` | bg-primary, text-primary-foreground | CSS 변수 자동 전환 |
-| `glass` | glass-subtle, text-foreground | glass-subtle (다크 토큰) |
-| `outline` | border-border, text-foreground | CSS 변수 자동 전환 |
-| `ghost` | transparent, text-muted-foreground | CSS 변수 자동 전환 |
-| `danger` | bg-danger, text-danger-foreground | CSS 변수 자동 전환 |
+| Variant   | 라이트 모드                         | 다크 모드                |
+| --------- | ----------------------------------- | ------------------------ |
+| `primary` | bg-primary, text-primary-foreground | CSS 변수 자동 전환       |
+| `glass`   | glass-subtle, text-foreground       | glass-subtle (다크 토큰) |
+| `outline` | border-border, text-foreground      | CSS 변수 자동 전환       |
+| `ghost`   | transparent, text-muted-foreground  | CSS 변수 자동 전환       |
+| `danger`  | bg-danger, text-danger-foreground   | CSS 변수 자동 전환       |
 
 호버: `primary` → bg-primary-hover, `glass` → glass-medium 전환.
 트랜지션: `duration-[var(--duration-fast)] ease-[var(--easing-default)]`
@@ -162,13 +162,13 @@ interface GlassBadgeProps extends BadgeProps {
 }
 ```
 
-| Variant | 배경 | 텍스트 |
-|---------|------|--------|
-| `primary` | primary/15% opacity | primary |
-| `accent` | accent/15% opacity | accent |
-| `warning` | warning/15% opacity | warning |
-| `danger` | danger/15% opacity | danger |
-| `glass` | glass-subtle | foreground |
+| Variant   | 배경                 | 텍스트     |
+| --------- | -------------------- | ---------- |
+| `primary` | primary/15% opacity  | primary    |
+| `accent`  | accent/15% opacity   | accent     |
+| `warning` | warning/15% opacity  | warning    |
+| `danger`  | danger/15% opacity   | danger     |
+| `glass`   | glass-subtle         | foreground |
 | `outline` | transparent + border | foreground |
 
 ### 2.3 GlassInput
@@ -192,18 +192,18 @@ shadcn Avatar 래핑. 정당 컬러 보더 지원.
 ```typescript
 interface GlassAvatarProps extends AvatarProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  partyName?: string;     // 정당명 → PARTY_COLOR에서 보더 컬러 매핑
+  partyName?: string; // 정당명 → PARTY_COLOR에서 보더 컬러 매핑
   src?: string;
-  fallback?: string;      // 이름 첫 글자
+  fallback?: string; // 이름 첫 글자
 }
 ```
 
-| Size | 크기 | 보더 |
-|------|------|------|
+| Size | 크기 | 보더  |
+| ---- | ---- | ----- |
 | `sm` | 28px | 1.5px |
-| `md` | 40px | 2px |
-| `lg` | 56px | 2px |
-| `xl` | 80px | 3px |
+| `md` | 40px | 2px   |
+| `lg` | 56px | 2px   |
+| `xl` | 80px | 3px   |
 
 ### 2.5 GlassCard
 
@@ -233,8 +233,8 @@ lucide-react 래퍼. 통일된 사이즈/컬러. 타입 안전성을 위해 컴�
 
 ```typescript
 interface IconProps {
-  icon: LucideIcon;        // lucide 컴포넌트 레퍼런스 (e.g., Home, Search)
-  size?: 'sm' | 'md' | 'lg';  // 16px | 20px | 24px
+  icon: LucideIcon; // lucide 컴포넌트 레퍼런스 (e.g., Home, Search)
+  size?: 'sm' | 'md' | 'lg'; // 16px | 20px | 24px
   className?: string;
 }
 ```
@@ -247,7 +247,7 @@ interface IconProps {
 
 ```typescript
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg';  // 32px | 140x28 | 222x37
+  size?: 'sm' | 'md' | 'lg'; // 32px | 140x28 | 222x37
 }
 ```
 
@@ -266,7 +266,7 @@ shadcn Separator + 디자인 토큰.
 
 ```typescript
 interface StatusDotProps {
-  active?: boolean;   // true → primary 색상 dot
+  active?: boolean; // true → primary 색상 dot
   size?: 'sm' | 'md'; // 6px | 8px
 }
 ```
@@ -285,7 +285,7 @@ interface NavItemProps {
   label: string;
   href: string;
   active?: boolean;
-  compact?: boolean;    // true → 아이콘만 표시, 호버 시 툴팁
+  compact?: boolean; // true → 아이콘만 표시, 호버 시 툴팁
   onClick?: () => void; // 검색 버튼 등 커스텀 액션
 }
 ```
@@ -329,12 +329,13 @@ interface SearchBarProps {
 
 ```typescript
 interface BillMetaProps {
-  stage: string;         // bill_stage → GlassBadge variant 자동 매핑
-  proposeDate: string;   // → getTimeRemaining()으로 변환
+  stage: string; // bill_stage → GlassBadge variant 자동 매핑
+  proposeDate: string; // → getTimeRemaining()으로 변환
 }
 ```
 
 스테이지-배지 매핑:
+
 - 접수 → `primary`
 - 위원회 심사 → `warning`
 - 본회의 심의 → `warning`
@@ -352,7 +353,7 @@ interface ProposerAvatarProps {
   partyName: string;
   partyId?: number;
   size?: 'sm' | 'md';
-  showLabel?: boolean;    // false → 아바타만
+  showLabel?: boolean; // false → 아바타만
 }
 ```
 
@@ -394,7 +395,7 @@ interface StatCardProps {
 ```typescript
 interface NotificationBadgeProps {
   count: number;
-  icon?: React.ReactNode;   // 기본: Bell 아이콘
+  icon?: React.ReactNode; // 기본: Bell 아이콘
 }
 ```
 
@@ -424,7 +425,7 @@ interface KeywordChipProps {
 interface FollowButtonProps {
   isFollowing: boolean;
   onToggle: () => void;
-  count?: number;           // 팔로워 수 — 버튼 옆에 "N명" 표시
+  count?: number; // 팔로워 수 — 버튼 옆에 "N명" 표시
   size?: 'sm' | 'md';
 }
 ```
@@ -478,7 +479,7 @@ interface BillCardProps {
   bill: BillResponse;
   onBookmark: (billId: string) => void;
   onShare: (billId: string) => void;
-  variant?: 'default' | 'compact';  // compact: 사이드바용 작은 카드
+  variant?: 'default' | 'compact'; // compact: 사이드바용 작은 카드
 }
 ```
 
@@ -487,6 +488,7 @@ interface BillCardProps {
 **조합**: GlassCard(hover) > BillMeta + 제목(heading-sm) + 요약(body, 2줄 clamp) + ProposerAvatar + ActionBar
 
 **구조**:
+
 ```
 GlassCard(hover)
 ├── BillMeta (stage + time)
@@ -502,7 +504,7 @@ GlassCard(hover)
 
 ```typescript
 interface BillDetailHeroProps {
-  bill: BillResponse;      // BillDetail === BillResponse (동일 타입)
+  bill: BillResponse; // BillDetail === BillResponse (동일 타입)
   onBookmark: () => void;
   onShare: () => void;
 }
@@ -518,11 +520,12 @@ interface BillDetailHeroProps {
 
 ```typescript
 interface ProgressStepsProps {
-  currentStage: string;    // bill_stage
+  currentStage: string; // bill_stage
 }
 ```
 
 **디자인**: 수직 스텝 인디케이터
+
 - 완료 단계: primary + 체크 아이콘
 - 현재 단계: primary + 포인트 아이콘 + 텍스트 bold
 - 미래 단계: muted + 숫자
@@ -567,6 +570,7 @@ interface SideNavProps {
 ```
 
 **조합**: Logo + NavItem[] + 검색 NavItem + 테마 토글
+
 - full(lg+): 240px, 라벨 표시
 - compact(md): 72px, 아이콘만 + 호버 툴팁
 
@@ -579,6 +583,7 @@ interface SideNavProps {
 ```
 
 **조합**: glass-medium pill + NavItem[] + 슬라이딩 활성 인디케이터 + 무지개 검색 버튼
+
 - `useScrollDirection` → 스크롤 다운 시 `translateY(100%)` 숨김
 - 활성 인디케이터: `transition: left 500ms ease-out`
 
@@ -603,6 +608,7 @@ interface RightSidebarProps {
 ```
 
 **조합**: Dialog(glass-heavy overlay) > SearchBar + KeywordChip[] + "모두 지우기"
+
 - 검색 결과는 `/search/:query` 페이지로 라우팅
 
 ### 4.10 NotificationList
@@ -618,6 +624,7 @@ interface NotificationListProps {
 ```
 
 **디자인**:
+
 - 그룹 헤더: "지난 한 주" / "지난 한 달" / "지난 알림" (getDateStatus)
 - 아이템: GlassCard + StatusDot(읽음/안읽음) + 제목 + 내용 + 시간
 - 모바일: `useSwipeNavigation`으로 좌측 스와이프 → 삭제 버튼 노출
@@ -630,7 +637,7 @@ interface NotificationListProps {
 interface CongressmanCardProps {
   congressman: CongressmanDetail;
   onFollow: (congressmanId: string) => void;
-  variant?: 'full' | 'compact';  // full: 상세 페이지, compact: 리스트용
+  variant?: 'full' | 'compact'; // full: 상세 페이지, compact: 리스트용
 }
 ```
 
@@ -658,7 +665,7 @@ interface PartyCardProps {
 
 ```typescript
 interface TimelineEntryProps {
-  entry: TimelineResponseList;  // Zod 추론 타입 직접 사용 (snake_case 필드)
+  entry: TimelineResponseList; // Zod 추론 타입 직접 사용 (snake_case 필드)
 }
 ```
 
@@ -672,18 +679,19 @@ interface TimelineEntryProps {
 
 ```typescript
 interface FeedListProps {
-  children: React.ReactNode;    // BillCard[] 등
+  children: React.ReactNode; // BillCard[] 등
   onLoadMore: () => void;
   hasMore: boolean;
   isLoading: boolean;
   isError?: boolean;
   onRetry?: () => void;
-  onRefresh?: () => Promise<void>;  // 풀투리프레시
+  onRefresh?: () => Promise<void>; // 풀투리프레시
   emptyMessage?: string;
 }
 ```
 
 **내부**:
+
 - `useIntersect` → 하단 감지 시 `onLoadMore`
 - `usePullToRefresh` → 상단 당기기 시 `onRefresh`
 - 스태거 페이드인: `animate-fade-in-up` + `animation-delay`
@@ -720,6 +728,7 @@ interface AppLayoutProps {
 ```
 
 **구조**:
+
 - Desktop(lg+): SideNav(240px) + main(flex-1, max-640px) + RightSidebar(300px)
 - Tablet(md): SideNav(compact, 72px) + main
 - Mobile(<md): main + BottomNav(fixed bottom, 스크롤 반응)
@@ -734,7 +743,7 @@ interface FeedTemplateProps {
   activeTab?: string;
   onTabChange?: (value: string) => void;
   sidebar?: React.ReactNode;
-  children: React.ReactNode;     // FeedList 등
+  children: React.ReactNode; // FeedList 등
 }
 ```
 
@@ -746,8 +755,8 @@ interface FeedTemplateProps {
 
 ```typescript
 interface DetailTemplateProps {
-  hero: React.ReactNode;           // BillDetailHero, CongressmanCard(full) 등
-  children: React.ReactNode;       // 콘텐츠 섹션들
+  hero: React.ReactNode; // BillDetailHero, CongressmanCard(full) 등
+  children: React.ReactNode; // 콘텐츠 섹션들
   sidebar?: React.ReactNode;
 }
 ```
@@ -770,28 +779,28 @@ interface AuthTemplateProps {
 
 ## 6. 페이지 조합표
 
-| 페이지 | Template | Organisms | Container |
-|--------|----------|-----------|-----------|
-| 홈 (`/`) | FeedTemplate | TabBar + FeedList > BillCard[] | `FeedContainer` — useInfiniteBillMainfeed |
-| 법안 상세 (`/bill/:id`) | DetailTemplate | BillDetailHero + ProgressSteps + VoteResultGrid + ProposerGrid | `BillDetailContainer` — useGetBillDetail, useMutateViewCount, useMutateBookmark |
-| 타임라인 (`/timeline`) | AppLayout | StatCard(x3) + TimelineEntry[] (FeedList 래핑) | `TimelineContainer` — useInfiniteTimelineFeed, useGetTimelineBillState |
-| 검색 (`/search/:id`) | AppLayout | TabBar + FeedList > BillCard[] / CongressmanCard(compact)[] | `SearchContainer` — useInfiniteSearchBill, useGetSearchCongressmanParty |
-| 팔로잉 (`/following`) | FeedTemplate | CongressmanCard(compact)[] + FeedList > BillCard[] | `FollowingContainer` — useGetFollowingCongressman, useInfiniteFollowingBill |
-| 마이페이지 (`/user/mypage`) | AppLayout | CongressmanCard(compact)[] + PartyCard(compact)[] + FeedList > BillCard[] | `MyPageContainer` — useGetUserInfo, useInfiniteBillBookmarked 등 |
-| 의원 상세 (`/congressman/:id`) | DetailTemplate | CongressmanCard(full) + TabBar + FeedList > BillCard[] | `CongressmanDetailContainer` — useGetCongressmanDetail, useInfiniteCongressmanBills |
-| 정당 상세 (`/party/:id`) | DetailTemplate | PartyCard(full) + CongressmanCard(compact) 그리드 + FeedList > BillCard[] | `PartyDetailContainer` — useGetPartyDetail, useGetPartyCongressman, useInfinitePartyBills |
-| 알림 (`/notification`) | AppLayout | NotificationList | `NotificationContainer` — useGetNotification, usePutNotificationRead, useDeleteNotification |
-| 로그인 (`/auth/login`) | AuthTemplate | GlassCard + Logo + GlassButton | 없음 (정적) |
+| 페이지                         | Template       | Organisms                                                                 | Container                                                                                   |
+| ------------------------------ | -------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| 홈 (`/`)                       | FeedTemplate   | TabBar + FeedList > BillCard[]                                            | `FeedContainer` — useInfiniteBillMainfeed                                                   |
+| 법안 상세 (`/bill/:id`)        | DetailTemplate | BillDetailHero + ProgressSteps + VoteResultGrid + ProposerGrid            | `BillDetailContainer` — useGetBillDetail, useMutateViewCount, useMutateBookmark             |
+| 타임라인 (`/timeline`)         | AppLayout      | StatCard(x3) + TimelineEntry[] (FeedList 래핑)                            | `TimelineContainer` — useInfiniteTimelineFeed, useGetTimelineBillState                      |
+| 검색 (`/search/:id`)           | AppLayout      | TabBar + FeedList > BillCard[] / CongressmanCard(compact)[]               | `SearchContainer` — useInfiniteSearchBill, useGetSearchCongressmanParty                     |
+| 팔로잉 (`/following`)          | FeedTemplate   | CongressmanCard(compact)[] + FeedList > BillCard[]                        | `FollowingContainer` — useGetFollowingCongressman, useInfiniteFollowingBill                 |
+| 마이페이지 (`/user/mypage`)    | AppLayout      | CongressmanCard(compact)[] + PartyCard(compact)[] + FeedList > BillCard[] | `MyPageContainer` — useGetUserInfo, useInfiniteBillBookmarked 등                            |
+| 의원 상세 (`/congressman/:id`) | DetailTemplate | CongressmanCard(full) + TabBar + FeedList > BillCard[]                    | `CongressmanDetailContainer` — useGetCongressmanDetail, useInfiniteCongressmanBills         |
+| 정당 상세 (`/party/:id`)       | DetailTemplate | PartyCard(full) + CongressmanCard(compact) 그리드 + FeedList > BillCard[] | `PartyDetailContainer` — useGetPartyDetail, useGetPartyCongressman, useInfinitePartyBills   |
+| 알림 (`/notification`)         | AppLayout      | NotificationList                                                          | `NotificationContainer` — useGetNotification, usePutNotificationRead, useDeleteNotification |
+| 로그인 (`/auth/login`)         | AuthTemplate   | GlassCard + Logo + GlassButton                                            | 없음 (정적)                                                                                 |
 
 ### 우측 사이드바 구성
 
-| 페이지 | 우측 사이드바 콘텐츠 |
-|--------|---------------------|
-| 홈 피드 | SearchBar + NotificationBadge 위젯 + 인기 법안 BillCard(compact)[] |
-| 법안 상세 | 관련 법안 BillCard(compact)[] |
-| 타임라인 | StatCard(회기 통계) |
-| 의원/정당 상세 | 관련 의원/정당 카드 |
-| 기타 | SearchBar + 인기 법안 |
+| 페이지         | 우측 사이드바 콘텐츠                                               |
+| -------------- | ------------------------------------------------------------------ |
+| 홈 피드        | SearchBar + NotificationBadge 위젯 + 인기 법안 BillCard(compact)[] |
+| 법안 상세      | 관련 법안 BillCard(compact)[]                                      |
+| 타임라인       | StatCard(회기 통계)                                                |
+| 의원/정당 상세 | 관련 의원/정당 카드                                                |
+| 기타           | SearchBar + 인기 법안                                              |
 
 ---
 
@@ -829,6 +838,7 @@ export default function FeedContainer() {
 ```
 
 **원칙**:
+
 - Container는 `'use client'` (hooks 사용)
 - Container는 UI를 직접 렌더링하지 않음 — organisms/templates에 위임
 - Container는 데이터 변환/이벤트 핸들러만 담당
@@ -902,6 +912,7 @@ stories/
 ```
 
 각 스토리는:
+
 - Default + 주요 Variant 스토리
 - 다크 모드 스토리
 - 모바일 뷰포트 스토리 (스토리북 viewport addon 활용)
@@ -936,13 +947,13 @@ AppLayout(개선) → FeedTemplate → DetailTemplate → AuthTemplate
 
 각 계층별 테스트 접근:
 
-| 계층 | 테스트 방식 | 검증 내용 |
-|------|-----------|----------|
-| Atoms | 유닛 테스트 | 렌더링, props 전달, 이벤트, 접근성(role, aria) |
-| Molecules | 유닛 테스트 | Atoms 조합 동작, 상태 변화, 콜백 호출 |
-| Organisms | 통합 테스트 | 데이터 바인딩, 사용자 인터랙션 플로우 |
-| Templates | 스냅샷/시각 테스트 | 레이아웃 구조, 반응형 |
-| Pages | E2E (Playwright) | 전체 플로우, 라우팅, 데이터 로딩 |
+| 계층      | 테스트 방식        | 검증 내용                                      |
+| --------- | ------------------ | ---------------------------------------------- |
+| Atoms     | 유닛 테스트        | 렌더링, props 전달, 이벤트, 접근성(role, aria) |
+| Molecules | 유닛 테스트        | Atoms 조합 동작, 상태 변화, 콜백 호출          |
+| Organisms | 통합 테스트        | 데이터 바인딩, 사용자 인터랙션 플로우          |
+| Templates | 스냅샷/시각 테스트 | 레이아웃 구조, 반응형                          |
+| Pages     | E2E (Playwright)   | 전체 플로우, 라우팅, 데이터 로딩               |
 
 **TDD**: Atoms/Molecules는 테스트 선행 작성. Organisms/Templates는 Storybook 시각 확인 병행.
 

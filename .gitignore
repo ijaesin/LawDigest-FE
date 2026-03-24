@@ -40,3 +40,6 @@ next-env.d.ts
 
 # local server
 server.js
+
+# claude
+.superpowers/
