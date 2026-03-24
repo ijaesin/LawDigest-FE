@@ -2,13 +2,13 @@ import { Suspense } from 'react';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { notFound } from 'next/navigation';
-import { AppLayout } from '@/app/common/components/Layout/AppLayout/AppLayout';
 import { getMetadata, getPartyConstant } from '@/app/common/utils';
 import { Metadata } from 'next';
 import { PARTY_POSITION } from '@/app/party/constants';
 import { getPartyDetail } from '@/app/party/services/apis';
 import { partyKeys } from '@/app/party/services/query-keys';
-import { PartyContainer, PartyErrorFallback, PartySkeleton } from '@/app/party/components';
+import { PartyErrorFallback, PartySkeleton } from '@/app/party/components';
+import NewPartyDetailContainer from '@/app/party/components/NewPartyDetailContainer';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,13 +44,11 @@ export default async function Party({ params }: { params: Promise<{ id: string }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AppLayout>
-        <ErrorBoundary FallbackComponent={PartyErrorFallback}>
-          <Suspense fallback={<PartySkeleton />}>
-            <PartyContainer partyId={partyId} />
-          </Suspense>
-        </ErrorBoundary>
-      </AppLayout>
+      <ErrorBoundary FallbackComponent={PartyErrorFallback}>
+        <Suspense fallback={<PartySkeleton />}>
+          <NewPartyDetailContainer partyId={partyId} />
+        </Suspense>
+      </ErrorBoundary>
     </HydrationBoundary>
   );
 }
