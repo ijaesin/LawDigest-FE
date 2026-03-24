@@ -1,27 +1,9 @@
-import type { Preview, ReactRenderer } from '@storybook/react';
-import type { DecoratorFunction } from '@storybook/types';
-import React from 'react';
+import { definePreview } from '@storybook/nextjs-vite';
 
 import '../styles/globals.css';
 
-const withDarkMode: DecoratorFunction<ReactRenderer> = (Story, context) => {
-  const isDark =
-    context.globals?.backgrounds?.value === '#0a0a0a' || context.parameters?.backgrounds?.default === 'dark';
-  return React.createElement(
-    'div',
-    { className: isDark ? 'dark' : '' },
-    React.createElement(
-      'div',
-      { className: 'bg-background text-foreground min-h-screen p-4' },
-      React.createElement(Story),
-    ),
-  );
-};
-
-const preview: Preview = {
-  decorators: [withDarkMode],
+export default definePreview({
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -29,13 +11,15 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'light',
-      values: [
-        { name: 'light', value: '#ffffff' },
-        { name: 'dark', value: '#0a0a0a' },
-      ],
+      options: {
+        light: { name: 'light', value: '#ffffff' },
+        dark: { name: 'dark', value: '#0a0a0a' },
+      },
     },
   },
-};
-
-export default preview;
+  initialGlobals: {
+    backgrounds: {
+      value: 'light',
+    },
+  },
+});
