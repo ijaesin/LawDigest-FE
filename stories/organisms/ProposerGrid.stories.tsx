@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { ProposerGrid } from '@/app/common/components/organisms';
 
 const mockRepresentative = [

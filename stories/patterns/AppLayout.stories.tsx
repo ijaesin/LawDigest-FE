@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { AppLayout } from '@/app/common/components/Layout/AppLayout/AppLayout';
 
 const meta: Meta<typeof AppLayout> = {

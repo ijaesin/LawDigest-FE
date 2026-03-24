@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { SearchBar } from '@/app/common/components/molecules/SearchBar';
 
 const meta: Meta<typeof SearchBar> = {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 import { SearchModal } from '@/app/common/components/organisms';
 import { useSearchModalStore } from '@/app/common/store/search-modal';

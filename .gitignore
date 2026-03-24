@@ -42,4 +42,4 @@ next-env.d.ts
 server.js
 
 # claude
-.superpowers/
+.superpowers/debug-storybook.log

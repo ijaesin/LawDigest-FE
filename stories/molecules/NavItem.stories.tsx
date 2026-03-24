@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Home, Settings, Bell, User } from 'lucide-react';
 import { NavItem } from '@/app/common/components/molecules/NavItem';
 

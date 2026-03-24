@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 
 function ColorSwatch({ name, cssVar }: { name: string; cssVar: string }) {
   return (

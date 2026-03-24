@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Search } from 'lucide-react';
 import { GlassInput } from '@/app/common/components/atoms';
 

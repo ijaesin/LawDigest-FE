@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { SideNav } from '@/app/common/components/organisms';
 
 const meta: Meta<typeof SideNav> = {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { AuthTemplate } from '@/app/common/components/templates';
 import { GlassCard } from '@/app/common/components/atoms';
 

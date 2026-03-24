@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { GlassSkeleton } from '@/app/common/components/GlassSkeleton/GlassSkeleton';
 
 const meta: Meta<typeof GlassSkeleton> = {

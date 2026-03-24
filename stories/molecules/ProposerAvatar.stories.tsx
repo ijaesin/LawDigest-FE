@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { ProposerAvatar } from '@/app/common/components/molecules/ProposerAvatar';
 
 const meta: Meta<typeof ProposerAvatar> = {

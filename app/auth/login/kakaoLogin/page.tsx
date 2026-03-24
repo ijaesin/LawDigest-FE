@@ -13,7 +13,7 @@ export default function KaKaoLogin() {
 
   return (
     <section className="w-[90%] mx-auto h-full flex flex-col justify-center items-center gap-20">
-      <Logo width={222} height={37} />
+      <Logo size="lg" />
       <p>로그인 중입니다.</p>
     </section>
   );

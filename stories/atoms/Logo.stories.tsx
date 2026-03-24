@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Logo } from '@/app/common/components/atoms/Logo';
 
 const meta: Meta<typeof Logo> = {

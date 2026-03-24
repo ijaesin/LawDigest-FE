@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 import { Snackbar } from '@/app/common/components/organisms';
 import { useSnackbarStore } from '@/app/common/store';
