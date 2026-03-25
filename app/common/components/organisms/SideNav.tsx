@@ -15,7 +15,7 @@ export interface SideNavProps {
 }
 
 export function SideNav({ compact = false }: SideNavProps) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '/';
   const { theme, setTheme } = useTheme();
   const openSearch = useSearchModalStore((s) => s.open);
 

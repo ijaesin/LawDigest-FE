@@ -15,7 +15,7 @@ function isNavActive(pathname: string, href: string): boolean {
 
 export function BottomNav() {
   const { navItems } = siteConfig;
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '/';
   const openSearch = useSearchModalStore((s) => s.open);
 
   const activeIndex = navItems.findIndex(({ href }) => isNavActive(pathname, href));
