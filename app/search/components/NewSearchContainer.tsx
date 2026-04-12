@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation';
 import { useIntersect } from '@/app/common/hooks';
 import { AppLayout } from '@/app/common/components/templates/AppLayout';
 import { TabBar } from '@/app/common/components/molecules/TabBar';
-import { FeedList } from '@/app/common/components/organisms/FeedList';
 import { Separator } from '@/app/common/components/ui/separator';
 import { useGetSearchCongressmanParty, useInfiniteSearchBill } from '@/app/search/services/queries';
 import { SearchBarButton, SearchList } from '@/app/search/components';
