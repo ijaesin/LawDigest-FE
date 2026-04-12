@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 labels: 'feature'
 type: 'feature'
 assignees: ''
-
 ---
 
 ## 1. 무엇을?

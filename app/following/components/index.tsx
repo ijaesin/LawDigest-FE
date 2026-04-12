@@ -1,2 +1,2 @@
-export * from './FollowingHeader';
-export * from './BillContainer';
+export { default as FollowingNav } from './FollowingNav';
+export { default as BillContainer } from './BillContainer';

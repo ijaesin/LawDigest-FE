@@ -13,10 +13,9 @@
   },
   "ignorePatterns": ["node_modules/", "*.config.js"],
   "extends": [
+    "next/core-web-vitals",
     "airbnb",
     "airbnb-typescript",
-    "airbnb/hooks",
-    "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
     "prettier"
@@ -31,6 +30,7 @@
     "@typescript-eslint/naming-convention": "off",
     "react/require-default-props": "off",
     "import/no-cycle": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "no-nested-ternary": "off"
   }
 }

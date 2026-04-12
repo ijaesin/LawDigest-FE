@@ -1,5 +1,5 @@
-import { Layout } from '@/components/Layout';
-import { Spinner } from '@nextui-org/spinner';
+import { Layout } from '@/app/common/components/Layout';
+import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Loading() {
@@ -15,7 +15,7 @@ export default function Loading() {
           className="mb-[18px] md:mb-[50px] w-[269px] md:w-[600px] h-[93px] md:h-[140px]"
         />
         <h2 className="text-2xl md:text-[45px] font-extralight mb-[18px] md:mb-[28px]">AI 기반 입법정보 제공 플랫폼</h2>
-        <Spinner size="lg" />
+        <Loader2 className="h-10 w-10 animate-spin" />
       </section>
     </Layout>
   );

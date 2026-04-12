@@ -1,4 +1,4 @@
-import { NavIconProps } from '@/types';
+import type { NavIconProps } from '@/app/common/types';
 
 export default function IconHome({ isActive }: NavIconProps) {
   return isActive ? (

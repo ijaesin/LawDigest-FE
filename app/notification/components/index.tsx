@@ -1,4 +1,2 @@
-import NotificationList from './NotificationList';
-import NotificationTopThree from './NotificationTopThree';
-
-export { NotificationList, NotificationTopThree };
+export { default as NotificationList } from './NotificationList';
+export { default as NotificationTopThree } from './NotificationTopThree';

@@ -1,0 +1,1 @@
+export const FOLLOWING_BILL_PAGE_SIZE = 3;

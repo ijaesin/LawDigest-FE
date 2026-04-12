@@ -1,20 +1,23 @@
-import { Modal, ModalContent, ModalHeader, ModalBody } from '@nextui-org/react';
+'use client';
 
-export default function TimelineModal({
-  isOpen,
-  onClose,
-  children,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/common/components/ui/dialog';
+
+interface TimelineModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
   children: React.ReactNode;
-}) {
+}
+
+export default function TimelineModal({ open, onOpenChange, title, children }: TimelineModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="min-h-[40%] max-h-[80%] ">
-      <ModalContent>
-        <ModalHeader>심사한 법안</ModalHeader>
-        <ModalBody className="overflow-y-scroll">{children}</ModalBody>
-      </ModalContent>
-    </Modal>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="min-h-[40%] max-h-[80%] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
+        <div className="overflow-y-scroll">{children}</div>
+      </DialogContent>
+    </Dialog>
   );
 }

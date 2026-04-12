@@ -1,33 +1,50 @@
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { SubHeader } from '@/components';
-import { getMetadata } from '@/utils';
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { SubHeader } from '@/app/common/components/Layout';
+import { getMetadata } from '@/app/common/utils';
 import { Metadata } from 'next';
-import getQueryClient from '@/lib/getQueryClient';
-import { CongressmanContainer } from './components';
-import { getCongressmanDetail } from './apis';
+import { getCongressmanDetail } from '@/app/congressman/services/apis';
+import { congressmanKeys } from '@/app/congressman/services/query-keys';
+import { CongressmanContainer } from '@/app/congressman/components';
+import CongressmanDetailSkeleton from '@/app/congressman/components/CongressmanDetailSkeleton';
 
-export const generateMetadata = async ({ params: { id } }: { params: { id: string } }): Promise<Metadata> => {
-  const queryClient = getQueryClient();
-  const { data } = await queryClient.fetchQuery({
-    queryKey: ['/congressman/detail', id],
+export const dynamic = 'force-dynamic';
+
+export const generateMetadata = async ({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> => {
+  const { id } = await params;
+  const queryClient = new QueryClient();
+  const detail = await queryClient.fetchQuery({
+    queryKey: congressmanKeys.detail(id),
     queryFn: () => getCongressmanDetail(id),
   });
 
   return getMetadata({
-    title: `${data.congressman_name} 의원`,
-    description: `${data.party_name} ${data.congressman_name} 의원의 상세 프로필 페이지, ${data.district} ${data.elected}, ${data.commits}`,
+    title: `${detail.congressman_name} 의원`,
+    description: `${detail.party_name} ${detail.congressman_name} 의원의 상세 프로필 페이지, ${detail.district} ${detail.elected}, ${detail.commits}`,
     asPath: `/congressman/${id}`,
   });
 };
 
-export default async function Congressman({ params: { id } }: { params: { id: string } }) {
-  const queryClient = getQueryClient();
+export default async function Congressman({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const queryClient = new QueryClient();
+
+  // SSR prefetch congressman detail for hydration
+  await queryClient.prefetchQuery({
+    queryKey: congressmanKeys.detail(id),
+    queryFn: () => getCongressmanDetail(id),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <section className="flex flex-col gap-10">
         <SubHeader title="의원 프로필" />
-        <CongressmanContainer id={id} />
+        <ErrorBoundary fallback={<p className="text-center py-10 text-gray-2">의원 정보를 불러올 수 없습니다.</p>}>
+          <Suspense fallback={<CongressmanDetailSkeleton />}>
+            <CongressmanContainer id={id} />
+          </Suspense>
+        </ErrorBoundary>
       </section>
     </HydrationBoundary>
   );

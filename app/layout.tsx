@@ -1,12 +1,12 @@
 import '@/styles/globals.css';
 import { Metadata } from 'next';
-import { siteConfig } from '@/config/site';
-import { fontSans } from '@/config/fonts';
+import { siteConfig } from '@/app/common/config/site';
+import { fontSans } from '@/app/common/config/fonts';
 import clsx from 'clsx';
 import { Suspense } from 'react';
-import { QueryClientProvider, NextUIProvider, NextThemesProvider, RecoilRootProvider } from '@/lib/provider';
-import { GoToTopButton, Loading, Snackbar } from '@/components';
-import SearchModal from '@/components/common/SearchBar/SearchModal';
+import { Loading } from '@/app/common/components';
+import ClientOnlyWidgets from '@/app/common/components/ClientOnlyWidgets';
+import { Providers } from '@/app/providers';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -59,29 +59,15 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
-      <body
-        className={clsx(
-          'text-black bg-white dark:bg-dark-b dark:lg:bg-dark-pb dark:text-white font-sans antialiased',
-          fontSans.variable,
-        )}>
-        <RecoilRootProvider>
-          <QueryClientProvider>
-            <NextThemesProvider>
-              <NextUIProvider>
-                <div className="relative flex flex-col h-auto min-h-[100dvh] min-w-[360px]">
-                  <main className="flex items-center justify-center w-full h-full ">
-                    <Suspense fallback={<Loading />}>
-                      {children}
-                      <SearchModal />
-                      <Snackbar />
-                      <GoToTopButton />
-                    </Suspense>
-                  </main>
-                </div>
-              </NextUIProvider>
-            </NextThemesProvider>
-          </QueryClientProvider>
-        </RecoilRootProvider>
+      <body className={clsx('font-sans antialiased', fontSans.variable)}>
+        <Providers>
+          <div className="relative flex flex-col h-auto min-h-[100dvh] min-w-[360px]">
+            <main className="flex justify-center items-center w-full h-full">
+              <Suspense fallback={<Loading />}>{children}</Suspense>
+              <ClientOnlyWidgets />
+            </main>
+          </div>
+        </Providers>
       </body>
     </html>
   );

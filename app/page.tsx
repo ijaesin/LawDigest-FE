@@ -1,29 +1,23 @@
-import getQueryClient from '@/lib/getQueryClient';
-import { Feed, Layout, SearchBarButton } from '@/components';
-import { getBillByStage } from '@/components/Feed/Feed/apis';
-import { NotificationTopThree } from './notification/components';
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Layout } from '@/app/common/components/Layout/Layout';
+import { Loading } from '@/app/common/components/Loading';
+import { Feed } from '@/app/bill/components';
+import { NotificationTopThree } from '@/app/notification/components';
+import FeedErrorFallback from '@/app/bill/components/FeedErrorFallback';
 
-export default async function Home() {
-  const queryClient = getQueryClient();
+export const dynamic = 'force-dynamic';
 
-  await queryClient.prefetchInfiniteQuery({
-    queryKey: ['/bill/mainfeed'],
-    queryFn: ({ pageParam }: { pageParam: number }) => getBillByStage(pageParam, ''),
-    initialPageParam: 0,
-    getNextPageParam: ({ data }) => {
-      const { pagination_response } = data || {};
-      const { last_page, page_number } = pagination_response || {};
-      return last_page ? undefined : page_number + 1;
-    },
-    pages: 3,
-  });
-
+export default function Home() {
   return (
     <Layout nav logo notification>
-      <section className="lg:w-[880px] mx-auto ">
-        <SearchBarButton />
-        <NotificationTopThree />
-        <Feed />
+      <section className="lg:w-[880px] mx-auto">
+        <ErrorBoundary FallbackComponent={FeedErrorFallback}>
+          <Suspense fallback={<Loading />}>
+            <NotificationTopThree />
+            <Feed />
+          </Suspense>
+        </ErrorBoundary>
       </section>
     </Layout>
   );
