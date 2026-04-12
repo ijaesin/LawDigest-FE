@@ -27,8 +27,7 @@ export default function ProposerList({
   const proposerListByParty = sortByParty({ publicProposerList });
 
   return (
-    <Card
-      className={`lg:shadow-none dark:lg:bg-dark-pb ${variant === 'popover' ? 'shadow-none dark:lg:bg-transparent' : ''}`}>
+    <Card className={`lg:shadow-none ${variant === 'popover' ? 'shadow-none dark:lg:bg-transparent' : ''}`}>
       <CardHeader>
         <p className="font-medium">
           {representativeProposerLength === 1
@@ -48,7 +47,7 @@ export default function ProposerList({
                   href={`/party/${proposers[0][0]}`}
                   className={`flex items-center justify-center w-10 h-10 rounded-full shadow-lg shrink-0 border-1.5 ${party}`}>
                   {party === '무소속' ? (
-                    <div className="text-xs font-medium text-black">무소속</div>
+                    <div className="text-xs font-medium text-foreground">무소속</div>
                   ) : (
                     <>
                       <Image

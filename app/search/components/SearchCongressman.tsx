@@ -18,7 +18,7 @@ export default function SearchCongressman({
         </Avatar>
         <div className="flex flex-col">
           <p className="text-lg font-semibold">{congressman_name}</p>
-          <p className="text-sm font-medium text-gray-2 dark:text-gray-3">{party_name}</p>
+          <p className="text-sm font-medium text-muted-foreground">{party_name}</p>
         </div>
       </div>
       <Link href={`/congressman/${congressman_id}`}>

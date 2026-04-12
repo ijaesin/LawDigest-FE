@@ -1,8 +1,10 @@
 import { Metadata } from 'next';
-import { SubHeader } from '@/app/common/components/Layout';
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { getMetadata } from '@/app/common/utils';
 import { getBillDetail } from '@/app/bill/services/apis';
-import { BillContainer } from '@/app/bill/components';
+import { Loading } from '@/app/common/components/Loading';
+import NewBillDetailContainer from '@/app/bill/components/NewBillDetailContainer';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,9 +30,11 @@ export default async function BillDetail({ params }: { params: Promise<{ id: str
   const { id } = await params;
 
   return (
-    <section className="flex flex-col">
-      <SubHeader title="의안 자세히 보기" />
-      <BillContainer id={id} />
-    </section>
+    <ErrorBoundary
+      fallback={<p className="text-center py-10 text-muted-foreground">법안 정보를 불러올 수 없습니다.</p>}>
+      <Suspense fallback={<Loading />}>
+        <NewBillDetailContainer id={id} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }

@@ -1,9 +1,13 @@
-// TODO: React Query hydration disabled temporarily while investigating build error
 import { requireAuth } from '@/app/auth/lib/require-auth';
-// import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import MyPageContent from './MyPageContent';
+import { Suspense } from 'react';
+import { Loading } from '@/app/common/components/Loading';
+import NewMyPageContainer from './NewMyPageContainer';
 
 export default async function MyPage() {
   await requireAuth();
-  return <MyPageContent />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <NewMyPageContainer />
+    </Suspense>
+  );
 }

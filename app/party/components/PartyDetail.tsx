@@ -27,18 +27,18 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
 
   return (
     <section className="flex flex-col items-center mx-5 xl:mx-0 mt-5 gap-7 xl:w-[320px]">
-      <Card className="flex flex-col gap-5 items-center pt-1 w-full bg-transparent border-none dark:bg-dark-b lg:dark:bg-dark-pb">
+      <Card className="flex flex-col gap-5 items-center pt-1 w-full bg-transparent border-none">
         <PartyLogo partyName={party_name} partyImageUrl={party_img_url} variant="hero" />
 
         <div className="flex flex-col gap-1 items-center">
           <h2 className="text-2xl font-semibold">{party_name}</h2>
-          <h3 className="text-gray-3 dark:text-gray-2">{getPartyConstant(PARTY_POSITION, party_name)}</h3>
+          <h3 className="text-muted-foreground">{getPartyConstant(PARTY_POSITION, party_name)}</h3>
         </div>
 
         <div className="text-sm">
           <p>
             의석수: {whole_representative_count}석 / {total_congressman_count}석{' '}
-            <span className="text-gray-2 dark:text-gray-3">{seatRatio}%</span>
+            <span className="text-muted-foreground">{seatRatio}%</span>
           </p>
           <p>
             지역구 {district_congressman_count}석, 비례대표 {proportional_congressman_count}석
@@ -46,27 +46,27 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
         </div>
       </Card>
 
-      <Separator className="dark:bg-dark-l" />
+      <Separator className="dark:bg-border" />
 
       <FollowBoard partyId={partyId} />
 
-      <Separator className="dark:bg-dark-l" />
+      <Separator className="dark:bg-border" />
 
       <div className="grid grid-cols-4 justify-items-center w-full">
         <div className="flex flex-col items-center">
-          <p className="text-sm text-gray-3 dark:text-gray-2">당대표</p>
+          <p className="text-sm text-muted-foreground">당대표</p>
           <p className="font-medium">{executive?.party_leader || '없음'}</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="text-sm text-gray-3 dark:text-gray-2">원내대표</p>
+          <p className="text-sm text-muted-foreground">원내대표</p>
           <p className="font-medium">{executive?.parliamentary_leader || '없음'}</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="text-sm text-gray-3 dark:text-gray-2">사무총장</p>
+          <p className="text-sm text-muted-foreground">사무총장</p>
           <p className="font-medium">{executive?.secretary_general || '없음'}</p>
         </div>
         <div className="flex flex-col items-center">
-          <p className="text-sm text-gray-3 dark:text-gray-2">정책위의장</p>
+          <p className="text-sm text-muted-foreground">정책위의장</p>
           <p className="font-medium">{executive?.policy_committee_chairman || '없음'}</p>
         </div>
       </div>
@@ -74,7 +74,7 @@ export default function PartyDetail({ partyId }: { partyId: number }) {
       <Button
         asChild
         variant="outline"
-        className="w-[135px] h-8 bg-transparent text-gray-2 border-gray-1 dark:border-gray-3 rounded-full">
+        className="w-[135px] h-8 bg-transparent text-muted-foreground border-border rounded-full">
         <Link href={website_url}>
           웹사이트 방문
           <IconWeb />

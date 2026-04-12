@@ -36,7 +36,7 @@ export default function AnotherBill({
           <Badge variant="outline" className="text-xs lg:text-sm">
             {billStage}
           </Badge>
-          <h4 className="text-xs font-semibold lg:text-sm text-gray-2 shrink-0">{billProposers}</h4>
+          <h4 className="text-xs font-semibold lg:text-sm text-muted-foreground shrink-0">{billProposers}</h4>
         </div>
       </CardContent>
       <CardFooter className="flex overflow-visible justify-center pl-0 basis-1/4 shrink-0">
@@ -56,7 +56,7 @@ export default function AnotherBill({
             {party.map(({ party_image_url, party_id, party_name }) =>
               party_image_url !== null ? (
                 <Link href={`/party/${party_id}`} key={party_id}>
-                  <Avatar className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>
+                  <Avatar className={`bg-white dark:bg-border p-1 border ${party_name}`}>
                     <AvatarImage
                       className="object-contain dark:hidden"
                       src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${party_image_url}`}
@@ -69,7 +69,7 @@ export default function AnotherBill({
                   </Avatar>
                 </Link>
               ) : (
-                <Avatar key={party_id} className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>
+                <Avatar key={party_id} className={`bg-white dark:bg-border p-1 border ${party_name}`}>
                   <AvatarFallback>{party_name[0]}</AvatarFallback>
                 </Avatar>
               ),

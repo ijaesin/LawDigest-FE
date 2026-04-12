@@ -33,13 +33,13 @@ export default function BillDetail({ id }: { id: string }) {
             />
           </SectionContainer>
 
-          <Separator className="hidden md:block h-[1px] w-full border-gray-1 dark:border-dark-l" />
+          <Separator className="hidden md:block h-[1px] w-full border-border" />
 
           <SectionContainer title="심사 진행 단계">
             <ProgressStage billStage={data.bill_info_dto.bill_stage} />
           </SectionContainer>
 
-          <Separator className="hidden md:block h-[1px] w-full border-gray-1 dark:border-dark-l" />
+          <Separator className="hidden md:block h-[1px] w-full border-border" />
 
           <SectionContainer title="법안 처리 결과">
             <ProcessResult
@@ -52,7 +52,7 @@ export default function BillDetail({ id }: { id: string }) {
         </section>
       </Bill>
 
-      <div className="md:w-[calc(100%-340px)] lg:w-[calc(100%-530px)] border-r-[1px] md:dark:border-dark-l px-4 pt-[34px]">
+      <div className="md:w-[calc(100%-340px)] lg:w-[calc(100%-530px)] border-r-[1px] md:dark:border-border px-4 pt-[34px]">
         <SectionContainer>
           <AnotherBillList {...data} />
         </SectionContainer>

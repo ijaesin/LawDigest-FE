@@ -20,7 +20,7 @@ export default function FeedTab({
             <TabsTrigger
               key={FEED_TAB[tabValue as keyof typeof FEED_TAB]}
               value={FEED_TAB[tabValue as keyof typeof FEED_TAB]}
-              className="w-full h-[36px] text-base font-medium data-[state=active]:bg-black data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-full">
+              className="w-full h-[36px] text-base font-medium rounded-full text-muted-foreground hover:text-foreground transition-all duration-[var(--duration-normal)] ease-[var(--easing-default)] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               {label}
             </TabsTrigger>
           ))}

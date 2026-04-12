@@ -1,12 +1,11 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { SubHeader } from '@/app/common/components/Layout';
 import { getMetadata } from '@/app/common/utils';
 import { Metadata } from 'next';
 import { getCongressmanDetail } from '@/app/congressman/services/apis';
 import { congressmanKeys } from '@/app/congressman/services/query-keys';
-import { CongressmanContainer } from '@/app/congressman/components';
+import NewCongressmanDetailContainer from '@/app/congressman/components/NewCongressmanDetailContainer';
 import CongressmanDetailSkeleton from '@/app/congressman/components/CongressmanDetailSkeleton';
 
 export const dynamic = 'force-dynamic';
@@ -38,14 +37,12 @@ export default async function Congressman({ params }: { params: Promise<{ id: st
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <section className="flex flex-col gap-10">
-        <SubHeader title="의원 프로필" />
-        <ErrorBoundary fallback={<p className="text-center py-10 text-gray-2">의원 정보를 불러올 수 없습니다.</p>}>
-          <Suspense fallback={<CongressmanDetailSkeleton />}>
-            <CongressmanContainer id={id} />
-          </Suspense>
-        </ErrorBoundary>
-      </section>
+      <ErrorBoundary
+        fallback={<p className="text-center py-10 text-muted-foreground">의원 정보를 불러올 수 없습니다.</p>}>
+        <Suspense fallback={<CongressmanDetailSkeleton />}>
+          <NewCongressmanDetailContainer id={id} />
+        </Suspense>
+      </ErrorBoundary>
     </HydrationBoundary>
   );
 }

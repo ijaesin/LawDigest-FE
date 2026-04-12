@@ -20,7 +20,7 @@ export default function BillTab({
             <TabsTrigger
               key={BILL_TAB[value]}
               value={BILL_TAB[value]}
-              className="px-0 h-10 mx-2 text-base font-medium bg-transparent shadow-none rounded-none data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-black dark:data-[state=active]:text-white">
+              className="px-0 h-10 mx-2 text-base font-medium bg-transparent shadow-none rounded-none data-[state=active]:border-b-2 data-[state=active]:border-foreground data-[state=active]:text-foreground">
               {label}
             </TabsTrigger>
           ))}

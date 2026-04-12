@@ -1,3 +1,5 @@
+import { GlassCard } from '@/app/common/components/ui/glass-card';
+
 interface SectionContainerProps {
   title?: string;
   children: React.ReactNode;
@@ -5,9 +7,9 @@ interface SectionContainerProps {
 
 export default function SectionContainer({ title, children }: SectionContainerProps) {
   return (
-    <section className="flex flex-col gap-6">
-      <h3 className="text-2xl font-semibold">{title}</h3>
+    <GlassCard className="flex flex-col gap-6">
+      {title && <h3 className="text-[22px] md:text-[24px] font-semibold leading-[1.3]">{title}</h3>}
       {children}
-    </section>
+    </GlassCard>
   );
 }

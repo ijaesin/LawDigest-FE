@@ -21,13 +21,13 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
   return (
     <section className="flex flex-col gap-5">
       <div className="relative">
-        <div className="bg-gray-3 dark:bg-gray-4 w-[10px] h-[10px] rounded-full border border-black absolute -left-[30px] top-4" />
+        <div className="bg-muted-foreground w-[10px] h-[10px] rounded-full border border-foreground absolute -left-[30px] top-4" />
         <div className="flex items-center justify-between md:w-[280px]">
           <h3 className="text-[26px] font-extralight">위원회 심사</h3>
           {committee_audit_list.length > 0 && (
             <div className="flex items-center">
-              <p className="text-sm font-medium text-gray-2 dark:text-gray-3">
-                심의한 법안 <span className="text-black dark:text-white">{totalBillCount}개</span>
+              <p className="text-sm font-medium text-muted-foreground">
+                심의한 법안 <span className="text-foreground">{totalBillCount}개</span>
               </p>
               <Button variant="ghost" size="icon" className="p-0 w-4 h-4" onClick={() => setIsOpenAll(true)}>
                 <IconEnter />
@@ -48,7 +48,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                               <Link href={`/bill/${bill_id}`}>
                                 <p className="text-xs font-bold">{bill_brief_summary}</p>
                               </Link>
-                              <p className="text-xs font-semibold text-gray-2 dark:text-gray-3">{bill_proposers}</p>
+                              <p className="text-xs font-semibold text-muted-foreground">{bill_proposers}</p>
                             </div>
                           </div>
                         ))}
@@ -71,8 +71,8 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
               <CardContent>
                 <div className="flex flex-col gap-5 w-full">
                   <div className="flex items-center">
-                    <p className="text-xs font-medium text-gray-2 dark:text-gray-3">
-                      심사한 법안 <span className="text-black dark:text-white">{item.bill_count}개</span>
+                    <p className="text-xs font-medium text-muted-foreground">
+                      심사한 법안 <span className="text-foreground">{item.bill_count}개</span>
                     </p>
                     <Button
                       variant="ghost"
@@ -97,7 +97,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                                 <Link href={`/bill/${bill_id}`}>
                                   <p className="text-xs font-bold">{bill_brief_summary}</p>
                                 </Link>
-                                <p className="text-xs font-semibold text-gray-2 dark:text-gray-3">{bill_proposers}</p>
+                                <p className="text-xs font-semibold text-muted-foreground">{bill_proposers}</p>
                               </div>
                             </div>
                           ),
@@ -118,7 +118,7 @@ export default function CommitteeAuditList({ committee_audit_list }: { committee
                             <Link href={`/bill/${bill_id}`}>
                               <p className="text-xs font-bold">{bill_brief_summary}</p>
                             </Link>
-                            <p className="text-xs font-semibold text-gray-2 dark:text-gray-3">{bill_proposers}</p>
+                            <p className="text-xs font-semibold text-muted-foreground">{bill_proposers}</p>
                           </div>
                         </div>
                       ))}

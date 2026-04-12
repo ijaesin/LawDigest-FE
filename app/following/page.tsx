@@ -1,7 +1,13 @@
 import { requireAuth } from '@/app/auth/lib/require-auth';
-import FollowingContent from './components/FollowingContent';
+import { Suspense } from 'react';
+import { Loading } from '@/app/common/components/Loading';
+import NewFollowingContainer from './components/NewFollowingContainer';
 
 export default async function Following() {
   await requireAuth();
-  return <FollowingContent />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <NewFollowingContainer />
+    </Suspense>
+  );
 }

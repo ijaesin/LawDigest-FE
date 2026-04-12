@@ -35,7 +35,7 @@ export default function BillBookmarked({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <h4 className="text-xs font-semibold md:text-sm text-gray-2 shrink-0">
+                      <h4 className="text-xs font-semibold md:text-sm text-muted-foreground shrink-0">
                         {isRepresentativeSolo
                           ? `${representative_proposer_dto_list[0].representative_proposer_name} 의원 등 ${public_proposer_dto_list.length}인`
                           : `${representative_proposer_dto_list
@@ -76,7 +76,7 @@ export default function BillBookmarked({
           <div className="flex -space-x-4">
             {representative_proposer_dto_list.map(({ party_image_url, party_id, party_name }) => (
               <Link href={`/party/${party_id}`} key={party_id}>
-                <Avatar className={`bg-white dark:bg-dark-l p-1 border ${party_name}`}>
+                <Avatar className={`bg-white dark:bg-border p-1 border ${party_name}`}>
                   <>
                     <AvatarImage
                       className="object-contain dark:hidden"

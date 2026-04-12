@@ -22,7 +22,7 @@ export default function LogoutButton() {
       onClick={() => postLogout()}
       size="sm"
       variant="outline"
-      className="h-8 rounded-full bg-transparent border-1 border-[#E0E0E0] text-[#999999] dark:border-gray-3 dark:text-gray-2">
+      className="h-8 rounded-full bg-transparent border-1 border-border text-muted-foreground">
       로그아웃
     </Button>
   );

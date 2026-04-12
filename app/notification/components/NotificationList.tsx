@@ -88,11 +88,11 @@ export default function NotificationList() {
       <div className="mb-[18px] ml-3">
         <div className="flex justify-between items-center">
           {notificationCount?.notification_count === 0 ? (
-            <p className="text-sm md:text-base text-gray-2 dark:text-gray-3">알림이 없습니다.</p>
+            <p className="text-sm md:text-base text-muted-foreground">알림이 없습니다.</p>
           ) : (
-            <p className="text-sm md:text-base text-gray-2 dark:text-gray-3">
-              <span className="text-black dark:text-gray-2">{notificationCount?.notification_count}개</span>의 읽지 않은
-              알림이 있습니다.
+            <p className="text-sm md:text-base text-muted-foreground">
+              <span className="text-foreground">{notificationCount?.notification_count}개</span>의 읽지 않은 알림이
+              있습니다.
             </p>
           )}
           <DropdownMenu>
@@ -117,7 +117,7 @@ export default function NotificationList() {
             <div className="flex flex-col gap-3 md:gap-4">
               {notifications &&
                 (groupedNotifications[idx].length === 0 ? (
-                  <p className="text-sm md:text-base text-gray-2 dark:text-gray-3">{label} 알림이 없습니다.</p>
+                  <p className="text-sm md:text-base text-muted-foreground">{label} 알림이 없습니다.</p>
                 ) : (
                   groupedNotifications[idx].map((notification) => (
                     <NotificationItem

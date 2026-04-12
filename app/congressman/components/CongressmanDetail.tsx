@@ -39,7 +39,7 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
 
   return (
     <Card
-      className={`mx-5 md:mx-auto xl:mx-0 mt-5 py-4 px-7 border-1.5 flex flex-col items-center gap-5 mb-4 dark:bg-dark-b xl:h-min md:w-[430px] xl:w-[320px] shrink-0 lg:dark:bg-dark-pb ${party_name} shadow-md rounded-md`}>
+      className={`mx-5 md:mx-auto xl:mx-0 mt-5 py-4 px-7 border-1.5 flex flex-col items-center gap-5 mb-4 xl:h-min md:w-[430px] xl:w-[320px] shrink-0 ${party_name} shadow-md rounded-md`}>
       <PartyLogo
         partyName={party_name}
         partyImageUrl={party_image_url}
@@ -61,14 +61,14 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
 
         <div className="flex flex-col justify-between py-3 w-[65%] items-end text-right">
           <h3 className="text-2xl font-semibold">{congressman_name} 의원</h3>
-          <p className="text-sm text-gray-2">
+          <p className="text-sm text-muted-foreground">
             {district} {elected}
           </p>
           <p className="text-xs">{commits}</p>
         </div>
       </div>
 
-      <Separator className="bg-gray-1 dark:bg-dark-l" />
+      <Separator className="bg-muted dark:bg-border" />
 
       <FollowBoard
         id={congressmanId}
@@ -78,35 +78,33 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
         public_count={public_count}
       />
 
-      <Separator className="bg-gray-1 dark:bg-dark-l" />
+      <Separator className="bg-muted dark:bg-border" />
 
       <div className="flex flex-col gap-2 w-full md:flex-row lg:flex-col">
-        <Badge className="text-sm font-medium text-white bg-primary-3 dark:bg-gray-4 dark:text-gray-1 w-[78px] h-8 flex items-center justify-center">
+        <Badge className="text-sm font-medium text-white bg-foreground w-[78px] h-8 flex items-center justify-center">
           기본정보
         </Badge>
 
         <dl className="ml-3 w-full">
           <div className="flex gap-2 justify-between items-center">
-            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">나이</dt>
-            <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">
-              {age ? `${age} 세` : '-'}
-            </dd>
+            <dt className="font-medium text-muted-foreground shrink-0">나이</dt>
+            <dd className="text-sm font-medium w-[80%] break-words text-end">{age ? `${age} 세` : '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">성별</dt>
-            <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{gender || '-'}</dd>
+            <dt className="font-medium text-muted-foreground shrink-0">성별</dt>
+            <dd className="text-sm font-medium w-[80%] break-words text-end">{gender || '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">번호</dt>
-            <dd className="text-sm font-medium dark:text-gray-1 w-[80%] break-words text-end">{telephone || '-'}</dd>
+            <dt className="font-medium text-muted-foreground shrink-0">번호</dt>
+            <dd className="text-sm font-medium w-[80%] break-words text-end">{telephone || '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">이메일</dt>
-            <dd className="w-[80%] text-sm font-medium break-words dark:text-gray-1 text-end">{email || '-'}</dd>
+            <dt className="font-medium text-muted-foreground shrink-0">이메일</dt>
+            <dd className="w-[80%] text-sm font-medium break-words text-end">{email || '-'}</dd>
           </div>
           <div className="flex gap-2 justify-between items-center">
-            <dt className="font-medium text-gray-2 dark:text-gray-3 shrink-0">의원실</dt>
-            <dd className="text-sm font-medium break-words dark:text-gray-1 w-[80%] text-end">{office || '-'}</dd>
+            <dt className="font-medium text-muted-foreground shrink-0">의원실</dt>
+            <dd className="text-sm font-medium break-words w-[80%] text-end">{office || '-'}</dd>
           </div>
         </dl>
       </div>
@@ -116,7 +114,7 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
           <AccordionTrigger>후보 약력 더보기</AccordionTrigger>
           <AccordionContent>
             <div className="flex flex-col gap-5 pt-4 h-full">
-              <p className="text-sm font-medium whitespace-pre-line text-gray-3 dark:text-gray-2">
+              <p className="text-sm font-medium whitespace-pre-line text-muted-foreground">
                 {brief_history ? decodeHtmlEntities(brief_history) : '해당 의원의 약력이 존재하지 않습니다.'}
               </p>
 
@@ -124,7 +122,7 @@ export default function CongressmanDetail({ congressmanId }: { congressmanId: st
                 <Button
                   asChild
                   variant="outline"
-                  className="w-[135px] h-8 text-gray-2 mx-auto border-gray-1 dark:border-gray-2 dark:text-gray-3 rounded-full">
+                  className="w-[135px] h-8 text-muted-foreground mx-auto border-border rounded-full">
                   <Link
                     href={homepage}
                     target="_blank"

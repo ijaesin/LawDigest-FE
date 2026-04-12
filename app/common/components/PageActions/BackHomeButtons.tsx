@@ -24,13 +24,13 @@ export default function BackHomeButtons({ refresh = false }: Props) {
   return (
     <div className="flex flex-col md:flex-row gap-[10px]">
       <Button
-        className="text-xl font-medium text-white rounded-none bg-primary-3 w-[261px] md:w-[227px] h-[56px] dark:bg-dark-pb lg:dark:bg-dark-b"
+        className="text-xl font-medium text-white rounded-none bg-foreground w-[261px] md:w-[227px] h-[56px]"
         onClick={handleBack}>
         이전 페이지
       </Button>
       <Button
         variant="outline"
-        className="text-xl font-medium rounded-none w-[261px] md:w-[227px] h-[56px] dark:text-black"
+        className="text-xl font-medium rounded-none w-[261px] md:w-[227px] h-[56px]"
         onClick={handleHome}>
         홈으로
       </Button>

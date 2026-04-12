@@ -44,7 +44,7 @@ export default function Header({
   return (
     <section className="w-full">
       <nav
-        className={`relative flex items-center w-full dark:bg-dark-b dark:lg:bg-dark-pb lg:shadow-md md:h-[98px] dark:border-dark-l ${isTimelineOrFollowing ? 'md:border-b' : 'border-b'}`}>
+        className={`relative flex items-center w-full lg:shadow-md md:h-[98px] ${isTimelineOrFollowing ? 'md:border-b' : 'border-b'}`}>
         <div className="hidden xl:absolute xl:left-[-100px] lg:block">
           <Link href="/">
             <Logo width={106} height={18} />
@@ -76,7 +76,7 @@ export default function Header({
                     <IconNavBorder />
                   </div>
                   <Link
-                    className={`${isActive ? 'text-black dark:text-white font-semibold bg-transparent' : 'text-gray-2'} flex flex-col items-center justify-center text-sm lg:text-base font-medium lg:px-5 lg:py-3 bg-white lg:dark:bg-dark-pb dark:bg-dark-b w-[110px] h-[60px] leading-[60px]`}
+                    className={`${isActive ? 'text-foreground font-semibold bg-transparent' : 'text-muted-foreground'} flex flex-col items-center justify-center text-sm lg:text-base font-medium lg:px-5 lg:py-3 bg-white w-[110px] h-[60px] leading-[60px]`}
                     href={href}>
                     {label}
                   </Link>

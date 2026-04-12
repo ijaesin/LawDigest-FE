@@ -55,7 +55,7 @@ jobs:
             function capitalizeFirst(str) {
               return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
             }
-            
+
             const issueType = sanitize(capitalizeFirst(issueTypeRaw));
 
             const formattedPrefix = `[${issueType}]/#${number}/`;

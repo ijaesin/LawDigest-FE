@@ -33,7 +33,7 @@ export default function GoToTopButton() {
     <Button
       size="icon"
       variant="outline"
-      className={`${isVisible ? '' : 'hidden'} z-10 fixed bg-gray-1/80 dark:bg-gray-3/60 bottom-24 right-10 md:bottom-20 md:right-20`}
+      className={`${isVisible ? '' : 'hidden'} z-10 fixed bg-muted/80 bottom-24 right-10 md:bottom-20 md:right-20`}
       onClick={onClickGoToTopButton}>
       <IconArrowUp />
     </Button>

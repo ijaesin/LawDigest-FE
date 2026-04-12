@@ -1,16 +1,17 @@
 'use client';
 
 import { CongressmanList, UserInfo, PartyList, BillContainer } from '@/app/user/components';
+import { Separator } from '@/app/common/components/ui/separator';
 
 export default function MyPageContent() {
   return (
-    <div className="flex flex-col gap-8 h-full lg:flex-row md:items-center lg:items-start lg:justify-center lg:mt-10 lg:mx-auto lg:ml-10 xl:ml-0">
+    <div className="flex flex-col gap-8">
       <UserInfo />
-      <div className="flex flex-col gap-8 h-full">
+      <div className="flex flex-col gap-8">
         <PartyList />
-        <hr className="mx-[30px] border-[#E0E0E0] dark:border-dark-l lg:border-transparent dark:lg:border-transparent" />
+        <Separator className="mx-[30px] bg-border" />
         <CongressmanList />
-        <hr className="mx-[30px] border-[#E0E0E0] dark:border-dark-l lg:border-transparent dark:lg:border-transparent" />
+        <Separator className="mx-[30px] bg-border" />
         <BillContainer />
       </div>
     </div>

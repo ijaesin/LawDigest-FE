@@ -16,19 +16,13 @@ module.exports = {
     },
     extend: {
       colors: {
+        // Legacy colors — will be removed in Phase 5, DO NOT DELETE YET
         gray: {
           1: '#E0E0E0',
           2: '#999999',
           3: '#555555',
           4: '#262626',
           0.5: '#EBEBEB',
-        },
-        primary: {
-          1: '#F5F7FD',
-          2: '#96BCFA',
-          3: '#191919',
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
         },
         theme: {
           alert: '#E63946',
@@ -39,19 +33,25 @@ module.exports = {
           l: '#2E2E2E',
           pb: '#1E1E1E',
         },
+        // shadcn base (existing, updated)
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+          hover: 'hsl(var(--primary-hover))',
+          subtle: 'hsl(var(--primary-subtle))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
@@ -60,14 +60,16 @@ module.exports = {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
+          subtle: 'hsl(var(--accent-subtle))',
         },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
         chart: {
           1: 'hsl(var(--chart-1))',
           2: 'hsl(var(--chart-2))',
@@ -75,11 +77,39 @@ module.exports = {
           4: 'hsl(var(--chart-4))',
           5: 'hsl(var(--chart-5))',
         },
+        // New semantic tokens
+        surface: 'hsl(var(--surface))',
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        danger: {
+          DEFAULT: 'hsl(var(--danger))',
+          foreground: 'hsl(var(--danger-foreground))',
+        },
+        'tertiary-foreground': 'hsl(var(--tertiary-foreground))',
+        // Glass tokens — raw rgba() values, not HSL channels (no hsl() wrapper)
+        glass: {
+          subtle: 'var(--glass-bg-subtle)',
+          medium: 'var(--glass-bg-medium)',
+          heavy: 'var(--glass-bg-heavy)',
+          border: 'var(--glass-border)',
+        },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: 'var(--radius-lg)',
+        md: 'var(--radius-md)',
+        sm: 'var(--radius-sm)',
+        full: 'var(--radius-full)',
+      },
+      zIndex: {
+        base: 'var(--z-base)',
+        sticky: 'var(--z-sticky)',
+        nav: 'var(--z-nav)',
+        header: 'var(--z-header)',
+        dropdown: 'var(--z-dropdown)',
+        modal: 'var(--z-modal)',
+        toast: 'var(--z-toast)',
       },
       keyframes: {
         'accordion-down': {

@@ -64,7 +64,7 @@ export default function NotificationTopThree() {
     });
   };
 
-  if (isLoading) return <p className="text-sm text-center text-gray-2 dark:text-gray-3">불러오는 중...</p>;
+  if (isLoading) return <p className="text-sm text-center text-muted-foreground">불러오는 중...</p>;
 
   return (
     <section className="flex flex-col gap-4 px-3 py-2 mx-5 mt-6 mb-10 rounded-3xl border shadow-2xl backdrop-blur-md bg-white/20 border-white/60 shadow-black/20">
@@ -84,14 +84,14 @@ export default function NotificationTopThree() {
           ))}
         </div>
       ) : (
-        <p className="text-sm md:text-base text-gray-2 dark:text-gray-3">최근 알림이 없습니다.</p>
+        <p className="text-sm md:text-base text-muted-foreground">최근 알림이 없습니다.</p>
       )}
 
       <div className="flex justify-between items-center">
         {notificationCount && (
-          <p className="text-xs md:text-sm text-gray-2 dark:text-gray-3">
-            <span className="text-black dark:text-gray-2">{notificationCount.notification_count}개</span>의 읽지 않은
-            알림이 있습니다.
+          <p className="text-xs md:text-sm text-muted-foreground">
+            <span className="text-foreground">{notificationCount.notification_count}개</span>의 읽지 않은 알림이
+            있습니다.
           </p>
         )}
         <Button asChild variant="link" size="sm" className="text-xs md:text-sm">

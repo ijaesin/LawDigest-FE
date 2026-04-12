@@ -1,4 +1,4 @@
-import { Layout } from '@/app/common/components/Layout';
+import { AppLayout } from '@/app/common/components/templates';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function MypageLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <Layout nav logo notification>
-      {children}
-    </Layout>
-  );
+  return <AppLayout>{children}</AppLayout>;
 }

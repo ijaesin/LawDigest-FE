@@ -1,4 +1,3 @@
-import { Layout } from '@/app/common/components/Layout';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,9 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function SearchLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <Layout nav goBack theme>
-      {children}
-    </Layout>
-  );
+  return children;
 }

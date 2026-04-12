@@ -39,7 +39,7 @@ export default function PartyCongressmanList({ partyId }: { partyId: number }) {
         </Button>
       </div>
 
-      <Separator className="dark:bg-dark-l lg:hidden" />
+      <Separator className="dark:bg-border lg:hidden" />
     </section>
   );
 }

@@ -32,21 +32,21 @@ export default function FollowBoard({ partyId }: { partyId: number }) {
       <div className="grid grid-cols-3 gap-10">
         <div className="flex flex-col items-center gap-[10px]">
           <p className="text-2xl font-semibold">{follow_count}</p>
-          <p className="text-sm font-medium text-gray-2 dark:text-gray-3">팔로워</p>
+          <p className="text-sm font-medium text-muted-foreground">팔로워</p>
         </div>
         <div className="flex flex-col items-center gap-[10px]">
           <p className="text-2xl font-semibold"> {representative_bill_count}</p>
-          <p className="text-sm font-medium text-gray-2 dark:text-gray-3">대표발의법안</p>
+          <p className="text-sm font-medium text-muted-foreground">대표발의법안</p>
         </div>
         <div className="flex flex-col items-center gap-[10px]">
           <p className="text-2xl font-semibold"> {public_bill_count}</p>
-          <p className="text-sm font-medium text-gray-2 dark:text-gray-3">공동발의법안</p>
+          <p className="text-sm font-medium text-muted-foreground">공동발의법안</p>
         </div>
       </div>
 
       <Button
         onClick={onClickFollow}
-        className={`w-full h-12 text-lg font-medium flex justify-between px-6 rounded-full ${followed ? 'bg-gray-1 text-gray-3' : 'bg-primary-3 text-white dark:bg-gray-4 dark:text-gray-2'} `}>
+        className={`w-full h-12 text-lg font-medium flex justify-between px-6 rounded-full ${followed ? 'bg-muted text-muted-foreground' : 'bg-foreground text-white'} `}>
         {followed ? '팔로우 취소' : '팔로우'}
         {followed ? <IconCheck /> : <IconPlus />}
       </Button>
